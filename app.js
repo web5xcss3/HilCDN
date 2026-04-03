@@ -483,13 +483,7 @@
 					</ul>
 				</div>
 			</section>
-
-        <!-- Footer -->
-			<footer id="footer">
-				<span class="copyright">
-					&copy; Copyright. All rights reserved. Design by <a href="http://www.html5webtemplates.co.uk">Responsive Web Templates</a>
-				</span>
-			</footer>
+			
 		`;
 	}
 
