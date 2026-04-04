@@ -82,23 +82,5 @@
 		$(document).on("click", "#menu", function (e) {
 			e.stopPropagation();
 		});
-	
-		// ================= TOGGLE BANNER (SPA SAFE) =================
-		$(document).on('click', '#toggleBanner', function() {
-
-			const $image = $('#banner .image');
-
-			if (!$image.length) return; // segurança SPA
-
-			$image.toggleClass('hidden');
-
-			// Atualiza texto do botão
-			if ($image.hasClass('hidden')) {
-				$(this).text('Background Color');
-			} else {
-				$(this).text('Background Image');
-			}
-
-		});
 
 })(jQuery);
