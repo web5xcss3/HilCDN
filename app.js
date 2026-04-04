@@ -41,14 +41,6 @@
 						</li>
 					</ul>
 				</nav>
-            
-				<!-- PWA Install -->
-				<button id="installBtn" class="install-pwa-btn" style="display: none;">
-					<span class="pwa-inner">
-						<img src="https://cdn.jsdelivr.net/gh/web5xcss3/icons/mobile.svg" alt="Install" />
-						<p>Instalar Play 90 Music</p>
-					</span>
-				</button>
 			</header>
 		`;
 	}
