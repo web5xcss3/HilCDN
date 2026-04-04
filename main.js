@@ -84,30 +84,33 @@
 		});
 
 	// ================= DROPDOWN (SPA SAFE) =================
-
 	// abrir/fechar dropdown
 		$(document).on('click', '.toggle-dropdown', function(e) {
 			e.preventDefault();
+			e.stopPropagation();
 
 			const $dropdown = $(this).next('.dropotron');
 
-			$dropdown.toggleClass('dropdown-active');
+			if (!$dropdown.length) return;
 
 			// fecha outros
 			$('.dropotron').not($dropdown).removeClass('dropdown-active');
+
+			// toggle atual
+			$dropdown.toggleClass('dropdown-active');
 		});
 
-		// fechar ao clicar fora
-		$(document).on('click', function(e) {
+		// clique fora fecha
+		$(document).on('click', function() {
+			$('.dropotron').removeClass('dropdown-active');
+		});
 
-			if (!$(e.target).closest('.toggle-dropdown, .dropotron').length) {
-				$('.dropotron').removeClass('dropdown-active');
-			}
-
+		// impedir fechamento ao clicar dentro
+		$(document).on('click', '.dropotron', function(e) {
+			e.stopPropagation();
 		});
 		
 		// ================= TOGGLE BANNER (SPA SAFE) =================
-
 		$(document).on('click', '#toggleBanner', function() {
 
 			const $image = $('#banner .image');
