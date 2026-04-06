@@ -1,7 +1,6 @@
 // Header Component
 function Header() {
     return `
-			<!-- Header -->
 			<header id="header" class="alt">
 				<!-- Logo -->
 				<div class="logo">
@@ -15,8 +14,7 @@ function Header() {
 						<li><button type="button" class="icon solid fa-bars md-ripples ripples-light menuToogle"></button></li>
 					</ul>
 				</div>
-
-            <!-- Search -->
+				
 				<nav id="search">
 					<ul>
 						<li>
@@ -28,7 +26,6 @@ function Header() {
 					</ul>
 				</nav>
 
-            <!-- Nav -->
 				<nav id="nav">
 					<ul class="icons">
 						<li class="alt"><button type="button" class="icon solid fa-magnifying-glass md-ripples ripples-light"></button></li>
@@ -46,7 +43,6 @@ function Header() {
 		`;
 }
 
-// Menu Component
 function Menu() {
     return `
 			<!-- Menu -->
@@ -60,7 +56,6 @@ function Menu() {
 		`;
 }
 
-// Banner Component
 function Banner() {
     return `
 			<!-- Banner -->
@@ -70,13 +65,11 @@ function Banner() {
 		`;
 }
 
-// Home Content Component
 function HomeContent() {
     return `
         <!-- Content Home Tab -->
 			<div id="home" class="tab-content active">
 			
-            <!-- Destaque -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="featuredTitle">Destaque</h2>
@@ -87,7 +80,6 @@ function HomeContent() {
 					<div id="featuredAlbums" class="grid col-6"></div>
 				</section>
             
-            <!-- Day Hits -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="dailyHitTitle">Hits do Dia</h2>
@@ -98,7 +90,6 @@ function HomeContent() {
 					<div id="dailyHit"></div>
 				</section>
             
-            <!-- Day Titulos -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="dailyFeaturedTitle">Títulos do Dia</h2>
@@ -109,7 +100,6 @@ function HomeContent() {
 					<div id="dailyFeaturedTitles" class="grid col-6"></div>
 				</section>
 
-            <!-- DJS -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="featuredDjsTitle">DJs em Destaque</h2>
@@ -120,7 +110,6 @@ function HomeContent() {
 					<div id="featuredDjs"></div>
 				</section>
             
-            <!-- Recent -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="recentlyPlayedTitle">Recentemente Tocadas</h2>
@@ -134,10 +123,8 @@ function HomeContent() {
 		`;
 }
 
-// Artists Component
 function ArtistsContent() {
     return `
-        <!-- Artists Tab -->
 			<section id="artists" class="tab-content">
 				<article id="action">
 					<ul class="actions">
@@ -159,7 +146,6 @@ function ArtistsContent() {
 		`;
 }
 
-// Artists Component
 function suballAlbumsContent() {
     return `
 		<!-- Artists Albums Tab -->
@@ -175,10 +161,8 @@ function suballAlbumsContent() {
 		`;
 }
 
-// Timeline Component
 function timelineContent() {
     return `
-		<!-- Timeline Tab -->
 			<section id="timeline" class="tab-content">
 				<header class="major">
 					<h2 id="timelineTitle"></h2>
@@ -199,10 +183,8 @@ function timelineContent() {
 		`;
 }
 
-// Genres Component
 function genresContent() {
     return `
-		<!-- Genres Albums Tab -->
 			<section id="genresAlbums" class="tab-content">
 				<header class="major">
 					<h2 id="genresAlbumsTitle"></h2>
@@ -215,10 +197,8 @@ function genresContent() {
 		`;
 }
 
-// Year Albums Component
 function yearAlbumsContent() {
     return `
-		<!-- Year Albums Tab -->
 			<section id="yearAlbums" class="tab-content">
 				<header class="major">
 					<h2 id="yearAlbumsTitle"></h2>
@@ -231,10 +211,8 @@ function yearAlbumsContent() {
 		`;
 }
 
-// Music Component
 function musicsContent() {
     return `
-		<!-- Music -->
 			<section id="musics" class="tab-content">
 				<header class="major">
 					<h2 id="musicsTitle"></h2>
@@ -247,10 +225,8 @@ function musicsContent() {
 		`;
 }
 
-// Playlists Component
 function playlistsContent() {
     return `
-		<!-- Playlists -->
 			<section id="playlists" class="tab-content">
 				<header class="major">
 					<h2 id="playlistsTitle"></h2>
@@ -263,10 +239,8 @@ function playlistsContent() {
 		`;
 }
 
-// Álbuns Component
 function albumsContent() {
     return `
-		<!-- Álbuns Tab -->
 			<section id="albums" class="tab-content">
 				<header class="major">
 					<h2 id="albumsTitle"></h2>
@@ -279,10 +253,8 @@ function albumsContent() {
 		`;
 }
 
-// Single Component
 function singlesContent() {
     return `
-		<!-- Single Tab -->
 			<section id="singles" class="tab-content">
 				<header class="major">
 					<h2 id="singlesTitle"></h2>
@@ -295,10 +267,8 @@ function singlesContent() {
 		`;
 }
 
-// Vinyl Component
 function vinylsContent() {
     return `
-		<!-- Vinyl Tab -->
 			<section id="vinyls" class="tab-content">
 				<header class="major">
 					<h2 id="vinylsTitle"></h2>
@@ -311,10 +281,8 @@ function vinylsContent() {
 		`;
 }
 
-// Djs Component
 function djsContent() {
     return `
-		<!-- Djs Tab -->
 			<section id="djs" class="tab-content">
 				<header class="major">
 					<h2 id="djsTitle"></h2>
@@ -327,10 +295,8 @@ function djsContent() {
 		`;
 }
 
-// Instrumental Component
 function instrumentalContent() {
     return `
-		<!-- Instrumental Tab -->
 			<section id="instrumental" class="tab-content">
 				<header class="major">
 					<h2 id="instrumentalTitle"></h2>
@@ -343,10 +309,8 @@ function instrumentalContent() {
 		`;
 }
 
-// Labels Component
 function labelsContent() {
     return `
-		<!-- Labels Tab -->
 			<section id="labels" class="tab-content">
 				<header class="major">
 					<h2 id="labelsTitle"></h2>
@@ -359,7 +323,6 @@ function labelsContent() {
 		`;
 }
 
-// Sub Labels Component
 function labelDetailsContent() {
     return `
 		<!-- Sub Labels Tab -->
@@ -375,14 +338,12 @@ function labelDetailsContent() {
 		`;
 }
 
-// Main App Component
 function App() {
     return `
 			${Header()}
 			${Menu()}
 			${Banner()}
         
-        <!-- Main -->
 			<section id="main" class="wrapper align-top">
 				<div class="container">
 					${HomeContent()}
@@ -400,20 +361,16 @@ function App() {
 					${instrumentalContent()}
 					${labelsContent()}
 					${labelDetailsContent()}
-					<!-- Outros tabs serão adicionados dinamicamente -->
 				</div>
 			</section>
 
-        <!-- Player Page -->
 			<section id="player-page" style="display: none;">
 				<div class="content">
 				
-				<!-- Main Panel -->
 					<div id="main-panel">
 						<div class="player-embed"></div>
 					</div>
 					
-				<!-- Side Panel -->
 					<div id="side-panel">
 						<div class="album-details">
 							<h4>Detalhes do Álbum</h4>
@@ -452,7 +409,6 @@ function App() {
 				</div>
 			</section>
 		
-		<!-- related Albums Panel -->
 			<section id="relatedContainer">
 				<header class="major">
 					<h3 id="relatedArtistName"></h3>
@@ -460,7 +416,6 @@ function App() {
 				<div id="relatedAlbums" class="related-grid"></div>
 			</section>
 
-        <!-- Player Bar -->
 			<section id="player-bar" style="display: none;">
 				<div class="content">
 					<div class="image" data-position="center">
@@ -480,16 +435,10 @@ function App() {
 		`;
 }
 
-// ===============================
-// RENDER
-// ===============================
 function renderRoot() {
     $('#app').html(App());
 }
 
-// ===============================
-// TABS
-// ===============================
 function initTabSystem() {
 
     $(document).on('click', '[data-tab]', function(e) {
@@ -512,12 +461,8 @@ function switchTab(tab) {
     $('[data-tab="' + tab + '"]').parent().addClass('active');
 }
 
-// ===============================
-// EVENTOS GLOBAIS (SPA SAFE)
-// ===============================
 function initGlobalEvents() {
 
-    // MENU TOGGLE
     $(document).on('click', '.menuToogle', function(e) {
         e.preventDefault();
         $('body').toggleClass('is-menu-visible');
@@ -542,7 +487,6 @@ function initGlobalEvents() {
         e.stopPropagation();
     });
 
-    // DROPDOWN
     $(document).on('click', '.toggle-dropdown', function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -561,7 +505,6 @@ function initGlobalEvents() {
         e.stopPropagation();
     });
 
-    // TOGGLE BANNER
     $(document).on('click', '#toggleBanner', function() {
         const $image = $('#banner .image');
         if (!$image.length) return;
@@ -575,7 +518,6 @@ function initGlobalEvents() {
         );
     });
 
-    // SEARCH TOGGLE (SPA SAFE)
     $(document).on('click', '.fa-magnifying-glass', function(e) {
         e.preventDefault();
 
@@ -587,7 +529,6 @@ function initGlobalEvents() {
         }
     });
 
-    // CLICK OUTSIDE
     $(document).on('click', function(e) {
         const $search = $('#search');
 
@@ -603,9 +544,6 @@ function initGlobalEvents() {
 
 }
 
-// ===============================
-// PLUGINS (RODAR APÓS RENDER)
-// ===============================
 function initPlugins() {
 
     if ($.fn.fillColor) {
@@ -614,7 +552,6 @@ function initPlugins() {
         });
     }
 
-    // exemplo slick (adicione onde quiser)
     if ($.fn.slick && $('#featuredAlbums').length) {
         $('#featuredAlbums').not('.slick-initialized').slick({
             slidesToShow: 4,
@@ -624,9 +561,6 @@ function initPlugins() {
 
 }
 
-// ===============================
-// SCROLL WATCH (HEADER)
-// ===============================
 function setupScrollWatch() {
 
     const $banner = $('#banner');
@@ -656,17 +590,13 @@ function setupScrollWatch() {
 
 }
 
-// ==================================================================
-// 🔍 SEARCH SYSTEM (ULTRA LEVE SPA)
-// ==================================================================
 window.searchIndex = [];
 
 let searchTimeout = null;
 
-// CRIAR INDEX UMA VEZ (super rápido depois)
 window.buildSearchIndex = function() {
 
-    console.log('🔥 buildSearchIndex rodou');
+    console.log('buildSearchIndex rodou');
 
     window.searchIndex = mockFeatured.map(item => ({
         id: item.id,
@@ -684,10 +614,9 @@ window.buildSearchIndex = function() {
         ).toLowerCase()
     }));
 
-    console.log('🔥 TOTAL:', window.searchIndex.length);
+    console.log('TOTAL:', window.searchIndex.length);
 };
 
-// BUSCA ULTRA RÁPIDA (SEM TRAVAR)
 function handleSearch(term) {
 
     const $dropdown = $('#searchDropdown');
@@ -712,7 +641,6 @@ function handleSearch(term) {
     renderSearchResults(results);
 }
 
-// RENDER SUPER OTIMIZADO
 function renderSearchResults(results) {
 
     const html = results.map(item => `
@@ -730,7 +658,6 @@ function renderSearchResults(results) {
         .show();
 }
 
-// DEBOUNCE (SUAVIDADE)
 function debounceSearch(value) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
@@ -738,11 +665,6 @@ function debounceSearch(value) {
     }, 250);
 }
 
-// ==================================================================
-// 🎯 EVENTOS (SPA SAFE)
-// ==================================================================
-
-// DIGITAÇÃO
 $(document).on('input', '#searchInput', function() {
     debounceSearch($(this).val());
 });
@@ -754,7 +676,6 @@ $(document).on('keypress', '#searchInput', function(e) {
     }
 });
 
-// CLICK RESULTADO
 $(document).on('click', '.result-item', function() {
 
     const id = parseInt($(this).data('id'));
@@ -767,18 +688,13 @@ $(document).on('click', '.result-item', function() {
     $('#searchDropdown').hide();
 });
 
-// CLICK FORA (FECHAR)
 $(document).on('click', function(e) {
     if (!$(e.target).closest('#searchInput, #searchDropdown').length) {
         $('#searchDropdown').hide();
     }
 });
 
-// ===============================
-// RENDER DE DADOS
-// ===============================
 function initRenderFunctions() {
-
     if (typeof renderAllAlbums === 'function') renderAllAlbums();
     if (typeof renderAllArtists === 'function') renderAllArtists();
     if (typeof renderAllPlaylists === 'function') renderAllPlaylists();
@@ -795,35 +711,19 @@ function initRenderFunctions() {
     if (typeof renderAllLabels === 'function') renderAllLabels();
     if (typeof renderDailyFeaturedTitles === 'function') renderDailyFeaturedTitles();
     if (typeof renderAllGenres === 'function') renderAllGenres();
-
 }
 
-// ===============================
-// INIT APP (🔥 FINAL LIMPO)
-// ===============================
 $(document).ready(function() {
 
     console.log('SPA: inicializando...');
 
-    // 1. render HTML
     renderRoot();
-
-    // 2. eventos globais (RODA UMA VEZ)
     initGlobalEvents();
-
-    // 3. tabs
     initTabSystem();
-
-    // 4. render dados
     initRenderFunctions();
-
-    // 5. plugins (depois do DOM)
     initPlugins();
-
-    // 6. scroll header
     setupScrollWatch();
-
-    // 🔥 força execução
+	
     setTimeout(() => {
         buildSearchIndex();
     }, 100);
