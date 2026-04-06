@@ -1,8 +1,6 @@
-// Header Component
 function Header() {
     return `
 			<header id="header" class="alt">
-				<!-- Logo -->
 				<div class="logo">
 					<a href="index.html">
 						<picture>
@@ -38,14 +36,12 @@ function Header() {
 						</li>
 					</ul>
 				</nav>
-
 			</header>
 		`;
 }
 
 function Menu() {
     return `
-			<!-- Menu -->
 			<section id="menu">
 				<ul class="menu">
 					<li><button type="button" class="active md-ripples ripples-light" data-tab="home"><i class="icon solid fa-house"></i><span class="label">Início</span></button></li>
@@ -58,7 +54,6 @@ function Menu() {
 
 function Banner() {
     return `
-			<!-- Banner -->
 			<section id="banner">
 				<div class="image filtered" data-position="center"></div>
 			</section>
@@ -67,7 +62,6 @@ function Banner() {
 
 function HomeContent() {
     return `
-        <!-- Content Home Tab -->
 			<div id="home" class="tab-content active">
 			
 				<section class="wrapper style">
@@ -148,7 +142,6 @@ function ArtistsContent() {
 
 function suballAlbumsContent() {
     return `
-		<!-- Artists Albums Tab -->
 			<section id="subalbums" class="tab-content">
 				<header class="major">
 					<h2 id="subalbumsTitle"></h2>
