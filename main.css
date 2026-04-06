@@ -2069,6 +2069,17 @@ input, select, textarea {
 		padding: 2em;
 		border-radius: 0.5em;
 	}
+	
+		@media screen and (max-width: 736px) {
+			
+			#dailyFeaturedTitles {
+				background-color: transparent;
+				padding: 0;
+				border-radius: 0;
+				
+			}
+			
+		}
 		
 /* All Artistas */
 
