@@ -24,7 +24,6 @@
         }
 
         // DOM Elements com verificação de existência
-        const $searchInput = $('#searchInput');
         const $navButtons = $('ul li button');
         const $tabContents = $('section .tab-content');
 
@@ -58,68 +57,53 @@
             renderRecentlyPlayed();
             renderFeaturedDjs();
             renderDailyHit();
-			renderAllLabels();
+            renderAllLabels();
             renderDailyFeaturedTitles();
-			renderAllGenres();
+            renderAllGenres();
+            buildSearchIndex();
         }
 
         // Setup de event listeners section
-			function setupEventListeners() {
+        function setupEventListeners() {
 
-			// ================= SEARCH =================
-			const $searchInput = $('#searchInput');
+            // ================= NAV TABS =================
+            $(document).on('click', '[data-tab]', function(event) {
+                event.preventDefault();
 
-			if ($searchInput.length) {
+                const tab = $(this).data('tab');
+                if (tab) {
+                    switchTab(tab);
+                }
+            });
 
-				$searchInput.on('input', debouncedHandleSearch);
+            // ================= BOTÕES VOLTAR =================
+            $(document).on('click', '#backToArtistsBtn', function(e) {
+                e.preventDefault();
+                switchTab('artists');
+            });
 
-				$searchInput.on('keypress', function(event) {
-					if (event.key === 'Enter') {
-						event.preventDefault();
-						handleSearch();
-					}
-				});
+            $(document).on('click', '#backToTimelineBtn', function(e) {
+                e.preventDefault();
+                switchTab('timeline');
+            });
 
-			}
+            $(document).on('click', '#backToTimelineFromGenres', function(e) {
+                e.preventDefault();
+                switchTab('timeline');
+            });
 
-			// ================= NAV TABS =================
-			$(document).on('click', '[data-tab]', function(event) {
-				event.preventDefault();
+            $(document).on('click', '#backToLabelsBtn', function(e) {
+                e.preventDefault();
+                switchTab('labels');
+            });
 
-				const tab = $(this).data('tab');
-				if (tab) {
-					switchTab(tab);
-				}
-			});
+            $(document).on('click', '#backToHomeFromLabels', function(e) {
+                e.preventDefault();
+                switchTab('artists');
+            });
 
-			// ================= BOTÕES VOLTAR =================
-			$(document).on('click', '#backToArtistsBtn', function(e) {
-				e.preventDefault();
-				switchTab('artists');
-			});
-
-			$(document).on('click', '#backToTimelineBtn', function(e) {
-				e.preventDefault();
-				switchTab('timeline');
-			});
-
-			$(document).on('click', '#backToTimelineFromGenres', function(e) {
-				e.preventDefault();
-				switchTab('timeline');
-			});
-
-			$(document).on('click', '#backToLabelsBtn', function(e) {
-				e.preventDefault();
-				switchTab('labels');
-			});
-
-			$(document).on('click', '#backToHomeFromLabels', function(e) {
-				e.preventDefault();
-				switchTab('artists');
-			});
-
-			// grupo único (melhor performance)
-			$(document).on('click', `
+            // grupo único (melhor performance)
+            $(document).on('click', `
 				#backToMusicsBtn,
 				#backToPlaylistsBtn,
 				#backToAlbunsBtn,
@@ -128,164 +112,10 @@
 				#backToDjsBtn,
 				#backToInstrumentaisBtn
 			`, function(e) {
-				e.preventDefault();
-				switchTab('artists');
-			});
+                e.preventDefault();
+                switchTab('artists');
+            });
 
-		}
-		
-	// ==================================================================
-	// SEARCH SYSTEM (SPA SAFE)
-	// ==================================================================
-
-		// HANDLE SEARCH
-		function handleSearch() {
-
-			const $searchInput = $('#searchInput'); // sempre atualizado
-			if (!$searchInput.length) return;
-
-			const searchTerm = $searchInput.val().toLowerCase().trim();
-
-			currentData = {
-				featured: [...(originalData.featured || [])]
-			};
-
-			renderSearchDropdown(searchTerm);
-
-			try {
-				renderFeaturedAlbums();
-				renderFeaturedDjs();
-				renderDailyHit();
-				renderDailyFeaturedTitles();
-			} catch (error) {
-				console.error('Erro durante re-renderização após busca:', error);
-			}
-		}
-
-
-		// DROPDOWN SEARCH
-		function renderSearchDropdown(searchTerm) {
-
-			const $dropdown = $('#searchDropdown');
-			if (!$dropdown.length) return;
-
-			// mínimo de caracteres
-			if (!searchTerm || searchTerm.length < 2) {
-				$dropdown.hide();
-				return;
-			}
-
-			const term = searchTerm.toLowerCase().trim();
-
-			const results = (originalData.featured || [])
-				.filter(item => {
-
-					if (!item) return false;
-
-					const title = (item.title || '').toLowerCase();
-					const artist = (item.artist || '').toLowerCase();
-					const name = (item.name || '').toLowerCase();
-					const year = (item.year || '').toString();
-
-					return (
-						title.includes(term) ||
-						artist.includes(term) ||
-						name.includes(term) ||
-						year.includes(term)
-					);
-				})
-				.slice(0, 20);
-
-			if (!results.length) {
-				$dropdown.hide();
-				return;
-			}
-
-			$dropdown.html(results.map(item => `
-				<div class="result-item md-ripples ripples-light" data-id="${item.id || ''}" data-type="featured">
-					<img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" class="result-thumb">
-					<header class="align-left">
-						<h3>${escapeHtml(item.artist || '')}</h3>
-						<p class="result-title">${escapeHtml(item.title || '')}</p>
-					</header>
-				</div>
-			`).join(''));
-
-			$dropdown.show();
-		}
-
-
-		// ================= EVENTOS SEARCH =================
-
-		// digitação (SPA safe)
-		$(document).on('input', '#searchInput', function() {
-			handleSearch();
-		});
-
-		// enter
-		$(document).on('keypress', '#searchInput', function(e) {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				handleSearch();
-			}
-		});
-
-		// clique no resultado (SPA safe)
-		$(document).on('click', '.result-item', function() {
-
-			const id = parseInt($(this).data('id'));
-			const type = $(this).data('type');
-
-			if (!isNaN(id)) {
-				openPlayer(id, type);
-				$('#searchDropdown').hide();
-			}
-
-		});
-
-		// fechar ao clicar fora
-		$(document).on('click', function(e) {
-			if (!$(e.target).closest('#searchInput, #searchDropdown').length) {
-				$('#searchDropdown').hide();
-			}
-		});
-
-
-	// ==================================================================
-	// HEADER DROPDOWN (SPA SAFE)
-	// ==================================================================
-
-		// abrir/fechar dropdown
-		$(document).on('click', '.toggle-dropdown', function(e) {
-			e.preventDefault();
-
-			const $dropdown = $(this).next('.dropotron');
-
-			if (!$dropdown.length) return;
-
-			$dropdown
-				.stop(true, true)
-				.toggleClass('dropdown-active');
-
-			// fecha outros
-			$('.dropotron')
-				.not($dropdown)
-				.removeClass('dropdown-active');
-		});
-
-		// fechar ao clicar fora
-		$(document).on('click', function(e) {
-
-			if (!$(e.target).closest('.toggle-dropdown, .dropotron').length) {
-				$('.dropotron').removeClass('dropdown-active');
-			}
-
-		});
-
-        // Função de debounce para melhorar performance
-        function debouncedHandleSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(handleSearch, 300); // 300ms de delay
         }
 
         function switchTab(tabName) {
@@ -303,10 +133,10 @@
             $('#artistCount').text((currentData.artists || []).length);
             $('#playlistCount').text((currentData.playlists || []).length);
         }
-		
-	// ==================================================================
-	// HOME FEATURED ALBUMS
-	// ==================================================================
+
+        // ==================================================================
+        // HOME FEATURED ALBUMS
+        // ==================================================================
 
         function renderFeaturedAlbums() {
             const $container = $('#featuredAlbums');
@@ -361,20 +191,35 @@
             }
 
             $container.slick({
-				focusOnSelect: true,
-				infinite: true,
-				slidesToShow: 4,
-				speed: 300,
-				slidesToScroll: 1,
-				appendArrows: $('#new-slick-arrow'),
-				nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
-				prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
-				responsive: [{
-					breakpoint: 1280, settings: { slidesToShow: 3 } }, {
-					breakpoint: 980, settings: { slidesToShow: 2 } }, {
-					breakpoint: 736, settings: { slidesToShow: 2 } }, {
-					breakpoint: 480, settings: { slidesToShow: 1 } }
-                    ]
+                    focusOnSelect: true,
+                    infinite: true,
+                    slidesToShow: 4,
+                    speed: 300,
+                    slidesToScroll: 1,
+                    appendArrows: $('#new-slick-arrow'),
+                    nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
+                    prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
+                    responsive: [{
+                        breakpoint: 1280,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    }, {
+                        breakpoint: 980,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }, {
+                        breakpoint: 736,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }, {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }]
                 })
                 .on('afterChange', function(event, slick, currentSlide) {
                     const $current = slick.$slides.eq(currentSlide);
@@ -396,11 +241,11 @@
             });
 
         }
-		
-	// ==================================================================
-	// HOME FEATURED DAY HITS (12 itens embaralhados)
-	// ==================================================================
-	
+
+        // ==================================================================
+        // HOME FEATURED DAY HITS (12 itens embaralhados)
+        // ==================================================================
+
         function renderDailyHit(count = 1) {
             const $container = $('#dailyHit');
             if (!$container.length) return;
@@ -470,8 +315,8 @@
 			`).join('');
 
             $container.html(html);
-			
-			/*
+
+            /*
             // 🔹 Slick 
             if ($container.hasClass('slick-initialized')) {
                 $container.slick('unslick');
@@ -494,8 +339,8 @@
                 ]
             });
 			*/
-			
-			// Aplica fillColor apenas no container atual
+
+            // Aplica fillColor apenas no container atual
             $container.find('.avg').fillColor({
                 type: 'avg'
             });
@@ -510,131 +355,131 @@
             });
         }
 
-	// ==================================================================
-	// UTIL
-	// ==================================================================
-	function shuffleArray(array) {
-		const arr = array.slice();
-		for (let i = arr.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[arr[i], arr[j]] = [arr[j], arr[i]];
-		}
-		return arr;
-	}
+        // ==================================================================
+        // UTIL
+        // ==================================================================
+        function shuffleArray(array) {
+            const arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
 
-	// ==================================================================
-	// HOME FEATURED ESPECIAL TITULOS
-	// ==================================================================
-	function renderDailyFeaturedTitles() {
+        // ==================================================================
+        // HOME FEATURED ESPECIAL TITULOS
+        // ==================================================================
+        function renderDailyFeaturedTitles() {
 
-		const $container = $('#dailyFeaturedTitles');
-		const $titleElement = $('#dailyFeaturedTitle');
-		if (!$container.length) return;
+            const $container = $('#dailyFeaturedTitles');
+            const $titleElement = $('#dailyFeaturedTitle');
+            if (!$container.length) return;
 
-		const today = new Date().toISOString().split('T')[0];
-		const cacheKey = 'dailyFeaturedTitlesCache';
-		const indexKey = 'dailyFeaturedIndex';
+            const today = new Date().toISOString().split('T')[0];
+            const cacheKey = 'dailyFeaturedTitlesCache';
+            const indexKey = 'dailyFeaturedIndex';
 
-		const targetThemes = [
-			"Let Me Be",
-			"I Believe",
-			"Copernico",
-			"DJ Bobo",
-			"Masterboy",
-			"Culture Beat",
-			"Haddaway",
-			"Da Blitz",
-			"Taleesa",
-			"T.F.O.",
-			"Double You",
-			"Future City",
-			"ICE MC",
-			"M.C. Sar & The Real McCoy",
-			"Flexx",
-			"Maxx",
-			"F.B. Machine",
-		];
+            const targetThemes = [
+                "Let Me Be",
+                "I Believe",
+                "Copernico",
+                "DJ Bobo",
+                "Masterboy",
+                "Culture Beat",
+                "Haddaway",
+                "Da Blitz",
+                "Taleesa",
+                "T.F.O.",
+                "Double You",
+                "Future City",
+                "ICE MC",
+                "M.C. Sar & The Real McCoy",
+                "Flexx",
+                "Maxx",
+                "F.B. Machine",
+            ];
 
-		let selected = [];
-		let currentIndex = parseInt(localStorage.getItem(indexKey)) || 0;
-		let themeOfDay = "";
+            let selected = [];
+            let currentIndex = parseInt(localStorage.getItem(indexKey)) || 0;
+            let themeOfDay = "";
 
-		const normalize = str => (str || '').toLowerCase().trim();
+            const normalize = str => (str || '').toLowerCase().trim();
 
-		// TODAS as coleções
-		const allItems = [
-			...(currentData.albums || []),
-			...(currentData.singles || []),
-			...(currentData.vinyls || []),
-			...(currentData.featured || [])
-		];
+            // TODAS as coleções
+            const allItems = [
+                ...(currentData.albums || []),
+                ...(currentData.singles || []),
+                ...(currentData.vinyls || []),
+                ...(currentData.featured || [])
+            ];
 
-		// limpa cache se mudou o dia
-		let cachedData = JSON.parse(localStorage.getItem(cacheKey)) || {};
-		if (cachedData.date !== today) {
-			localStorage.removeItem(cacheKey);
-			cachedData = {};
-		}
+            // limpa cache se mudou o dia
+            let cachedData = JSON.parse(localStorage.getItem(cacheKey)) || {};
+            if (cachedData.date !== today) {
+                localStorage.removeItem(cacheKey);
+                cachedData = {};
+            }
 
-		if (cachedData.items && cachedData.items.length) {
-			selected = cachedData.items;
-			themeOfDay = cachedData.theme || "";
-		} else {
+            if (cachedData.items && cachedData.items.length) {
+                selected = cachedData.items;
+                themeOfDay = cachedData.theme || "";
+            } else {
 
-			const total = targetThemes.length;
-			let attempts = 0;
+                const total = targetThemes.length;
+                let attempts = 0;
 
-			while (attempts < total) {
+                while (attempts < total) {
 
-				themeOfDay = targetThemes[currentIndex % total];
-				const search = normalize(themeOfDay);
+                    themeOfDay = targetThemes[currentIndex % total];
+                    const search = normalize(themeOfDay);
 
-				const matchingItems = allItems.filter(item => {
-					if (!item) return false;
+                    const matchingItems = allItems.filter(item => {
+                        if (!item) return false;
 
-					const artist = normalize(item.artist);
-					const title = normalize(item.title);
+                        const artist = normalize(item.artist);
+                        const title = normalize(item.title);
 
-					return (
-						artist.includes(search) ||
-						title.includes(search)
-					);
-				});
+                        return (
+                            artist.includes(search) ||
+                            title.includes(search)
+                        );
+                    });
 
-				if (matchingItems.length > 0) {
+                    if (matchingItems.length > 0) {
 
-					selected = shuffleArray(matchingItems);
+                        selected = shuffleArray(matchingItems);
 
-					localStorage.setItem(indexKey, (currentIndex + 1) % total);
-					localStorage.setItem(cacheKey, JSON.stringify({
-						date: today,
-						theme: themeOfDay,
-						items: selected
-					}));
+                        localStorage.setItem(indexKey, (currentIndex + 1) % total);
+                        localStorage.setItem(cacheKey, JSON.stringify({
+                            date: today,
+                            theme: themeOfDay,
+                            items: selected
+                        }));
 
-					break;
+                        break;
 
-				} else {
-					currentIndex++;
-					attempts++;
-				}
-			}
+                    } else {
+                        currentIndex++;
+                        attempts++;
+                    }
+                }
 
-			// FALLBACK (nunca vazio)
-			if (!selected.length) {
-				selected = shuffleArray(allItems).slice(0, 6);
-				themeOfDay = "Destaques";
-			}
-		}
+                // FALLBACK (nunca vazio)
+                if (!selected.length) {
+                    selected = shuffleArray(allItems).slice(0, 6);
+                    themeOfDay = "Destaques";
+                }
+            }
 
-		// título
-		if ($titleElement.length) {
-			$titleElement.html(`Especial • <span class="artist-name">${escapeHtml(themeOfDay)}</span>`);
-			
-		}
+            // título
+            if ($titleElement.length) {
+                $titleElement.html(`Especial • <span class="artist-name">${escapeHtml(themeOfDay)}</span>`);
 
-		// render
-		$container.html(selected.map(item => `
+            }
+
+            // render
+            $container.html(selected.map(item => `
 			<div class="album-card" data-id="${item.id || ''}" data-type="featured">
 				<article class="box post">
 					<div class="content">
@@ -653,12 +498,12 @@
 			</div>
 		`).join(''));
 
-		// Aplica fillColor apenas no container atual
+            // Aplica fillColor apenas no container atual
             $container.find('.avg').fillColor({
                 type: 'avg'
             });
-			
-			// 🔹 Slick 
+
+            // 🔹 Slick 
             if ($container.hasClass('slick-initialized')) {
                 $container.slick('unslick');
             }
@@ -673,27 +518,42 @@
                 nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                 prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                 responsive: [{
-					breakpoint: 1280, settings: { slidesToShow: 5 } }, {
-					breakpoint: 980, settings: { slidesToShow: 4 } }, {
-					breakpoint: 736,settings: { slidesToShow: 3 } }, {
-					breakpoint: 480, settings: { slidesToShow: 2 } }
-                ]
+                    breakpoint: 1280,
+                    settings: {
+                        slidesToShow: 5
+                    }
+                }, {
+                    breakpoint: 980,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                }, {
+                    breakpoint: 736,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                }, {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                }]
             });
 
-		// clique
-		$container.find('.album-card').on('click', function() {
-			const id = parseInt($(this).data('id'));
-			if (!isNaN(id)) {
-				openPlayer(id, 'featured');
-			}
-		});
-	}
+            // clique
+            $container.find('.album-card').on('click', function() {
+                const id = parseInt($(this).data('id'));
+                if (!isNaN(id)) {
+                    openPlayer(id, 'featured');
+                }
+            });
+        }
 
-	// ==================================================================
-	// HOME FEATURED DJS // WITH SLICK SLIDER
-	// ==================================================================
+        // ==================================================================
+        // HOME FEATURED DJS // WITH SLICK SLIDER
+        // ==================================================================
 
-	// Render featured playlists
+        // Render featured playlists
         function renderFeaturedDjs() {
             const $container = $('#featuredDjs');
             if (!$container.length) return;
@@ -754,21 +614,35 @@
                 nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                 prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                 responsive: [{
-					breakpoint: 1280, settings: { slidesToShow: 6 } }, {
-					breakpoint: 980, settings: { slidesToShow: 4 } }, {
-					breakpoint: 736, settings: { slidesToShow: 3 } }, {
-					breakpoint: 480,
-					settings: { slidesToShow: 2 } }
-                ]
+                    breakpoint: 1280,
+                    settings: {
+                        slidesToShow: 6
+                    }
+                }, {
+                    breakpoint: 980,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                }, {
+                    breakpoint: 736,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                }, {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                }]
             });
 
         }
-		
-	// ==================================================================
-	// HOME RECENT PLAYED WITH SLICK SLIDER
-	// ==================================================================
 
-	// Recent Played
+        // ==================================================================
+        // HOME RECENT PLAYED WITH SLICK SLIDER
+        // ==================================================================
+
+        // Recent Played
         function renderRecentlyPlayed() {
             const $container = $('#recentlyPlayed');
             if (!$container.length) return;
@@ -839,11 +713,26 @@
                     nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                     prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                     responsive: [{
-						breakpoint: 1280, settings: { slidesToShow: 6 } }, {
-						breakpoint: 980, settings: { slidesToShow: 4 } }, {
-						breakpoint: 736, settings: { slidesToShow: 3 } }, {
-						breakpoint: 480, settings: { slidesToShow: 2 } }
-                    ]
+                        breakpoint: 1280,
+                        settings: {
+                            slidesToShow: 6
+                        }
+                    }, {
+                        breakpoint: 980,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    }, {
+                        breakpoint: 736,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    }, {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }]
                 });
             }
 
@@ -858,9 +747,9 @@
 
         }
 
-	// ==================================================================
-	// Save Recent Played
-	// ==================================================================
+        // ==================================================================
+        // Save Recent Played
+        // ==================================================================
 
         function saveToRecentlyPlayed(item) {
             const key = 'recentlyPlayed';
@@ -879,16 +768,16 @@
             renderRecentlyPlayed();
         }
 
-	// ==================================================================
-	// INSTRUMENTALS
-	// ==================================================================
+        // ==================================================================
+        // INSTRUMENTALS
+        // ==================================================================
 
-	// Funções de renderização allInstrumental
+        // Funções de renderização allInstrumental
         function renderAllInstrumental() {
             const $container = $('#allInstrumentals');
             if (!$container.length) return;
 
-			const $titleElement = $('#instrumentalTitle');
+            const $titleElement = $('#instrumentalTitle');
             if ($titleElement.length) {
                 $titleElement.text('Instrumentais');
             }
@@ -929,16 +818,16 @@
             });
         }
 
-	// ==================================================================
-	// DJ'S
-	// ==================================================================
+        // ==================================================================
+        // DJ'S
+        // ==================================================================
 
-	// Funções de renderização allDjs
+        // Funções de renderização allDjs
         function renderAllDjs() {
             const $container = $('#allDjs');
             if (!$container.length) return;
-			
-			const $titleElement = $('#djsTitle');
+
+            const $titleElement = $('#djsTitle');
             if ($titleElement.length) {
                 $titleElement.text('Mix de DJs');
             }
@@ -979,16 +868,16 @@
             });
         }
 
-	// ==================================================================
-	// MUSICS
-	// ==================================================================
+        // ==================================================================
+        // MUSICS
+        // ==================================================================
 
-	// Funções de renderização allMusics
+        // Funções de renderização allMusics
         function renderMusics() {
             const $container = $('#allMusics');
             if (!$container.length) return;
-			
-			const $titleElement = $('#musicsTitle');
+
+            const $titleElement = $('#musicsTitle');
             if ($titleElement.length) {
                 $titleElement.text('Músicas');
             }
@@ -1042,41 +931,41 @@
             });
         }
 
-	// ==================================================================
-	// ALBUMS COM LOAD MORE
-	// ==================================================================
+        // ==================================================================
+        // ALBUMS COM LOAD MORE
+        // ==================================================================
 
-	// Funções de renderização allAlbums
-		let albumsData = [];
-		let albumsVisible = 0;
-		const albumsPerLoad = 12;
+        // Funções de renderização allAlbums
+        let albumsData = [];
+        let albumsVisible = 0;
+        const albumsPerLoad = 12;
 
-		function renderAllAlbums() {
-			const $container = $('#allAlbums');
-			if (!$container.length) return;
+        function renderAllAlbums() {
+            const $container = $('#allAlbums');
+            if (!$container.length) return;
 
-			const $titleElement = $('#albumsTitle');
-			if ($titleElement.length) {
-				$titleElement.text('Álbuns');
-			}
+            const $titleElement = $('#albumsTitle');
+            if ($titleElement.length) {
+                $titleElement.text('Álbuns');
+            }
 
-			// prepara os dados
-			albumsData = [
-				...(currentData.featured || []).filter(item =>
-					item.format?.toLowerCase().includes('album')
-				)
-			].sort((a, b) => (b.id || 0) - (a.id || 0));
+            // prepara os dados
+            albumsData = [
+                ...(currentData.featured || []).filter(item =>
+                    item.format?.toLowerCase().includes('album')
+                )
+            ].sort((a, b) => (b.id || 0) - (a.id || 0));
 
-			albumsVisible = 0;
-			$container.empty();
+            albumsVisible = 0;
+            $container.empty();
 
-			renderMoreAlbums();
+            renderMoreAlbums();
 
-			// remove botão antigo (evita duplicação em tabs/load)
-			$('#loadMoreAlbums').parent().remove();
+            // remove botão antigo (evita duplicação em tabs/load)
+            $('#loadMoreAlbums').parent().remove();
 
-			// cria botão
-			$container.after(`
+            // cria botão
+            $container.after(`
 				<div class="align-center" style="margin-top:50px;">
 					<button id="loadMoreAlbums" class="button loadmore large">
 						Carregar mais
@@ -1084,18 +973,18 @@
 				</div>
 			`);
 
-			$('#loadMoreAlbums').off('click').on('click', function() {
-				renderMoreAlbums();
-			});
-		}
+            $('#loadMoreAlbums').off('click').on('click', function() {
+                renderMoreAlbums();
+            });
+        }
 
-		// carregar mais
-		function renderMoreAlbums() {
-			const $container = $('#allAlbums');
+        // carregar mais
+        function renderMoreAlbums() {
+            const $container = $('#allAlbums');
 
-			const nextItems = albumsData.slice(albumsVisible, albumsVisible + albumsPerLoad);
+            const nextItems = albumsData.slice(albumsVisible, albumsVisible + albumsPerLoad);
 
-			const html = nextItems.map(album => `
+            const html = nextItems.map(album => `
 				<div class="album-card" data-id="${album.id || ''}" data-type="featured">
 					<article class="box post">
 						<div class="content">
@@ -1114,97 +1003,97 @@
 				</div>
 			`).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			albumsVisible += albumsPerLoad;
+            albumsVisible += albumsPerLoad;
 
-			// reativa efeitos
-			setupBannerFillColorEvents('allAlbums');
+            // reativa efeitos
+            setupBannerFillColorEvents('allAlbums');
 
-			$container.find('.album-card').off('click').on('click', function() {
-				const id = parseInt($(this).data('id'));
-				const type = $(this).data('type');
-				if (!isNaN(id)) {
-					openPlayer(id, type);
-				}
-			});
+            $container.find('.album-card').off('click').on('click', function() {
+                const id = parseInt($(this).data('id'));
+                const type = $(this).data('type');
+                if (!isNaN(id)) {
+                    openPlayer(id, type);
+                }
+            });
 
-			// esconder botão quando acabar
-			if (albumsVisible >= albumsData.length) {
-				$('#loadMoreAlbums').hide();
-			}
-		}
+            // esconder botão quando acabar
+            if (albumsVisible >= albumsData.length) {
+                $('#loadMoreAlbums').hide();
+            }
+        }
 
-	// ==================================================================
-	//	ALL ARTISTS
-	// ==================================================================
+        // ==================================================================
+        //	ALL ARTISTS
+        // ==================================================================
 
-	// Funções de renderização allArtists
+        // Funções de renderização allArtists
 
-	// 1:VARIÁVEIS
-		let allArtistsData = [];
-		let artistsVisible = 0;
-		const artistsPerLoad = 15;
-	
-	// 2:FUNÇÃO PRINCIPAL (renderAllArtists)
-		function renderAllArtists() {
+        // 1:VARIÁVEIS
+        let allArtistsData = [];
+        let artistsVisible = 0;
+        const artistsPerLoad = 15;
 
-			const $container = $('#allArtists');
-			if (!$container.length) return;
+        // 2:FUNÇÃO PRINCIPAL (renderAllArtists)
+        function renderAllArtists() {
 
-			const $titleElement = $('#artistsTitle');
-			if ($titleElement.length) {
-				$titleElement.text('Artistas');
-			}
+            const $container = $('#allArtists');
+            if (!$container.length) return;
 
-			const allAlbums = [
-				...(currentData.albums || []),
-				...(currentData.singles || []),
-				...(currentData.vinyls || []),
-				...(currentData.featured || [])
-			];
+            const $titleElement = $('#artistsTitle');
+            if ($titleElement.length) {
+                $titleElement.text('Artistas');
+            }
 
-			const albumsByArtist = allAlbums.reduce((acc, album) => {
+            const allAlbums = [
+                ...(currentData.albums || []),
+                ...(currentData.singles || []),
+                ...(currentData.vinyls || []),
+                ...(currentData.featured || [])
+            ];
 
-				if (!album || !album.artist) return acc;
+            const albumsByArtist = allAlbums.reduce((acc, album) => {
 
-				if (!acc[album.artist]) {
-					acc[album.artist] = {
-						name: album.artist,
-						albumCount: 0,
-						image: album.image || 'https://i.ibb.co/m5Cb336C/music-default.jpg'
-					};
-				}
+                if (!album || !album.artist) return acc;
 
-				acc[album.artist].albumCount++;
-				return acc;
+                if (!acc[album.artist]) {
+                    acc[album.artist] = {
+                        name: album.artist,
+                        albumCount: 0,
+                        image: album.image || 'https://i.ibb.co/m5Cb336C/music-default.jpg'
+                    };
+                }
 
-			}, {});
+                acc[album.artist].albumCount++;
+                return acc;
 
-			// salva lista completa
-			allArtistsData = Object.values(albumsByArtist)
-				.sort((a, b) => b.albumCount - a.albumCount); // opcional (mais populares primeiro)
+            }, {});
 
-			artistsVisible = 0;
+            // salva lista completa
+            allArtistsData = Object.values(albumsByArtist)
+                .sort((a, b) => b.albumCount - a.albumCount); // opcional (mais populares primeiro)
 
-			$container.empty();
+            artistsVisible = 0;
 
-			loadMoreArtists(); // primeira carga
-		}
-	
-	// 3:FUNÇÃO LOAD MORE
-		function loadMoreArtists() {
+            $container.empty();
 
-			const $container = $('#allArtists');
+            loadMoreArtists(); // primeira carga
+        }
 
-			const nextItems = allArtistsData.slice(
-				artistsVisible,
-				artistsVisible + artistsPerLoad
-			);
+        // 3:FUNÇÃO LOAD MORE
+        function loadMoreArtists() {
 
-			if (!nextItems.length) return;
+            const $container = $('#allArtists');
 
-			const html = nextItems.map(artist => `
+            const nextItems = allArtistsData.slice(
+                artistsVisible,
+                artistsVisible + artistsPerLoad
+            );
+
+            if (!nextItems.length) return;
+
+            const html = nextItems.map(artist => `
 				<div class="artist-card" data-artist="${artist.name}">
 					<article class="box post avg">
 						<div class="content">
@@ -1220,55 +1109,57 @@
 				</div>
 			`).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			artistsVisible += artistsPerLoad;
+            artistsVisible += artistsPerLoad;
 
-			// eventos (rebind seguro)
-			$container.find('.artist-card').off('click').on('click', function() {
-				const artist = $(this).data('artist');
-				renderSubAlbumsByArtist(artist);
-			});
+            // eventos (rebind seguro)
+            $container.find('.artist-card').off('click').on('click', function() {
+                const artist = $(this).data('artist');
+                renderSubAlbumsByArtist(artist);
+            });
 
-			// efeito visual
-			$container.find('.avg').fillColor({ type: 'avg' });
+            // efeito visual
+            $container.find('.avg').fillColor({
+                type: 'avg'
+            });
 
-			setupBannerFillColorEvents('allArtists');
+            setupBannerFillColorEvents('allArtists');
 
-			updateLoadMoreButton();
-		}
+            updateLoadMoreButton();
+        }
 
-	// 4:BOTÃO LOAD MORE
-		function updateLoadMoreButton() {
+        // 4:BOTÃO LOAD MORE
+        function updateLoadMoreButton() {
 
-			let $btn = $('#loadMoreArtists');
+            let $btn = $('#loadMoreArtists');
 
-			if (!$btn.length) {
-				$('#allArtists').after(`
+            if (!$btn.length) {
+                $('#allArtists').after(`
 					<div class="align-center" style="margin-top:50px;">
 						<button id="loadMoreArtists" class="button loadmore large">Carregar mais</button>
 					</div>
 				`);
-				$btn = $('#loadMoreArtists');
-			}
+                $btn = $('#loadMoreArtists');
+            }
 
-			if (artistsVisible >= allArtistsData.length) {
-				$btn.hide();
-			} else {
-				$btn.show();
-			}
-		}
+            if (artistsVisible >= allArtistsData.length) {
+                $btn.hide();
+            } else {
+                $btn.show();
+            }
+        }
 
-	// 5:EVENTO DO BOTÃO
-		$(document).on('click', '#loadMoreArtists', function() {
-			loadMoreArtists();
-		});
+        // 5:EVENTO DO BOTÃO
+        $(document).on('click', '#loadMoreArtists', function() {
+            loadMoreArtists();
+        });
 
-	// ==================================================================
-	// ALBUMS BY ARTISTS
-	// ==================================================================
+        // ==================================================================
+        // ALBUMS BY ARTISTS
+        // ==================================================================
 
-	// Funções de renderização suballAlbums dos artistas
+        // Funções de renderização suballAlbums dos artistas
         function renderSubAlbumsByArtist(artist) {
             const allAlbums = [
                     ...(currentData.albums || []),
@@ -1286,7 +1177,7 @@
 
             if (!$container.length || !$title.length) return;
 
-			$title.html(`Álbuns de <span class="artist-name">${artist}</span>`);
+            $title.html(`Álbuns de <span class="artist-name">${artist}</span>`);
             $container.html(albums.map(album => {
                 let albumType = 'album';
                 if ((currentData.singles || []).find(s => s.id === album.id)) albumType = 'singles';
@@ -1328,60 +1219,60 @@
             switchTab('subalbums');
         }
 
-	// ==================================================================
-	// VINYLS COM LOAD MORE
-	// ==================================================================
+        // ==================================================================
+        // VINYLS COM LOAD MORE
+        // ==================================================================
 
-	// Funções de renderização allVinyls
-		let vinylsData = [];
-		let vinylsVisible = 0;
-		const vinylsPerLoad = 12;
+        // Funções de renderização allVinyls
+        let vinylsData = [];
+        let vinylsVisible = 0;
+        const vinylsPerLoad = 12;
 
-		function renderAllVinyls() {
-			const $container = $('#allVinyls');
-			if (!$container.length) return;
+        function renderAllVinyls() {
+            const $container = $('#allVinyls');
+            if (!$container.length) return;
 
-			const $titleElement = $('#vinylsTitle');
-			if ($titleElement.length) {
-				$titleElement.text('Vinyl, 12"');
-			}
+            const $titleElement = $('#vinylsTitle');
+            if ($titleElement.length) {
+                $titleElement.text('Vinyl, 12"');
+            }
 
-			// prepara os dados
-			vinylsData = [
-				...(currentData.featured || []).filter(item =>
-					item.format?.toLowerCase().includes('vinyl')
-				)
-			].sort((a, b) => (b.id || 0) - (a.id || 0));
+            // prepara os dados
+            vinylsData = [
+                ...(currentData.featured || []).filter(item =>
+                    item.format?.toLowerCase().includes('vinyl')
+                )
+            ].sort((a, b) => (b.id || 0) - (a.id || 0));
 
-			vinylsVisible = 0;
-			$container.empty();
+            vinylsVisible = 0;
+            $container.empty();
 
-			renderMoreVinyls();
+            renderMoreVinyls();
 
-			// botão load more
-			if (!$('#loadMoreVinyls').length) {
-				$container.after(`
+            // botão load more
+            if (!$('#loadMoreVinyls').length) {
+                $container.after(`
 					<div class="align-center" style="margin-top:50px;">
 						<button id="loadMoreVinyls" class="button loadmore large">
 							Carregar mais
 						</button>
 					</div>
 				`);
-			}
+            }
 
-			$('#loadMoreVinyls').off('click').on('click', function() {
-				renderMoreVinyls();
-			});
-		}
+            $('#loadMoreVinyls').off('click').on('click', function() {
+                renderMoreVinyls();
+            });
+        }
 
 
-		// carregar mais itens
-		function renderMoreVinyls() {
-			const $container = $('#allVinyls');
+        // carregar mais itens
+        function renderMoreVinyls() {
+            const $container = $('#allVinyls');
 
-			const nextItems = vinylsData.slice(vinylsVisible, vinylsVisible + vinylsPerLoad);
+            const nextItems = vinylsData.slice(vinylsVisible, vinylsVisible + vinylsPerLoad);
 
-			const html = nextItems.map(album => `
+            const html = nextItems.map(album => `
 				<div class="album-card" data-id="${album.id || ''}" data-type="featured">
 					<article class="box post">
 						<div class="content">
@@ -1400,80 +1291,80 @@
 				</div>
 			`).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			vinylsVisible += vinylsPerLoad;
+            vinylsVisible += vinylsPerLoad;
 
-			// reativa efeitos
-			setupBannerFillColorEvents('allVinyls');
+            // reativa efeitos
+            setupBannerFillColorEvents('allVinyls');
 
-			$container.find('.album-card').off('click').on('click', function() {
-				const id = parseInt($(this).data('id'));
-				const type = $(this).data('type');
-				if (!isNaN(id)) {
-					openPlayer(id, type);
-				}
-			});
+            $container.find('.album-card').off('click').on('click', function() {
+                const id = parseInt($(this).data('id'));
+                const type = $(this).data('type');
+                if (!isNaN(id)) {
+                    openPlayer(id, type);
+                }
+            });
 
-			// esconder botão quando acabar
-			if (vinylsVisible >= vinylsData.length) {
-				$('#loadMoreVinyls').hide();
-			}
-		}
+            // esconder botão quando acabar
+            if (vinylsVisible >= vinylsData.length) {
+                $('#loadMoreVinyls').hide();
+            }
+        }
 
-	// ==================================================================
-	// SINGLES COM LOAD MORE
-	// ==================================================================
+        // ==================================================================
+        // SINGLES COM LOAD MORE
+        // ==================================================================
 
-	// Funções de renderização allSingles
-		let singlesData = [];
-		let singlesVisible = 0;
-		const singlesPerLoad = 12;
+        // Funções de renderização allSingles
+        let singlesData = [];
+        let singlesVisible = 0;
+        const singlesPerLoad = 12;
 
-		function renderAllSingles() {
-			const $container = $('#allSingles');
-			if (!$container.length) return;
+        function renderAllSingles() {
+            const $container = $('#allSingles');
+            if (!$container.length) return;
 
-			const $titleElement = $('#singlesTitle');
-			if ($titleElement.length) {
-				$titleElement.text('CD, Maxi-Single');
-			}
+            const $titleElement = $('#singlesTitle');
+            if ($titleElement.length) {
+                $titleElement.text('CD, Maxi-Single');
+            }
 
-			// Prepara os dados apenas uma vez
-			singlesData = [
-				...(currentData.featured || []).filter(item =>
-					item.format?.toLowerCase().includes('single')
-				)
-			].sort((a, b) => (b.id || 0) - (a.id || 0));
+            // Prepara os dados apenas uma vez
+            singlesData = [
+                ...(currentData.featured || []).filter(item =>
+                    item.format?.toLowerCase().includes('single')
+                )
+            ].sort((a, b) => (b.id || 0) - (a.id || 0));
 
-			singlesVisible = 0;
-			$container.empty();
+            singlesVisible = 0;
+            $container.empty();
 
-			renderMoreSingles();
+            renderMoreSingles();
 
-			// cria botão se não existir
-			if (!$('#loadMoreSingles').length) {
-				$container.after(`
+            // cria botão se não existir
+            if (!$('#loadMoreSingles').length) {
+                $container.after(`
 					<div class="align-center" style="margin-top:50px;">
 						<button id="loadMoreSingles" class="button loadmore large">
 							Carregar mais
 						</button>
 					</div>
 				`);
-			}
+            }
 
-			$('#loadMoreSingles').off('click').on('click', function() {
-				renderMoreSingles();
-			});
-		}
+            $('#loadMoreSingles').off('click').on('click', function() {
+                renderMoreSingles();
+            });
+        }
 
-		// Função que adiciona mais itens
-		function renderMoreSingles() {
-			const $container = $('#allSingles');
+        // Função que adiciona mais itens
+        function renderMoreSingles() {
+            const $container = $('#allSingles');
 
-			const nextItems = singlesData.slice(singlesVisible, singlesVisible + singlesPerLoad);
+            const nextItems = singlesData.slice(singlesVisible, singlesVisible + singlesPerLoad);
 
-			const html = nextItems.map(album => `
+            const html = nextItems.map(album => `
 				<div class="album-card" data-id="${album.id || ''}" data-type="featured">
 					<article class="box post">
 						<div class="content">
@@ -1492,37 +1383,37 @@
 				</div>
 			`).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			singlesVisible += singlesPerLoad;
+            singlesVisible += singlesPerLoad;
 
-			// eventos
-			setupBannerFillColorEvents('allSingles');
+            // eventos
+            setupBannerFillColorEvents('allSingles');
 
-			$container.find('.album-card').off('click').on('click', function() {
-				const id = parseInt($(this).data('id'));
-				const type = $(this).data('type');
-				if (!isNaN(id)) {
-					openPlayer(id, type);
-				}
-			});
+            $container.find('.album-card').off('click').on('click', function() {
+                const id = parseInt($(this).data('id'));
+                const type = $(this).data('type');
+                if (!isNaN(id)) {
+                    openPlayer(id, type);
+                }
+            });
 
-			// esconder botão quando acabar
-			if (singlesVisible >= singlesData.length) {
-				$('#loadMoreSingles').hide();
-			}
-		}
+            // esconder botão quando acabar
+            if (singlesVisible >= singlesData.length) {
+                $('#loadMoreSingles').hide();
+            }
+        }
 
-	// ==================================================================
-	// PLAYLISTS
-	// ==================================================================
+        // ==================================================================
+        // PLAYLISTS
+        // ==================================================================
 
         // Funções de renderização allPlaylists
         function renderAllPlaylists() {
             const $container = $('#allPlaylists');
             if (!$container.length) return;
-			
-			const $titleElement = $('#playlistsTitle');
+
+            const $titleElement = $('#playlistsTitle');
             if ($titleElement.length) {
                 $titleElement.text('Playlists');
             }
@@ -1563,32 +1454,32 @@
             });
         }
 
-	// ==================================================================
-	// TIMELINE
-	// ==================================================================
+        // ==================================================================
+        // TIMELINE
+        // ==================================================================
 
-	// UTIL
-		function switchTab(tabName) {
-			// Atualiza menu ativo
-			$('ul li button').removeClass('active');
-			$(`ul li button[data-tab="${tabName}"]`).addClass('active');
+        // UTIL
+        function switchTab(tabName) {
+            // Atualiza menu ativo
+            $('ul li button').removeClass('active');
+            $(`ul li button[data-tab="${tabName}"]`).addClass('active');
 
-			// Atualiza conteúdo
-			$('.tab-content').removeClass('active');
-			const $activeTab = $('#' + tabName).addClass('active');
+            // Atualiza conteúdo
+            $('.tab-content').removeClass('active');
+            const $activeTab = $('#' + tabName).addClass('active');
 
-			// Corrige Slick apenas na tab ativa
-			setTimeout(() => {
-				$activeTab.find('.slick-initialized').slick('setPosition');
-			}, 50);
-		}
+            // Corrige Slick apenas na tab ativa
+            setTimeout(() => {
+                $activeTab.find('.slick-initialized').slick('setPosition');
+            }, 50);
+        }
 
-	// Timeline
+        // Timeline
         function renderTimeline() {
             const $container = $('#allTimeline');
             if (!$container.length) return;
-			
-			const $titleElement = $('#timelineTitle');
+
+            const $titleElement = $('#timelineTitle');
             if ($titleElement.length) {
                 $titleElement.text('Linha do Tempo');
             }
@@ -1622,14 +1513,14 @@
 					<p>${year.albumCount} álbuns</p>
 				</div>
 			`).join(''));
-			
-			// Evento de clique para cada ano
+
+            // Evento de clique para cada ano
             $container.find('.timeline-card').on('click', function() {
                 const year = $(this).data('year');
                 renderAlbumsByYear(year);
             });
-			
-			// ⚡ Slick Slider
+
+            // ⚡ Slick Slider
             if ($container.hasClass('slick-initialized')) {
                 $container.slick('unslick');
             }
@@ -1644,80 +1535,95 @@
                 nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                 prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                 responsive: [{
-					breakpoint: 1280, settings: { slidesToShow: 6 } }, {
-					breakpoint: 980, settings: { slidesToShow: 4 } }, {
-					breakpoint: 736, settings: { slidesToShow: 3 } }, {
-					breakpoint: 480, settings: { slidesToShow: 2 } }
-                ]
+                    breakpoint: 1280,
+                    settings: {
+                        slidesToShow: 6
+                    }
+                }, {
+                    breakpoint: 980,
+                    settings: {
+                        slidesToShow: 4
+                    }
+                }, {
+                    breakpoint: 736,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                }, {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                }]
             });
 
             setupBannerFillColorEvents('allTimeline');
         }
 
-		// Lista de álbuns do ano clicado
-		// 1. VARIÁVEIS
-		let yearAlbumsData = [];
-		let yearAlbumsVisible = 0;
-		const yearAlbumsPerLoad = 12;
+        // Lista de álbuns do ano clicado
+        // 1. VARIÁVEIS
+        let yearAlbumsData = [];
+        let yearAlbumsVisible = 0;
+        const yearAlbumsPerLoad = 12;
 
-		// 2. FUNÇÃO PRINCIPAL (ATUALIZADA)
-		function renderAlbumsByYear(year) {
+        // 2. FUNÇÃO PRINCIPAL (ATUALIZADA)
+        function renderAlbumsByYear(year) {
 
-			const allAlbums = [
-				...(currentData.albums || []),
-				...(currentData.singles || []),
-				...(currentData.vinyls || []),
-				...(currentData.featured || [])
-			].sort((a, b) => (b.id || 0) - (a.id || 0));
+            const allAlbums = [
+                ...(currentData.albums || []),
+                ...(currentData.singles || []),
+                ...(currentData.vinyls || []),
+                ...(currentData.featured || [])
+            ].sort((a, b) => (b.id || 0) - (a.id || 0));
 
-			// salva global
-			yearAlbumsData = allAlbums.filter(album =>
-				album && album.year?.toString() === year.toString()
-			);
+            // salva global
+            yearAlbumsData = allAlbums.filter(album =>
+                album && album.year?.toString() === year.toString()
+            );
 
-			yearAlbumsVisible = 0;
+            yearAlbumsVisible = 0;
 
-			const $container = $('#yearAlbumsList');
-			const $title = $('#yearAlbumsTitle');
+            const $container = $('#yearAlbumsList');
+            const $title = $('#yearAlbumsTitle');
 
-			if (!$container.length || !$title.length) return;
+            if (!$container.length || !$title.length) return;
 
-			$title.html(`Álbuns de <span class="artist-year">${year}</span>`);
-			// Mostrar quantidade no título
-			// $title.html(`Álbuns de <span class="artist-year">${year}</span> (${yearAlbumsData.length})`);
+            $title.html(`Álbuns de <span class="artist-year">${year}</span>`);
+            // Mostrar quantidade no título
+            // $title.html(`Álbuns de <span class="artist-year">${year}</span> (${yearAlbumsData.length})`);
 
-			$container.empty();
+            $container.empty();
 
-			loadMoreYearAlbums(); // primeira carga
+            loadMoreYearAlbums(); // primeira carga
 
-			switchTab('yearAlbums');
-		}
+            switchTab('yearAlbums');
+        }
 
-		// 3. FUNÇÃO LOAD MORE
-		function loadMoreYearAlbums() {
+        // 3. FUNÇÃO LOAD MORE
+        function loadMoreYearAlbums() {
 
-			const $container = $('#yearAlbumsList');
+            const $container = $('#yearAlbumsList');
 
-			const nextItems = yearAlbumsData.slice(
-				yearAlbumsVisible,
-				yearAlbumsVisible + yearAlbumsPerLoad
-			);
+            const nextItems = yearAlbumsData.slice(
+                yearAlbumsVisible,
+                yearAlbumsVisible + yearAlbumsPerLoad
+            );
 
-			if (!nextItems.length) return;
+            if (!nextItems.length) return;
 
-			const html = nextItems.map(album => {
+            const html = nextItems.map(album => {
 
-				let albumType = 'albums';
+                let albumType = 'albums';
 
-				if ((currentData.singles || []).find(s => s.id === album.id)) {
-					albumType = 'singles';
-				} else if ((currentData.vinyls || []).find(v => v.id === album.id)) {
-					albumType = 'vinyls';
-				} else if ((currentData.featured || []).find(f => f.id === album.id)) {
-					albumType = 'featured';
-				}
+                if ((currentData.singles || []).find(s => s.id === album.id)) {
+                    albumType = 'singles';
+                } else if ((currentData.vinyls || []).find(v => v.id === album.id)) {
+                    albumType = 'vinyls';
+                } else if ((currentData.featured || []).find(f => f.id === album.id)) {
+                    albumType = 'featured';
+                }
 
-				return `
+                return `
 				<div class="album-card" data-id="${album.id}" data-type="${albumType}">
 					<article class="box post">
 						<div class="content">
@@ -1735,109 +1641,109 @@
 					</article>
 				</div>
 				`;
-			}).join('');
+            }).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			yearAlbumsVisible += yearAlbumsPerLoad;
+            yearAlbumsVisible += yearAlbumsPerLoad;
 
-			// eventos
-			$container.find('.album-card').off('click').on('click', function(e) {
-				e.preventDefault();
-				const id = parseInt($(this).data('id'));
-				const type = $(this).data('type');
-				if (!isNaN(id)) openPlayer(id, type);
-			});
+            // eventos
+            $container.find('.album-card').off('click').on('click', function(e) {
+                e.preventDefault();
+                const id = parseInt($(this).data('id'));
+                const type = $(this).data('type');
+                if (!isNaN(id)) openPlayer(id, type);
+            });
 
-			setupBannerFillColorEvents('yearAlbumsList');
+            setupBannerFillColorEvents('yearAlbumsList');
 
-			updateLoadMoreYearAlbumsButton();
-		}
+            updateLoadMoreYearAlbumsButton();
+        }
 
-		// 4. BOTÃO LOAD MORE
-		function updateLoadMoreYearAlbumsButton() {
+        // 4. BOTÃO LOAD MORE
+        function updateLoadMoreYearAlbumsButton() {
 
-			let $btn = $('#loadMoreYearAlbums');
+            let $btn = $('#loadMoreYearAlbums');
 
-			if (!$btn.length) {
-				$('#yearAlbumsList').after(`
+            if (!$btn.length) {
+                $('#yearAlbumsList').after(`
 					<div class="align-center" style="margin-top:50px;">
 						<button id="loadMoreYearAlbums" class="button loadmore large">Carregar mais</button>
 					</div>
 				`);
-				$btn = $('#loadMoreYearAlbums');
-			}
+                $btn = $('#loadMoreYearAlbums');
+            }
 
-			if (yearAlbumsVisible >= yearAlbumsData.length) {
-				$btn.hide();
-			} else {
-				$btn.show();
-			}
-		}
+            if (yearAlbumsVisible >= yearAlbumsData.length) {
+                $btn.hide();
+            } else {
+                $btn.show();
+            }
+        }
 
-		// 5. EVENTO DO BOTÃO
-		$(document).on('click', '#loadMoreYearAlbums', function() {
-			loadMoreYearAlbums();
-		});
+        // 5. EVENTO DO BOTÃO
+        $(document).on('click', '#loadMoreYearAlbums', function() {
+            loadMoreYearAlbums();
+        });
 
-	// ==================================================================
-	// Genres
-	// ==================================================================
-	
-	// Genres
-		function renderAllGenres() {
+        // ==================================================================
+        // Genres
+        // ==================================================================
 
-			const $container = $('#AllGenres');
-			if (!$container.length) return;
-			
-			const $titleElement = $('#genresTitle');
+        // Genres
+        function renderAllGenres() {
+
+            const $container = $('#AllGenres');
+            if (!$container.length) return;
+
+            const $titleElement = $('#genresTitle');
             if ($titleElement.length) {
                 $titleElement.text('Gêneros');
             }
 
-			const featured = currentData.featured || [];
+            const featured = currentData.featured || [];
 
-			// função segura (garante que sempre funcione)
-			const normalize = str => (str || '').toLowerCase().trim();
+            // função segura (garante que sempre funcione)
+            const normalize = str => (str || '').toLowerCase().trim();
 
-			const getStyles = (styleString) => {
-				return (styleString || '')
-					.split(',')
-					.map(s => normalize(s))
-					.filter(Boolean);
-			};
+            const getStyles = (styleString) => {
+                return (styleString || '')
+                    .split(',')
+                    .map(s => normalize(s))
+                    .filter(Boolean);
+            };
 
-			// pegar todos os styles usados
-			let usedStyles = [];
+            // pegar todos os styles usados
+            let usedStyles = [];
 
-			featured.forEach(item => {
-				if (!item || !item.style) return;
-				usedStyles.push(...getStyles(item.style));
-			});
+            featured.forEach(item => {
+                if (!item || !item.style) return;
+                usedStyles.push(...getStyles(item.style));
+            });
 
-			// remover duplicados
-			usedStyles = [...new Set(usedStyles)];
+            // remover duplicados
+            usedStyles = [...new Set(usedStyles)];
 
-			// DEBUG (pode remover depois)
-			console.log('Styles encontrados:', usedStyles);
+            // DEBUG (pode remover depois)
+            console.log('Styles encontrados:', usedStyles);
 
-			// cruzar com mockGenres (normalizado)
-			const validGenres = (mockGenres || []).filter(g =>
-				usedStyles.includes(normalize(g.name))
-			);
+            // cruzar com mockGenres (normalizado)
+            const validGenres = (mockGenres || []).filter(g =>
+                usedStyles.includes(normalize(g.name))
+            );
 
-			if (!validGenres.length) {
-				$container.html('<p>Nenhum gênero encontrado.</p>');
-				return;
-			}
+            if (!validGenres.length) {
+                $container.html('<p>Nenhum gênero encontrado.</p>');
+                return;
+            }
 
-			// ordenar
-			const sortedGenres = validGenres
-				.slice()
-				.sort((a, b) => (b.id || 0) - (a.id || 0));
+            // ordenar
+            const sortedGenres = validGenres
+                .slice()
+                .sort((a, b) => (b.id || 0) - (a.id || 0));
 
-			// render
-			$container.html(sortedGenres.map(genre => `
+            // render
+            $container.html(sortedGenres.map(genre => `
 				<div class="genre-card md-ripples ripples-light" data-genre="${genre.name}">
 					<article class="box post">
 						<header class="align-center">
@@ -1847,94 +1753,94 @@
 				</div>
 			`).join(''));
 
-			// clique
-			$container.find('.genre-card').on('click', function () {
-				const genreName = $(this).data('genre');
-				renderAlbumsByStyle(genreName); // 👈 usa sua função nova
-			});
+            // clique
+            $container.find('.genre-card').on('click', function() {
+                const genreName = $(this).data('genre');
+                renderAlbumsByStyle(genreName); // 👈 usa sua função nova
+            });
 
-		}
+        }
 
-	// re-renderização album style
-	
-		// 1. VARIÁVEIS GLOBAIS
-		let genresAlbumsData = [];
-		let genresAlbumsVisible = 0;
-		const genresAlbumsPerLoad = 12;
-		
-		// 2. FUNÇÃO PRINCIPAL (RENDER)
-		function renderAlbumsByStyle(styleName) {
+        // re-renderização album style
 
-			const allAlbums = [
-				...(currentData.albums || []),
-				...(currentData.singles || []),
-				...(currentData.vinyls || []),
-				...(currentData.featured || [])
-			].sort((a, b) => (b.id || 0) - (a.id || 0));
+        // 1. VARIÁVEIS GLOBAIS
+        let genresAlbumsData = [];
+        let genresAlbumsVisible = 0;
+        const genresAlbumsPerLoad = 12;
 
-			const normalize = str => (str || '').toLowerCase().trim();
+        // 2. FUNÇÃO PRINCIPAL (RENDER)
+        function renderAlbumsByStyle(styleName) {
 
-			const getStyles = (styleString) => {
-				return (styleString || '')
-					.split(',')
-					.map(s => normalize(s))
-					.filter(Boolean);
-			};
+            const allAlbums = [
+                ...(currentData.albums || []),
+                ...(currentData.singles || []),
+                ...(currentData.vinyls || []),
+                ...(currentData.featured || [])
+            ].sort((a, b) => (b.id || 0) - (a.id || 0));
 
-			genresAlbumsData = allAlbums.filter(album => {
-				if (!album || !album.style) return false;
-				return getStyles(album.style).includes(normalize(styleName));
-			});
+            const normalize = str => (str || '').toLowerCase().trim();
 
-			genresAlbumsVisible = 0;
+            const getStyles = (styleString) => {
+                return (styleString || '')
+                    .split(',')
+                    .map(s => normalize(s))
+                    .filter(Boolean);
+            };
 
-			const $container = $('#genresAlbumsList');
-			const $title = $('#genresAlbumsTitle');
+            genresAlbumsData = allAlbums.filter(album => {
+                if (!album || !album.style) return false;
+                return getStyles(album.style).includes(normalize(styleName));
+            });
 
-			if (!$container.length || !$title.length) return;
-			
-			$title.html(`Gênero: <span class="artist-year">${escapeHtml(styleName)}</span>`);
-			// Mostrar quantidade no título
-			// $title.html(`Gênero: <span class="artist-year">${escapeHtml(styleName)}</span> (${genresAlbumsData.length})`);
+            genresAlbumsVisible = 0;
 
-			if (!genresAlbumsData.length) {
-				$container.html('<p>Nenhum álbum encontrado.</p>');
-				switchTab('genresAlbums');
-				return;
-			}
+            const $container = $('#genresAlbumsList');
+            const $title = $('#genresAlbumsTitle');
 
-			$container.empty();
+            if (!$container.length || !$title.length) return;
 
-			loadMoreGenresAlbums();
+            $title.html(`Gênero: <span class="artist-year">${escapeHtml(styleName)}</span>`);
+            // Mostrar quantidade no título
+            // $title.html(`Gênero: <span class="artist-year">${escapeHtml(styleName)}</span> (${genresAlbumsData.length})`);
 
-			switchTab('genresAlbums');
-		}
-		
-		// 3. FUNÇÃO LOAD MORE
-		function loadMoreGenresAlbums() {
+            if (!genresAlbumsData.length) {
+                $container.html('<p>Nenhum álbum encontrado.</p>');
+                switchTab('genresAlbums');
+                return;
+            }
 
-			const $container = $('#genresAlbumsList');
+            $container.empty();
 
-			const nextItems = genresAlbumsData.slice(
-				genresAlbumsVisible,
-				genresAlbumsVisible + genresAlbumsPerLoad
-			);
+            loadMoreGenresAlbums();
 
-			if (!nextItems.length) return;
+            switchTab('genresAlbums');
+        }
 
-			const html = nextItems.map(album => {
+        // 3. FUNÇÃO LOAD MORE
+        function loadMoreGenresAlbums() {
 
-				let albumType = 'albums';
+            const $container = $('#genresAlbumsList');
 
-				if ((currentData.singles || []).find(s => s.id === album.id)) {
-					albumType = 'singles';
-				} else if ((currentData.vinyls || []).find(v => v.id === album.id)) {
-					albumType = 'vinyls';
-				} else if ((currentData.featured || []).find(f => f.id === album.id)) {
-					albumType = 'featured';
-				}
+            const nextItems = genresAlbumsData.slice(
+                genresAlbumsVisible,
+                genresAlbumsVisible + genresAlbumsPerLoad
+            );
 
-				return `
+            if (!nextItems.length) return;
+
+            const html = nextItems.map(album => {
+
+                let albumType = 'albums';
+
+                if ((currentData.singles || []).find(s => s.id === album.id)) {
+                    albumType = 'singles';
+                } else if ((currentData.vinyls || []).find(v => v.id === album.id)) {
+                    albumType = 'vinyls';
+                } else if ((currentData.featured || []).find(f => f.id === album.id)) {
+                    albumType = 'featured';
+                }
+
+                return `
 				<div class="album-card" data-id="${album.id}" data-type="${albumType}">
 					<article class="box post">
 						<div class="content">
@@ -1952,102 +1858,102 @@
 					</article>
 				</div>
 				`;
-			}).join('');
+            }).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			genresAlbumsVisible += genresAlbumsPerLoad;
+            genresAlbumsVisible += genresAlbumsPerLoad;
 
-			// eventos
-			$container.find('.album-card').off().on('click', function(e) {
-				e.preventDefault();
-				const id = parseInt($(this).data('id'));
-				const type = $(this).data('type');
-				if (!isNaN(id)) openPlayer(id, type);
-			});
+            // eventos
+            $container.find('.album-card').off().on('click', function(e) {
+                e.preventDefault();
+                const id = parseInt($(this).data('id'));
+                const type = $(this).data('type');
+                if (!isNaN(id)) openPlayer(id, type);
+            });
 
-			setupBannerFillColorEvents('genresAlbumsList');
+            setupBannerFillColorEvents('genresAlbumsList');
 
-			updateLoadMoreGenresButton();
-		}
-		
-		// 4. BOTÃO LOAD MORE
-		function updateLoadMoreGenresButton() {
+            updateLoadMoreGenresButton();
+        }
 
-			let $btn = $('#loadMoreGenresAlbums');
+        // 4. BOTÃO LOAD MORE
+        function updateLoadMoreGenresButton() {
 
-			if (!$btn.length) {
-				$('#genresAlbumsList').after(`
+            let $btn = $('#loadMoreGenresAlbums');
+
+            if (!$btn.length) {
+                $('#genresAlbumsList').after(`
 					<div class="align-center" style="margin-top:50px;">
 						<button id="loadMoreGenresAlbums" class="button loadmore large">Carregar mais</button>
 					</div>
 				`);
-				$btn = $('#loadMoreGenresAlbums');
-			}
+                $btn = $('#loadMoreGenresAlbums');
+            }
 
-			if (genresAlbumsVisible >= genresAlbumsData.length) {
-				$btn.hide();
-			} else {
-				$btn.show();
-			}
-		}
-		
-		// 5. EVENTO DO BOTÃO
-		$(document).on('click', '#loadMoreGenresAlbums', function() {
-			loadMoreGenresAlbums();
-		});
-		
-	// ==================================================================
-	// LABELS
-	// ==================================================================
-	
-	// Labels List
-		// 1. VARIÁVEIS
-		let allLabelsData = [];
-		let labelsVisible = 0;
-		const labelsPerLoad = 12;
+            if (genresAlbumsVisible >= genresAlbumsData.length) {
+                $btn.hide();
+            } else {
+                $btn.show();
+            }
+        }
 
-		// 2. FUNÇÃO PRINCIPAL (renderAllLabels)
-		function renderAllLabels() {
+        // 5. EVENTO DO BOTÃO
+        $(document).on('click', '#loadMoreGenresAlbums', function() {
+            loadMoreGenresAlbums();
+        });
 
-			const $container = $('#labelsList');
-			if (!$container.length) return;
+        // ==================================================================
+        // LABELS
+        // ==================================================================
 
-			const $titleElement = $('#labelsTitle');
-			if ($titleElement.length) {
-				$titleElement.text('Labels / Selos');
-			}
+        // Labels List
+        // 1. VARIÁVEIS
+        let allLabelsData = [];
+        let labelsVisible = 0;
+        const labelsPerLoad = 12;
 
-			if (!mockLabels || !mockLabels.length) {
-				$container.html('<p>Nenhuma label disponível.</p>');
-				return;
-			}
+        // 2. FUNÇÃO PRINCIPAL (renderAllLabels)
+        function renderAllLabels() {
 
-			// salva lista ordenada
-			allLabelsData = mockLabels
-				.slice()
-				.sort((a, b) => (b.id || 0) - (a.id || 0));
+            const $container = $('#labelsList');
+            if (!$container.length) return;
 
-			labelsVisible = 0;
+            const $titleElement = $('#labelsTitle');
+            if ($titleElement.length) {
+                $titleElement.text('Labels / Selos');
+            }
 
-			$container.empty();
+            if (!mockLabels || !mockLabels.length) {
+                $container.html('<p>Nenhuma label disponível.</p>');
+                return;
+            }
 
-			loadMoreLabels(); // primeira carga
-		}
+            // salva lista ordenada
+            allLabelsData = mockLabels
+                .slice()
+                .sort((a, b) => (b.id || 0) - (a.id || 0));
 
-		// 3. FUNÇÃO LOAD MORE
-		function loadMoreLabels() {
+            labelsVisible = 0;
 
-			const $container = $('#labelsList');
+            $container.empty();
 
-			const nextItems = allLabelsData.slice(
-				labelsVisible,
-				labelsVisible + labelsPerLoad
-			);
+            loadMoreLabels(); // primeira carga
+        }
 
-			if (!nextItems.length) return;
+        // 3. FUNÇÃO LOAD MORE
+        function loadMoreLabels() {
 
-			const html = nextItems.map(label => `
+            const $container = $('#labelsList');
+
+            const nextItems = allLabelsData.slice(
+                labelsVisible,
+                labelsVisible + labelsPerLoad
+            );
+
+            if (!nextItems.length) return;
+
+            const html = nextItems.map(label => `
 				<div class="album-card label-card" data-label="${label.name}">
 					<article class="box post">
 						<div class="content">
@@ -2063,70 +1969,70 @@
 				</div>
 			`).join('');
 
-			$container.append(html);
+            $container.append(html);
 
-			labelsVisible += labelsPerLoad;
+            labelsVisible += labelsPerLoad;
 
-			// evento de clique
-			$container.find('.label-card').off('click').on('click', function() {
-				const labelName = $(this).data('label');
-				renderLabelDetails(labelName);
-				switchTab('labelDetails');
-			});
+            // evento de clique
+            $container.find('.label-card').off('click').on('click', function() {
+                const labelName = $(this).data('label');
+                renderLabelDetails(labelName);
+                switchTab('labelDetails');
+            });
 
-			setupBannerFillColorEvents('labelsList');
+            setupBannerFillColorEvents('labelsList');
 
-			updateLoadMoreLabelsButton();
-		}
+            updateLoadMoreLabelsButton();
+        }
 
-		// 4. BOTÃO LOAD MORE
-		function updateLoadMoreLabelsButton() {
+        // 4. BOTÃO LOAD MORE
+        function updateLoadMoreLabelsButton() {
 
-			let $btn = $('#loadMoreLabels');
+            let $btn = $('#loadMoreLabels');
 
-			if (!$btn.length) {
-				$('#labelsList').after(`
+            if (!$btn.length) {
+                $('#labelsList').after(`
 					<div class="align-center" style="margin-top:50px;">
 						<button id="loadMoreLabels" class="button loadmore large">Carregar mais</button>
 					</div>
 				`);
-				$btn = $('#loadMoreLabels');
-			}
+                $btn = $('#loadMoreLabels');
+            }
 
-			if (labelsVisible >= allLabelsData.length) {
-				$btn.hide();
-			} else {
-				$btn.show();
-			}
-		}
+            if (labelsVisible >= allLabelsData.length) {
+                $btn.hide();
+            } else {
+                $btn.show();
+            }
+        }
 
-		// 5. EVENTO DO BOTÃO
-		$(document).on('click', '#loadMoreLabels', function() {
-			loadMoreLabels();
-		});
+        // 5. EVENTO DO BOTÃO
+        $(document).on('click', '#loadMoreLabels', function() {
+            loadMoreLabels();
+        });
 
-		// 🔹 função de re-renderização dos artist label
-		function renderLabelDetails(labelName) {
+        // 🔹 função de re-renderização dos artist label
+        function renderLabelDetails(labelName) {
 
-			const $title = $('#labelTitle');
-			const $container = $('#labelArtistsList');
+            const $title = $('#labelTitle');
+            const $container = $('#labelArtistsList');
 
-			if (!$container.length || !$title.length) return;
+            if (!$container.length || !$title.length) return;
 
-			// 🔹 título com estilo
-			$title.html(`Selos de <span class="artist-labels">${escapeHtml(labelName)}</span>`);
+            // 🔹 título com estilo
+            $title.html(`Selos de <span class="artist-labels">${escapeHtml(labelName)}</span>`);
 
-			const items = (currentData.featured || [])
-				.filter(item =>
-					(item.label || '').toLowerCase() === labelName.toLowerCase()
-				);
+            const items = (currentData.featured || [])
+                .filter(item =>
+                    (item.label || '').toLowerCase() === labelName.toLowerCase()
+                );
 
-			if (!items.length) {
-				$container.html('<p class="no-artists-found icon solid fa-record-vinyl"> Nenhum albun encontrado.</p>');
-				return;
-				}
+            if (!items.length) {
+                $container.html('<p class="no-artists-found icon solid fa-record-vinyl"> Nenhum albun encontrado.</p>');
+                return;
+            }
 
-			$container.html(items.map(item => `
+            $container.html(items.map(item => `
 				<div class="album-card" data-id="${item.id}" data-type="featured">
 					<article class="box post">
 						<div class="content">
@@ -2145,60 +2051,48 @@
 				</div>
 			`).join(''));
 
-			// 🔹 abrir player
-			$container.find('.album-card').on('click', function() {
-				const id = parseInt($(this).data('id'));
-				const type = $(this).data('type');
+            // 🔹 abrir player
+            $container.find('.album-card').on('click', function() {
+                const id = parseInt($(this).data('id'));
+                const type = $(this).data('type');
 
-				if (!isNaN(id)) {
-					openPlayer(id, type);
-				}
-			});
-		}
-		
-	// ==================================================================
-	// PLAYER
-	// ==================================================================
-	
-	// Função openPlayer
-        function openPlayer(id, type) {
-            const allSources = {
-                album: currentData.albums || [],
-                albums: currentData.albums || [],
-                playlist: currentData.playlists || [],
-                playlists: currentData.playlists || [],
-                instrumental: currentData.instrumental || [],
-                djs: currentData.djs || [],
-                vinyls: currentData.vinyls || [],
-                singles: currentData.singles || [],
-                musics: currentData.musics || [],
-                featured: currentData.featured || []
-            };
+                if (!isNaN(id)) {
+                    openPlayer(id, type);
+                }
+            });
+        }
 
-            let item;
-            if (type === 'featured') item = currentData.featured.find(x => x.id === id);
-            else if (type === 'albums') item = currentData.albums.find(x => x.id === id);
-            else if (type === 'singles') item = currentData.singles.find(x => x.id === id);
-            else if (type === 'vinyls') item = currentData.vinyls.find(x => x.id === id);
-            else if (type === 'djs') item = currentData.djs.find(x => x.id === id);
-            else if (type === 'instrumental') item = currentData.instrumental.find(x => x.id === id);
-            else if (type === 'playlists') item = currentData.playlists.find(x => x.id === id);
+        // ==================================================================
+        // PLAYER
+        // ==================================================================
 
-            if (!item || !item.embedUrl) return;
-			
-			// Atualiza o iframe do player
-			const $embedContainer = $('.player-embed');
+        // Função openPlayer
+        window.openPlayer = function(id) {
 
-			// 🔥 mostra loading primeiro
-			$embedContainer.html(`
+            const item = (currentData.featured || [])
+                .find(x => parseInt(x.id) === parseInt(id));
+
+            if (!item || !item.embedUrl) {
+                console.warn('❌ Item não encontrado:', id);
+                return;
+            }
+
+            console.log('🎵 PLAYER:', item);
+
+            // ==================================================================
+            // 🎬 IFRAME
+            // ==================================================================
+
+            const $embedContainer = $('.player-embed');
+
+            $embedContainer.html(`
 				<div class="player-loading">
 					<span class="spinner"></span>
 					<p>Carregando...</p>
 				</div>
 			`);
 
-			// cria iframe
-			const $iframe = $(`
+            const $iframe = $(`
 				<iframe 
 					src="${item.embedUrl}" 
 					frameborder="0" 
@@ -2207,97 +2101,30 @@
 				</iframe>
 			`);
 
-			// quando carregar
-			$iframe.on('load', function() {
+            $iframe.on('load', function() {
+                $embedContainer.fadeOut(100, function() {
+                    $embedContainer.html($iframe).fadeIn(200);
+                });
+            });
 
-				// pequena transição suave
-				$embedContainer.fadeOut(100, function() {
-					$embedContainer.html($iframe);
-					$embedContainer.fadeIn(200);
-				});
+            $iframe.css('opacity', 0);
+            $embedContainer.append($iframe);
 
-			});
-
-			// adiciona iframe (invisível inicialmente)
-			$iframe.css('opacity', 0);
-			$embedContainer.append($iframe);
-
-			// fallback (caso load demore ou falhe)
-			setTimeout(() => {
-				if ($embedContainer.find('.player-loading').length) {
-					$embedContainer.html($iframe);
-					$iframe.css('opacity', 1);
-				}
-			}, 5000);
-			
-			// Mostrar outros álbuns do mesmo artista
-            showRelatedAlbums(item.artist, id);
-
-            $('#player-bar').addClass('active');
-			
-			// Tentar buscar em outros arrays como fallback
-            if (!item) {
-                for (let key in allSources) {
-                    item = allSources[key].find(el => el.id === id);
-                    if (item) {
-                        console.warn(`Tipo original '${type}' não encontrou. Usando '${key}' para id=${id}`);
-                        type = key; // Atualiza o tipo para correto
-                        break;
-                    }
+            setTimeout(() => {
+                if ($embedContainer.find('.player-loading').length) {
+                    $embedContainer.html($iframe);
+                    $iframe.css('opacity', 1);
                 }
-            }
+            }, 5000);
 
-            if (!item) {
-                console.error(`Item não encontrado: id=${id}, type=${type}`);
-                return;
-            }
-			
-			// Se for playlist, adapte os campos
-            if (type === 'playlist' || type === 'playlists') {
-                item = {
-                    ...item,
-                    title: item.name || item.title,
-                    artist: "Vários Artistas",
-                    year: "2025",
-                    label: "Play 90 Studio",
-                    country: "Brasil",
-                    format: "Playlist"
-                };
-            }
-			
-			// Se for DJ, adapte os campos
-            if (type === 'djs') {
-                item = {
-                    ...item,
-                    title: item.name || item.title,
-                    artist: "DJ Mix",
-                    year: "2025",
-                    label: "Play 90 Studio",
-                    country: "Brasil",
-                    format: "Mix"
-                };
-            }
-			
-			// Se for Instrumental, adapte os campos
-            if (type === 'instrumental') {
-                item = {
-                    ...item,
-                    title: item.title || item.name,
-                    artist: "Vários artistas",
-                    year: "todos os tempos",
-                    label: "Play 90 Studio",
-                    country: "Várias cidades",
-                    format: "Playlists"
-                };
-            }
-			
-			// Atualiza o player UI
+            // ==================================================================
+            // 🎨 UI
+            // ==================================================================
+
             $('#playerImage').attr('src', item.image || '');
             $('#playerTitle').text(item.title || '');
             $('#playerArtist').text(item.artist || '');
-            $('#playerFrame').attr('src', item.embedUrl || '');
-			
-			// Atualiza detalhes
+
             $('#detailArtist').text(item.artist || '');
             $('#detailYear').text(item.year || '');
             $('#detailLabel').text(item.label || '');
@@ -2305,29 +2132,30 @@
             $('#detailFormat').text(item.format || '');
             $('#detailGenre').text(item.genre || '');
             $('#detailStyle').text(item.style || '');
-			
-			// Mostra a UI do player	
-			// player bar
-			$('#player-bar')
-				.addClass('opened active')
-				.fadeIn(200);
 
-			// player page
-			$('#player-page')
-				.addClass('showmore')
-				.fadeIn(200);
+            // ==================================================================
+            // 🚀 ATIVAR PLAYER
+            // ==================================================================
 
+            $('#player-bar').addClass('opened active').fadeIn(200);
+            $('#player-page').addClass('showmore').fadeIn(200);
+
+            // ==================================================================
+            // 🔁 EXTRAS
+            // ==================================================================
+
+            showRelatedAlbums(item.artist, id);
             saveToRecentlyPlayed({
                 id,
-                type
+                type: 'featured'
             });
-        }
-		
-	// ==================================================================
-	// RELATED ALBUMS
-	// ==================================================================
-	
-	// Related Albums
+        };
+
+        // ==================================================================
+        // RELATED ALBUMS
+        // ==================================================================
+
+        // Related Albums
         function showRelatedAlbums(artist, currentId) {
             const $container = $('#relatedAlbums');
             const $title = $('#relatedArtistName');
@@ -2343,17 +2171,17 @@
                 ...(currentData.djs || []),
                 ...(currentData.instrumental || [])
             ];
-			
-			// Todos os álbuns do artista
-			const artistAlbums = allItems
-				.filter(item => item.artist === artist)
-				.sort((a, b) => {
-					if (a.id === currentId) return -1; // joga pra cima
-					if (b.id === currentId) return 1;
-					return (b.id || 0) - (a.id || 0); // mantém ordenação por id
-				});
 
-			$title.html(`Mais de <span class="artist-name">${artist}</span>`);
+            // Todos os álbuns do artista
+            const artistAlbums = allItems
+                .filter(item => item.artist === artist)
+                .sort((a, b) => {
+                    if (a.id === currentId) return -1; // joga pra cima
+                    if (b.id === currentId) return 1;
+                    return (b.id || 0) - (a.id || 0); // mantém ordenação por id
+                });
+
+            $title.html(`Mais de <span class="artist-name">${artist}</span>`);
 
             if (artistAlbums.length === 0) {
                 $container.html('<p>Nenhum álbum encontrado.</p>');
@@ -2379,13 +2207,13 @@
 					</article>
 				</div>
 			`).join(''));
-			
-			// Aplica fillColor apenas no container atual
+
+            // Aplica fillColor apenas no container atual
             $container.find('.avg').fillColor({
                 type: 'avg'
             });
 
-			// Reaplica eventos de clique
+            // Reaplica eventos de clique
             $container.find('.album-card').on('click', function() {
                 const id = parseInt($(this).data('id'));
                 const type = $(this).data('type');
@@ -2410,12 +2238,12 @@
             e.preventDefault();
             toggleRelated(this);
         });
-		
-	// ==================================================================
-	// ALTERNAR O CORPO DO PLAYER
-	// ==================================================================
-	
-	// Alterna o corpo do player
+
+        // ==================================================================
+        // ALTERNAR O CORPO DO PLAYER
+        // ==================================================================
+
+        // Alterna o corpo do player
         function togglePlayerBody() {
             const $playerPage = $("#player-page");
             const $mainPanel = $("#main-panel");
@@ -2423,15 +2251,15 @@
             const $arrow = $("#player-bar .fa-long-arrow-down"); // seta única
 
             if (!$playerPage.length) return;
-			
-			// alterna visibilidade do player
+
+            // alterna visibilidade do player
             $playerPage.toggleClass("showmore");
             const isOpen = $playerPage.hasClass("showmore");
 
             if ($mainPanel.length) $mainPanel.css('display', isOpen ? "block" : "none");
             if ($sidePanel.length) $sidePanel.css('display', isOpen ? "block" : "none");
-			
-			// alterna a rotação da seta
+
+            // alterna a rotação da seta
             $arrow.toggleClass("rotated", isOpen);
         }
 
@@ -2504,63 +2332,63 @@
             });
             console.log('SearchInput element:', $searchInput);
         }
-		
-	// ==================================================================
-	// BANNER
-	// ==================================================================
-	
-	// Funções utilitárias adicionais a banner
-		function setupBannerFillColorEvents(sectionId, cardSelector = '.album-card') {
 
-			const $section = $('#' + sectionId);
-			const $banner = $('.filtered');
+        // ==================================================================
+        // BANNER
+        // ==================================================================
 
-			if (!$section.length || !$banner.length) return;
+        // Funções utilitárias adicionais a banner
+        function setupBannerFillColorEvents(sectionId, cardSelector = '.album-card') {
 
-			function resetBanner() {
-				$banner.stop(true, true);
-				$banner.removeAttr('style');
-				$banner.empty();
-			}
+            const $section = $('#' + sectionId);
+            const $banner = $('.filtered');
 
-			function applyBanner(src) {
-				if (!src) return;
+            if (!$section.length || !$banner.length) return;
 
-				resetBanner();
+            function resetBanner() {
+                $banner.stop(true, true);
+                $banner.removeAttr('style');
+                $banner.empty();
+            }
 
-				const $img = $(`<img src="${src}" alt="Banner">`);
-				$banner.append($img);
+            function applyBanner(src) {
+                if (!src) return;
 
-				$img.one('load', function() {
-					setTimeout(() => {
-						$banner.fillColor({
-							type: 'avgYUV'
-						});
-					}, 10);
-				});
-			}
+                resetBanner();
 
-			// primeira imagem
-			const $firstImage = $section
-				.find(`${cardSelector}:not(.slick-cloned) img`)
-				.first();
+                const $img = $(`<img src="${src}" alt="Banner">`);
+                $banner.append($img);
 
-			if ($firstImage.length) {
-				applyBanner($firstImage.attr('src'));
-			}
+                $img.one('load', function() {
+                    setTimeout(() => {
+                        $banner.fillColor({
+                            type: 'avgYUV'
+                        });
+                    }, 10);
+                });
+            }
 
-			// clique
-			$section
-				.off('click.bannerFillColor')
-				.on('click.bannerFillColor', `${cardSelector}:not(.slick-cloned)`, function() {
-					const src = $(this).find('img').attr('src');
-					applyBanner(src);
-				});
-		}
-		
-	// ==================================================================
-	// PROGRESS BAR
-	// ==================================================================
+            // primeira imagem
+            const $firstImage = $section
+                .find(`${cardSelector}:not(.slick-cloned) img`)
+                .first();
+
+            if ($firstImage.length) {
+                applyBanner($firstImage.attr('src'));
+            }
+
+            // clique
+            $section
+                .off('click.bannerFillColor')
+                .on('click.bannerFillColor', `${cardSelector}:not(.slick-cloned)`, function() {
+                    const src = $(this).find('img').attr('src');
+                    applyBanner(src);
+                });
+        }
+
+        // ==================================================================
+        // PROGRESS BAR
+        // ==================================================================
 
         // Cria progress-bar se não existir
         if (!$('#progress-bar').length) {
