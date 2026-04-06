@@ -1,6 +1,6 @@
 // Header Component
-	function Header() {
-		return `
+function Header() {
+    return `
 			<!-- Header -->
 			<header id="header" class="alt">
 				<!-- Logo -->
@@ -41,13 +41,14 @@
 						</li>
 					</ul>
 				</nav>
+
 			</header>
 		`;
-	}
+}
 
 // Menu Component
-	function Menu() {
-		return `
+function Menu() {
+    return `
 			<!-- Menu -->
 			<section id="menu">
 				<ul class="menu">
@@ -57,21 +58,21 @@
 				</ul>
 			</section>
 		`;
-	}
+}
 
 // Banner Component
-	function Banner() {
-		return `
+function Banner() {
+    return `
 			<!-- Banner -->
 			<section id="banner">
 				<div class="image filtered" data-position="center"></div>
 			</section>
 		`;
-	}
+}
 
 // Home Content Component
-	function HomeContent() {
-		return `
+function HomeContent() {
+    return `
         <!-- Content Home Tab -->
 			<div id="home" class="tab-content active">
 			
@@ -131,11 +132,11 @@
 				</section>
 			</div>
 		`;
-	}
+}
 
 // Artists Component
-	function ArtistsContent() {
-		return `
+function ArtistsContent() {
+    return `
         <!-- Artists Tab -->
 			<section id="artists" class="tab-content">
 				<article id="action">
@@ -156,11 +157,11 @@
 				<div id="allArtists" class="grid col-5"></div>
 			</section>
 		`;
-	}
+}
 
 // Artists Component
-	function suballAlbumsContent() {
-		return `
+function suballAlbumsContent() {
+    return `
 		<!-- Artists Albums Tab -->
 			<section id="subalbums" class="tab-content">
 				<header class="major">
@@ -172,11 +173,11 @@
 				<div id="suballAlbums" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Timeline Component
-	function timelineContent() {
-		return `
+function timelineContent() {
+    return `
 		<!-- Timeline Tab -->
 			<section id="timeline" class="tab-content">
 				<header class="major">
@@ -196,11 +197,11 @@
 			</section>
 			
 		`;
-	}
+}
 
 // Genres Component
-	function genresContent() {
-		return `
+function genresContent() {
+    return `
 		<!-- Genres Albums Tab -->
 			<section id="genresAlbums" class="tab-content">
 				<header class="major">
@@ -212,11 +213,11 @@
 				<div id="genresAlbumsList" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Year Albums Component
-	function yearAlbumsContent() {
-		return `
+function yearAlbumsContent() {
+    return `
 		<!-- Year Albums Tab -->
 			<section id="yearAlbums" class="tab-content">
 				<header class="major">
@@ -228,11 +229,11 @@
 				<div id="yearAlbumsList" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Music Component
-	function musicsContent() {
-		return `
+function musicsContent() {
+    return `
 		<!-- Music -->
 			<section id="musics" class="tab-content">
 				<header class="major">
@@ -244,11 +245,11 @@
 				<div id="allMusics" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Playlists Component
-	function playlistsContent() {
-		return `
+function playlistsContent() {
+    return `
 		<!-- Playlists -->
 			<section id="playlists" class="tab-content">
 				<header class="major">
@@ -260,11 +261,11 @@
 				<div id="allPlaylists" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Álbuns Component
-	function albumsContent() {
-		return `
+function albumsContent() {
+    return `
 		<!-- Álbuns Tab -->
 			<section id="albums" class="tab-content">
 				<header class="major">
@@ -276,11 +277,11 @@
 				<div id="allAlbums" class="grid col-6"></div>
 			</section>
 		`;
-	}
+}
 
 // Single Component
-	function singlesContent() {
-		return `
+function singlesContent() {
+    return `
 		<!-- Single Tab -->
 			<section id="singles" class="tab-content">
 				<header class="major">
@@ -292,11 +293,11 @@
 				<div id="allSingles" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Vinyl Component
-	function vinylsContent() {
-		return `
+function vinylsContent() {
+    return `
 		<!-- Vinyl Tab -->
 			<section id="vinyls" class="tab-content">
 				<header class="major">
@@ -308,11 +309,11 @@
 				<div id="allVinyls" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Djs Component
-	function djsContent() {
-		return `
+function djsContent() {
+    return `
 		<!-- Djs Tab -->
 			<section id="djs" class="tab-content">
 				<header class="major">
@@ -324,11 +325,11 @@
 				<div id="allDjs" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Instrumental Component
-	function instrumentalContent() {
-		return `
+function instrumentalContent() {
+    return `
 		<!-- Instrumental Tab -->
 			<section id="instrumental" class="tab-content">
 				<header class="major">
@@ -340,11 +341,11 @@
 				<div id="allInstrumentals" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Labels Component
-	function labelsContent() {
-		return `
+function labelsContent() {
+    return `
 		<!-- Labels Tab -->
 			<section id="labels" class="tab-content">
 				<header class="major">
@@ -356,11 +357,11 @@
 				<div id="labelsList" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Sub Labels Component
-	function labelDetailsContent() {
-		return `
+function labelDetailsContent() {
+    return `
 		<!-- Sub Labels Tab -->
 			<section id="labelDetails" class="tab-content">
 				<header class="major">
@@ -372,11 +373,11 @@
 				<div id="labelArtistsList" class="grid col-6"></div>
 			</section>
 		`;
-	}
-	
+}
+
 // Main App Component
-	function App() {
-		return `
+function App() {
+    return `
 			${Header()}
 			${Menu()}
 			${Banner()}
@@ -475,130 +476,360 @@
 					</ul>
 				</div>
 			</section>
-			
+
+        <!-- Footer -->
+			<footer id="footer">
+				<span class="copyright">© Play 90 Music 2026 | <a href="https://www.forumeiros.com/">Crie um forum grátis</a></span>
+			</footer>
 		`;
-	}
+}
 
-// Render Function
-	function renderRoot() {
-		$('#app').html(App());
-	}
+// ===============================
+// RENDER
+// ===============================
+function renderRoot() {
+    $('#app').html(App());
+}
 
-// Tab System
-	function initTabSystem() {
+// ===============================
+// TABS
+// ===============================
+function initTabSystem() {
 
-		$(document).on('click', '[data-tab]', function(e) {
-			e.preventDefault();
+    $(document).on('click', '[data-tab]', function(e) {
+        e.preventDefault();
 
-			const tab = $(this).data('tab');
-
+        const tab = $(this).data('tab');
         switchTab(tab);
-		});
+    });
 
-	}
+}
 
-	function switchTab(tab) {
+function switchTab(tab) {
 
-		// conteúdo
-		$('.tab-content').removeClass('active');
-		$('#' + tab).addClass('active');
+    // conteúdo
+    $('.tab-content').removeClass('active');
+    $('#' + tab).addClass('active');
 
-		// menu (centralizado)
-		$('[data-tab]').parent().removeClass('active');
-		$('[data-tab="' + tab + '"]').parent().addClass('active');
+    // menu ativo
+    $('[data-tab]').parent().removeClass('active');
+    $('[data-tab="' + tab + '"]').parent().addClass('active');
+}
 
-	}
+// ===============================
+// EVENTOS GLOBAIS (SPA SAFE)
+// ===============================
+function initGlobalEvents() {
 
-// Initialize App
-	$(document).ready(function() {
+    // MENU TOGGLE
+    $(document).on('click', '.menuToogle', function(e) {
+        e.preventDefault();
+        $('body').toggleClass('is-menu-visible');
+    });
 
-		renderRoot();
+    $(document).on('click', function(e) {
+        const $menu = $('#menu');
+        const $toggle = $('.menuToogle');
 
-		// Initialize systems
-		initTabSystem();
+        if (
+            $('body').hasClass('is-menu-visible') &&
+            !$menu.is(e.target) &&
+            $menu.has(e.target).length === 0 &&
+            !$toggle.is(e.target) &&
+            $toggle.has(e.target).length === 0
+        ) {
+            $('body').removeClass('is-menu-visible');
+        }
+    });
 
-		// Initialize other components (after DOM is ready)
-		if (typeof renderAllAlbums === 'function') renderAllAlbums();
-		if (typeof renderAllArtists === 'function') renderAllArtists();
-		if (typeof renderAllPlaylists === 'function') renderAllPlaylists();
-		if (typeof renderTimeline === 'function') renderTimeline();
-		if (typeof renderMusics === 'function') renderMusics();
-		if (typeof renderAllSingles === 'function') renderAllSingles();
-		if (typeof renderAllVinyls === 'function') renderAllVinyls();
-		if (typeof renderAllDjs === 'function') renderAllDjs();
-		if (typeof renderAllInstrumental === 'function') renderAllInstrumental();
-		if (typeof renderFeaturedAlbums === 'function') renderFeaturedAlbums();
-		if (typeof renderRecentlyPlayed === 'function') renderRecentlyPlayed();
-		if (typeof renderFeaturedDjs === 'function') renderFeaturedDjs();
-		if (typeof renderDailyHit === 'function') renderDailyHit();
-		if (typeof renderAllLabels === 'function') renderAllLabels();
-		if (typeof renderDailyFeaturedTitles === 'function') renderDailyFeaturedTitles();
-		if (typeof renderAllGenres === 'function') renderAllGenres();
-	});
+    $(document).on('click', '#menu', function(e) {
+        e.stopPropagation();
+    });
 
-// ================= DROPDOWN (SPA SAFE) =================
-		// abrir/fechar dropdown
-		$(document).on('click', '.toggle-dropdown', function(e) {
-			e.preventDefault();
-			e.stopPropagation();
+    // DROPDOWN
+    $(document).on('click', '.toggle-dropdown', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-			const $dropdown = $(this).next('.dropotron');
+        const $dropdown = $(this).next('.dropotron');
 
-			if (!$dropdown.length) return;
+        $('.dropotron').not($dropdown).removeClass('dropdown-active');
+        $dropdown.toggleClass('dropdown-active');
+    });
 
-			// fecha outros
-			$('.dropotron').not($dropdown).removeClass('dropdown-active');
+    $(document).on('click', function() {
+        $('.dropotron').removeClass('dropdown-active');
+    });
 
-			// toggle atual
-			$dropdown.toggleClass('dropdown-active');
-		});
+    $(document).on('click', '.dropotron', function(e) {
+        e.stopPropagation();
+    });
 
-		// clique fora fecha
-		$(document).on('click', function() {
-			$('.dropotron').removeClass('dropdown-active');
-		});
+    // TOGGLE BANNER
+    $(document).on('click', '#toggleBanner', function() {
+        const $image = $('#banner .image');
+        if (!$image.length) return;
 
-		// impedir fechamento ao clicar dentro
-		$(document).on('click', '.dropotron', function(e) {
-			e.stopPropagation();
-		});
+        $image.toggleClass('hidden');
 
-// SCROLL WATCH
-	function setupScrollWatch() {
+        $(this).text(
+            $image.hasClass('hidden') ?
+            'Background Color' :
+            'Background Image'
+        );
+    });
 
-		const $banner = $('#banner');
-		const $header = $('#header');
-		const $menu = $('#menu');
+    // SEARCH TOGGLE (SPA SAFE)
+    $(document).on('click', '.fa-magnifying-glass', function(e) {
+        e.preventDefault();
 
-		if (($header.hasClass('alt') || $menu.hasClass('alt')) && $banner.length > 0) {
+        const $search = $('#search');
 
-			$banner.scrollwatch({
-				delay: 0,
-				range: 0,
-				anchor: 'top',
+        if (window.innerWidth <= 736) {
+            $search.toggle();
+            $('#searchInput').focus();
+        }
+    });
 
-				on: function() {
-					$header.addClass('alt reveal');
-					$menu.addClass('alt reveal');
-				},
+    // CLICK OUTSIDE
+    $(document).on('click', function(e) {
+        const $search = $('#search');
 
-				off: function() {
-					$header.removeClass('alt reveal');
-					$menu.removeClass('alt reveal');
-				}
+        if (
+            window.innerWidth <= 736 &&
+            !$search.is(e.target) &&
+            $search.has(e.target).length === 0 &&
+            !$(e.target).closest('.fa-magnifying-glass').length
+        ) {
+            $search.hide();
+        }
+    });
 
-			});
+}
 
-		} else {
-			console.warn('ScrollWatch não inicializado');
-		}
-	}
+// ===============================
+// PLUGINS (RODAR APÓS RENDER)
+// ===============================
+function initPlugins() {
 
-	$(document).ready(function() {
-		renderRoot();
-		initTabSystem();
-		setupScrollWatch();
-	});
-	
-	
-	
+    if ($.fn.fillColor) {
+        $('.avg').fillColor({
+            type: 'avg'
+        });
+    }
+
+    // exemplo slick (adicione onde quiser)
+    if ($.fn.slick && $('#featuredAlbums').length) {
+        $('#featuredAlbums').not('.slick-initialized').slick({
+            slidesToShow: 4,
+            arrows: true
+        });
+    }
+
+}
+
+// ===============================
+// SCROLL WATCH (HEADER)
+// ===============================
+function setupScrollWatch() {
+
+    const $banner = $('#banner');
+    const $header = $('#header');
+    const $menu = $('#menu');
+
+    if (!$banner.length || !$.fn.scrollwatch) {
+        console.warn('ScrollWatch não disponível');
+        return;
+    }
+
+    $banner.scrollwatch({
+        delay: 0,
+        range: 0,
+        anchor: 'top',
+
+        on: function() {
+            $header.addClass('alt reveal');
+            $menu.addClass('alt reveal');
+        },
+
+        off: function() {
+            $header.removeClass('alt reveal');
+            $menu.removeClass('alt reveal');
+        }
+    });
+
+}
+
+// ==================================================================
+// 🔍 SEARCH SYSTEM (ULTRA LEVE SPA)
+// ==================================================================
+window.searchIndex = [];
+
+let searchTimeout = null;
+
+// CRIAR INDEX UMA VEZ (super rápido depois)
+window.buildSearchIndex = function() {
+
+    console.log('🔥 buildSearchIndex rodou');
+
+    window.searchIndex = mockFeatured.map(item => ({
+        id: item.id,
+        type: 'featured',
+
+        title: item.title || '',
+        artist: item.artist || '',
+        image: item.image || '',
+
+        search: (
+            (item.title || '') + ' ' +
+            (item.artist || '') + ' ' +
+            (item.year || '') + ' ' +
+            (item.name || '')
+        ).toLowerCase()
+    }));
+
+    console.log('🔥 TOTAL:', window.searchIndex.length);
+};
+
+// BUSCA ULTRA RÁPIDA (SEM TRAVAR)
+function handleSearch(term) {
+
+    const $dropdown = $('#searchDropdown');
+    if (!$dropdown.length) return;
+
+    if (!term || term.length < 2) {
+        $dropdown.hide();
+        return;
+    }
+
+    term = term.toLowerCase();
+
+    const results = window.searchIndex
+        .filter(item => item.search.includes(term))
+        .slice(0, 10);
+
+    if (!results.length) {
+        $dropdown.hide();
+        return;
+    }
+
+    renderSearchResults(results);
+}
+
+// RENDER SUPER OTIMIZADO
+function renderSearchResults(results) {
+
+    const html = results.map(item => `
+        <div class="result-item md-ripples ripples-light" data-id="${item.id}" data-type="${item.type}">
+            <img src="${item.image}" class="result-thumb">
+            <div class="result-info">
+                <h3>${item.artist || ''}</h3>
+                <p>${item.title || ''}</p>
+            </div>
+        </div>
+    `).join('');
+
+    $('#searchDropdown')
+        .html(html)
+        .show();
+}
+
+// DEBOUNCE (SUAVIDADE)
+function debounceSearch(value) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        handleSearch(value); // ✅ AGORA SIM
+    }, 250);
+}
+
+// ==================================================================
+// 🎯 EVENTOS (SPA SAFE)
+// ==================================================================
+
+// DIGITAÇÃO
+$(document).on('input', '#searchInput', function() {
+    debounceSearch($(this).val());
+});
+
+$(document).on('keypress', '#searchInput', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSearch($(this).val());
+    }
+});
+
+// CLICK RESULTADO
+$(document).on('click', '.result-item', function() {
+
+    const id = parseInt($(this).data('id'));
+    const type = $(this).data('type');
+
+    if (!isNaN(id)) {
+        openPlayer(id, type);
+    }
+
+    $('#searchDropdown').hide();
+});
+
+// CLICK FORA (FECHAR)
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('#searchInput, #searchDropdown').length) {
+        $('#searchDropdown').hide();
+    }
+});
+
+// ===============================
+// RENDER DE DADOS
+// ===============================
+function initRenderFunctions() {
+
+    if (typeof renderAllAlbums === 'function') renderAllAlbums();
+    if (typeof renderAllArtists === 'function') renderAllArtists();
+    if (typeof renderAllPlaylists === 'function') renderAllPlaylists();
+    if (typeof renderTimeline === 'function') renderTimeline();
+    if (typeof renderMusics === 'function') renderMusics();
+    if (typeof renderAllSingles === 'function') renderAllSingles();
+    if (typeof renderAllVinyls === 'function') renderAllVinyls();
+    if (typeof renderAllDjs === 'function') renderAllDjs();
+    if (typeof renderAllInstrumental === 'function') renderAllInstrumental();
+    if (typeof renderFeaturedAlbums === 'function') renderFeaturedAlbums();
+    if (typeof renderRecentlyPlayed === 'function') renderRecentlyPlayed();
+    if (typeof renderFeaturedDjs === 'function') renderFeaturedDjs();
+    if (typeof renderDailyHit === 'function') renderDailyHit();
+    if (typeof renderAllLabels === 'function') renderAllLabels();
+    if (typeof renderDailyFeaturedTitles === 'function') renderDailyFeaturedTitles();
+    if (typeof renderAllGenres === 'function') renderAllGenres();
+
+}
+
+// ===============================
+// INIT APP (🔥 FINAL LIMPO)
+// ===============================
+$(document).ready(function() {
+
+    console.log('SPA: inicializando...');
+
+    // 1. render HTML
+    renderRoot();
+
+    // 2. eventos globais (RODA UMA VEZ)
+    initGlobalEvents();
+
+    // 3. tabs
+    initTabSystem();
+
+    // 4. render dados
+    initRenderFunctions();
+
+    // 5. plugins (depois do DOM)
+    initPlugins();
+
+    // 6. scroll header
+    setupScrollWatch();
+
+    // 🔥 força execução
+    setTimeout(() => {
+        buildSearchIndex();
+    }, 100);
+
+});
