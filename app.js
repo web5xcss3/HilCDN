@@ -1,6 +1,67 @@
-function Header() {
-    return `
+/*
+====================================================
+ PLAY 90 MUSIC - APP.JS (UI & SPA STRUCTURE) BY WEB5XCSS3 - W53 DEVELOPMENT
+====================================================
+
+ Descrição:
+Arquivo principal responsável pela estrutura da interface
+e comportamento SPA (Single Page Application).
+
+Define todos os componentes visuais e controla a navegação,
+eventos globais e renderização dinâmica do app.
+
+----------------------------------------------------
+ COMPONENTES
+----------------------------------------------------
+- Header() → topo com logo, busca e ações
+- Menu() → navegação lateral (tabs)
+- Banner() → background dinâmico
+- HomeContent() → conteúdo principal (home)
+- Outras abas → artistas, timeline, gêneros, etc
+- Player → player expandido + barra fixa
+
+----------------------------------------------------
+ SISTEMA SPA
+----------------------------------------------------
+- Navegação via [data-tab]
+- Troca de conteúdo sem reload
+- Rehidratação da UI (hydrateUI)
+- Controle de estado via classes CSS
+
+----------------------------------------------------
+ FUNCIONALIDADES
+----------------------------------------------------
+- Renderização dinâmica de conteúdo
+- Sistema de busca otimizado (debounce + index)
+- Eventos globais organizados (namespaces)
+- Integração com plugins (Slick, FillColor)
+- Player interativo com iframe
+
+----------------------------------------------------
+ PERFORMANCE
+----------------------------------------------------
+- RenderRoot executado apenas uma vez
+- Eventos desacoplados e reaproveitáveis
+- Plugins inicializados sob demanda
+- ScrollWatch protegido contra duplicação
+
+----------------------------------------------------
+ OBSERVAÇÕES
+----------------------------------------------------
+- Arquitetura modular (fácil manutenção)
+- Preparado para expansão (novas tabs e dados)
+- Compatível com carregamento dinâmico (.load)
+- Estrutura pensada para PWA
+
+====================================================
+*/
+
+// Header Component
+	function Header() {
+		return `
+			<!-- Header -->
 			<header id="header" class="alt">
+				<!-- Logo -->
 				<div class="logo">
 					<a href="index.html">
 						<picture>
@@ -12,7 +73,8 @@ function Header() {
 						<li><button type="button" class="icon solid fa-bars md-ripples ripples-light menuToogle"></button></li>
 					</ul>
 				</div>
-				
+
+            <!-- Search -->
 				<nav id="search">
 					<ul>
 						<li>
@@ -24,6 +86,7 @@ function Header() {
 					</ul>
 				</nav>
 
+            <!-- Nav -->
 				<nav id="nav">
 					<ul class="icons">
 						<li class="alt"><button type="button" class="icon solid fa-magnifying-glass md-ripples ripples-light"></button></li>
@@ -36,12 +99,15 @@ function Header() {
 						</li>
 					</ul>
 				</nav>
+
 			</header>
 		`;
-}
+	}
 
-function Menu() {
-    return `
+// Menu Component
+	function Menu() {
+		return `
+			<!-- Menu -->
 			<section id="menu">
 				<ul class="menu">
 					<li><button type="button" class="active md-ripples ripples-light" data-tab="home"><i class="icon solid fa-house"></i><span class="label">Início</span></button></li>
@@ -50,20 +116,25 @@ function Menu() {
 				</ul>
 			</section>
 		`;
-}
+	}
 
-function Banner() {
-    return `
+// Banner Component
+	function Banner() {
+		return `
+			<!-- Banner -->
 			<section id="banner">
 				<div class="image filtered" data-position="center"></div>
 			</section>
 		`;
-}
+	}
 
-function HomeContent() {
-    return `
+// Home Content Component
+	function HomeContent() {
+		return `
+        <!-- Content Home Tab -->
 			<div id="home" class="tab-content active">
 			
+            <!-- Destaque -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="featuredTitle">Destaque</h2>
@@ -74,6 +145,7 @@ function HomeContent() {
 					<div id="featuredAlbums" class="grid col-6"></div>
 				</section>
             
+            <!-- Day Hits -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="dailyHitTitle">Hits do Dia</h2>
@@ -84,6 +156,7 @@ function HomeContent() {
 					<div id="dailyHit"></div>
 				</section>
             
+            <!-- Day Titulos -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="dailyFeaturedTitle">Títulos do Dia</h2>
@@ -94,6 +167,7 @@ function HomeContent() {
 					<div id="dailyFeaturedTitles" class="grid col-6"></div>
 				</section>
 
+            <!-- DJS -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="featuredDjsTitle">DJs em Destaque</h2>
@@ -104,6 +178,7 @@ function HomeContent() {
 					<div id="featuredDjs"></div>
 				</section>
             
+            <!-- Recent -->
 				<section class="wrapper style">
 					<header class="major">
 						<h2 id="recentlyPlayedTitle">Recentemente Tocadas</h2>
@@ -115,10 +190,12 @@ function HomeContent() {
 				</section>
 			</div>
 		`;
-}
+	}
 
-function ArtistsContent() {
-    return `
+// Artists Component
+	function ArtistsContent() {
+		return `
+        <!-- Artists Tab -->
 			<section id="artists" class="tab-content">
 				<article id="action">
 					<ul class="actions">
@@ -138,10 +215,12 @@ function ArtistsContent() {
 				<div id="allArtists" class="grid col-5"></div>
 			</section>
 		`;
-}
+	}
 
-function suballAlbumsContent() {
-    return `
+// Artists Component
+	function suballAlbumsContent() {
+		return `
+		<!-- Artists Albums Tab -->
 			<section id="subalbums" class="tab-content">
 				<header class="major">
 					<h2 id="subalbumsTitle"></h2>
@@ -152,10 +231,12 @@ function suballAlbumsContent() {
 				<div id="suballAlbums" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function timelineContent() {
-    return `
+	}
+	
+// Timeline Component
+	function timelineContent() {
+		return `
+		<!-- Timeline Tab -->
 			<section id="timeline" class="tab-content">
 				<header class="major">
 					<h2 id="timelineTitle"></h2>
@@ -174,10 +255,12 @@ function timelineContent() {
 			</section>
 			
 		`;
-}
+	}
 
-function genresContent() {
-    return `
+// Genres Component
+	function genresContent() {
+		return `
+		<!-- Genres Albums Tab -->
 			<section id="genresAlbums" class="tab-content">
 				<header class="major">
 					<h2 id="genresAlbumsTitle"></h2>
@@ -188,10 +271,12 @@ function genresContent() {
 				<div id="genresAlbumsList" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function yearAlbumsContent() {
-    return `
+	}
+	
+// Year Albums Component
+	function yearAlbumsContent() {
+		return `
+		<!-- Year Albums Tab -->
 			<section id="yearAlbums" class="tab-content">
 				<header class="major">
 					<h2 id="yearAlbumsTitle"></h2>
@@ -202,10 +287,12 @@ function yearAlbumsContent() {
 				<div id="yearAlbumsList" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function musicsContent() {
-    return `
+	}
+	
+// Music Component
+	function musicsContent() {
+		return `
+		<!-- Music -->
 			<section id="musics" class="tab-content">
 				<header class="major">
 					<h2 id="musicsTitle"></h2>
@@ -216,10 +303,12 @@ function musicsContent() {
 				<div id="allMusics" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function playlistsContent() {
-    return `
+	}
+	
+// Playlists Component
+	function playlistsContent() {
+		return `
+		<!-- Playlists -->
 			<section id="playlists" class="tab-content">
 				<header class="major">
 					<h2 id="playlistsTitle"></h2>
@@ -230,10 +319,12 @@ function playlistsContent() {
 				<div id="allPlaylists" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function albumsContent() {
-    return `
+	}
+	
+// Álbuns Component
+	function albumsContent() {
+		return `
+		<!-- Álbuns Tab -->
 			<section id="albums" class="tab-content">
 				<header class="major">
 					<h2 id="albumsTitle"></h2>
@@ -244,10 +335,12 @@ function albumsContent() {
 				<div id="allAlbums" class="grid col-6"></div>
 			</section>
 		`;
-}
+	}
 
-function singlesContent() {
-    return `
+// Single Component
+	function singlesContent() {
+		return `
+		<!-- Single Tab -->
 			<section id="singles" class="tab-content">
 				<header class="major">
 					<h2 id="singlesTitle"></h2>
@@ -258,10 +351,12 @@ function singlesContent() {
 				<div id="allSingles" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function vinylsContent() {
-    return `
+	}
+	
+// Vinyl Component
+	function vinylsContent() {
+		return `
+		<!-- Vinyl Tab -->
 			<section id="vinyls" class="tab-content">
 				<header class="major">
 					<h2 id="vinylsTitle"></h2>
@@ -272,10 +367,12 @@ function vinylsContent() {
 				<div id="allVinyls" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function djsContent() {
-    return `
+	}
+	
+// Djs Component
+	function djsContent() {
+		return `
+		<!-- Djs Tab -->
 			<section id="djs" class="tab-content">
 				<header class="major">
 					<h2 id="djsTitle"></h2>
@@ -286,10 +383,12 @@ function djsContent() {
 				<div id="allDjs" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function instrumentalContent() {
-    return `
+	}
+	
+// Instrumental Component
+	function instrumentalContent() {
+		return `
+		<!-- Instrumental Tab -->
 			<section id="instrumental" class="tab-content">
 				<header class="major">
 					<h2 id="instrumentalTitle"></h2>
@@ -300,10 +399,12 @@ function instrumentalContent() {
 				<div id="allInstrumentals" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function labelsContent() {
-    return `
+	}
+	
+// Labels Component
+	function labelsContent() {
+		return `
+		<!-- Labels Tab -->
 			<section id="labels" class="tab-content">
 				<header class="major">
 					<h2 id="labelsTitle"></h2>
@@ -314,10 +415,11 @@ function labelsContent() {
 				<div id="labelsList" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function labelDetailsContent() {
-    return `
+	}
+	
+// Sub Labels Component
+	function labelDetailsContent() {
+		return `
 		<!-- Sub Labels Tab -->
 			<section id="labelDetails" class="tab-content">
 				<header class="major">
@@ -329,14 +431,16 @@ function labelDetailsContent() {
 				<div id="labelArtistsList" class="grid col-6"></div>
 			</section>
 		`;
-}
-
-function App() {
-    return `
+	}
+	
+// Main App Component
+	function App() {
+		return `
 			${Header()}
 			${Menu()}
 			${Banner()}
         
+        <!-- Main -->
 			<section id="main" class="wrapper align-top">
 				<div class="container">
 					${HomeContent()}
@@ -354,16 +458,20 @@ function App() {
 					${instrumentalContent()}
 					${labelsContent()}
 					${labelDetailsContent()}
+					<!-- Outros tabs serão adicionados dinamicamente -->
 				</div>
 			</section>
 
+        <!-- Player Page -->
 			<section id="player-page" style="display: none;">
 				<div class="content">
 				
+				<!-- Main Panel -->
 					<div id="main-panel">
 						<div class="player-embed"></div>
 					</div>
 					
+				<!-- Side Panel -->
 					<div id="side-panel">
 						<div class="album-details">
 							<h4>Detalhes do Álbum</h4>
@@ -402,6 +510,7 @@ function App() {
 				</div>
 			</section>
 		
+		<!-- related Albums Panel -->
 			<section id="relatedContainer">
 				<header class="major">
 					<h3 id="relatedArtistName"></h3>
@@ -409,6 +518,7 @@ function App() {
 				<div id="relatedAlbums" class="related-grid"></div>
 			</section>
 
+        <!-- Player Bar -->
 			<section id="player-bar" style="display: none;">
 				<div class="content">
 					<div class="image" data-position="center">
@@ -425,134 +535,231 @@ function App() {
 				</div>
 			</section>
 
+        <!-- Footer -->
+			<footer id="footer">
+				<span class="copyright">© Play 90 Music 2026 | <a href="https://www.forumeiros.com/">Crie um forum grátis</a></span>
+			</footer>
 		`;
-}
+	}
 
+// =====================================================
+// APP CORE
+// =====================================================
+
+// RENDER ROOT (APENAS UMA VEZ)
 function renderRoot() {
     $('#app').html(App());
 }
 
+// =====================================================
+// TABS SYSTEM
+// =====================================================
+
 function initTabSystem() {
 
-    $(document).on('click', '[data-tab]', function(e) {
-        e.preventDefault();
+    $(document)
+        .off('click.tab')
+        .on('click.tab', '[data-tab]', function(e) {
+            e.preventDefault();
 
-        const tab = $(this).data('tab');
-        switchTab(tab);
-    });
+            const tab = $(this).data('tab');
+            switchTab(tab);
+        });
 
 }
 
 function switchTab(tab) {
 
-    // conteúdo
-    $('.tab-content').removeClass('active');
-    $('#' + tab).addClass('active');
+    const $current = $('.tab-content.active');
+    const $next = $('#' + tab);
 
-    // menu ativo
-    $('[data-tab]').parent().removeClass('active');
-    $('[data-tab="' + tab + '"]').parent().addClass('active');
+    if (!$next.length) return;
+
+    $current.removeClass('active');
+    $next.addClass('active');
+
+    $('[data-tab]').removeClass('active');
+    $('[data-tab="' + tab + '"]').addClass('active');
+
+    // rehidratar UI após troca
+    setTimeout(hydrateUI, 80);
 }
+
+// =====================================================
+// EVENTOS GLOBAIS (100% ORGANIZADO)
+// =====================================================
 
 function initGlobalEvents() {
 
-    $(document).on('click', '.menuToogle', function(e) {
-        e.preventDefault();
-        $('body').toggleClass('is-menu-visible');
-    });
+    // =========================
+    // MENU
+    // =========================
+    $(document)
+        .off('click.menuToggle')
+        .on('click.menuToggle', '.menuToogle', function(e) {
+            e.preventDefault();
+            $('body').toggleClass('is-menu-visible');
+        });
 
-    $(document).on('click', function(e) {
-        const $menu = $('#menu');
-        const $toggle = $('.menuToogle');
+    $(document)
+        .off('click.menuOutside')
+        .on('click.menuOutside', function(e) {
 
-        if (
-            $('body').hasClass('is-menu-visible') &&
-            !$menu.is(e.target) &&
-            $menu.has(e.target).length === 0 &&
-            !$toggle.is(e.target) &&
-            $toggle.has(e.target).length === 0
-        ) {
-            $('body').removeClass('is-menu-visible');
-        }
-    });
+            const $menu = $('#menu');
+            const $toggle = $('.menuToogle');
 
-    $(document).on('click', '#menu', function(e) {
-        e.stopPropagation();
-    });
+            if (
+                $('body').hasClass('is-menu-visible') &&
+                !$menu.is(e.target) &&
+                $menu.has(e.target).length === 0 &&
+                !$toggle.is(e.target) &&
+                $toggle.has(e.target).length === 0
+            ) {
+                $('body').removeClass('is-menu-visible');
+            }
+        });
 
-    $(document).on('click', '.toggle-dropdown', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    $(document)
+        .off('click.menuStop')
+        .on('click.menuStop', '#menu', function(e) {
+            e.stopPropagation();
+        });
 
-        const $dropdown = $(this).next('.dropotron');
+    // =========================
+    // DROPDOWN
+    // =========================
+    $(document)
+        .off('click.dropdown')
+        .on('click.dropdown', '.toggle-dropdown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-        $('.dropotron').not($dropdown).removeClass('dropdown-active');
-        $dropdown.toggleClass('dropdown-active');
-    });
+            const $dropdown = $(this).next('.dropotron');
 
-    $(document).on('click', function() {
-        $('.dropotron').removeClass('dropdown-active');
-    });
+            $('.dropotron').not($dropdown).removeClass('dropdown-active');
+            $dropdown.toggleClass('dropdown-active');
+        });
 
-    $(document).on('click', '.dropotron', function(e) {
-        e.stopPropagation();
-    });
+    $(document)
+        .off('click.dropdownOutside')
+        .on('click.dropdownOutside', function() {
+            $('.dropotron').removeClass('dropdown-active');
+        });
 
-    $(document).on('click', '#toggleBanner', function() {
-        const $image = $('#banner .image');
-        if (!$image.length) return;
+    $(document)
+        .off('click.dropdownStop')
+        .on('click.dropdownStop', '.dropotron', function(e) {
+            e.stopPropagation();
+        });
 
-        $image.toggleClass('hidden');
+    // =========================
+    // BANNER
+    // =========================
+    $(document)
+        .off('click.bannerToggle')
+        .on('click.bannerToggle', '#toggleBanner', function() {
 
-        $(this).text(
-            $image.hasClass('hidden') ?
-            'Background Color' :
-            'Background Image'
-        );
-    });
+            const $image = $('#banner .image');
+            if (!$image.length) return;
 
-    $(document).on('click', '.fa-magnifying-glass', function(e) {
-        e.preventDefault();
+            $image.toggleClass('hidden');
 
-        const $search = $('#search');
+            $(this).text(
+                $image.hasClass('hidden')
+                    ? 'Background Color'
+                    : 'Background Image'
+            );
+        });
 
-        if (window.innerWidth <= 736) {
-            $search.toggle();
-            $('#searchInput').focus();
-        }
-    });
+    // =========================
+    // SEARCH
+    // =========================
+    $(document)
+        .off('click.searchToggle')
+        .on('click.searchToggle', '.fa-magnifying-glass', function(e) {
+            e.preventDefault();
 
-    $(document).on('click', function(e) {
-        const $search = $('#search');
+            const $search = $('#search');
 
-        if (
-            window.innerWidth <= 736 &&
-            !$search.is(e.target) &&
-            $search.has(e.target).length === 0 &&
-            !$(e.target).closest('.fa-magnifying-glass').length
-        ) {
-            $search.hide();
-        }
-    });
+            if (window.innerWidth <= 736) {
+                $search.toggle();
+                $('#searchInput').focus();
+            }
+        });
+
+    $(document)
+        .off('click.searchOutside')
+        .on('click.searchOutside', function(e) {
+
+            const $search = $('#search');
+
+            if (
+                window.innerWidth <= 736 &&
+                !$search.is(e.target) &&
+                $search.has(e.target).length === 0 &&
+                !$(e.target).closest('.fa-magnifying-glass').length
+            ) {
+                $search.hide();
+            }
+        });
+
+    // =========================
+    // SEARCH INPUT
+    // =========================
+    $(document)
+        .off('input.search')
+        .on('input.search', '#searchInput', function() {
+            debounceSearch($(this).val());
+        });
+
+    $(document)
+        .off('keypress.search')
+        .on('keypress.search', '#searchInput', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearch($(this).val());
+            }
+        });
+
+    // CLICK RESULTADO
+    $(document)
+        .off('click.searchResult')
+        .on('click.searchResult', '.result-item', function() {
+
+            const id = parseInt($(this).data('id'));
+            const type = $(this).data('type');
+
+            if (!isNaN(id) && typeof openPlayer === 'function') {
+                openPlayer(id, type);
+            }
+
+            $('#searchDropdown').hide();
+        });
+
+    // CLICK FORA DROPDOWN
+    $(document)
+        .off('click.searchClose')
+        .on('click.searchClose', function(e) {
+            if (!$(e.target).closest('#searchInput, #searchDropdown').length) {
+                $('#searchDropdown').hide();
+            }
+        });
 
 }
+
+// =====================================================
+// PLUGINS GLOBAIS (LEVE)
+// =====================================================
 
 function initPlugins() {
-
-    if ($.fn.fillColor) {
-        $('.avg').fillColor({
-            type: 'avg'
-        });
-    }
-
-    if ($.fn.slick && $('#featuredAlbums').length) {
-        $('#featuredAlbums').not('.slick-initialized').slick({
-            slidesToShow: 4,
-            arrows: true
-        });
-    }
-
+    // reservado para plugins leves globais
 }
+
+// =====================================================
+// SCROLL WATCH (SAFE)
+// =====================================================
+
+let scrollInitialized = false;
 
 function setupScrollWatch() {
 
@@ -560,10 +767,7 @@ function setupScrollWatch() {
     const $header = $('#header');
     const $menu = $('#menu');
 
-    if (!$banner.length || !$.fn.scrollwatch) {
-        console.warn('ScrollWatch não disponível');
-        return;
-    }
+    if (!$banner.length || !$.fn.scrollwatch) return;
 
     $banner.scrollwatch({
         delay: 0,
@@ -580,25 +784,39 @@ function setupScrollWatch() {
             $menu.removeClass('alt reveal');
         }
     });
-
 }
 
-window.searchIndex = [];
+// =====================================================
+// HYDRATE UI
+// =====================================================
 
+function hydrateUI() {
+
+    initPlugins();
+
+    if (!scrollInitialized) {
+        setupScrollWatch();
+        scrollInitialized = true;
+    }
+}
+
+// =====================================================
+// SEARCH SYSTEM
+// =====================================================
+
+window.searchIndex = [];
 let searchTimeout = null;
 
 window.buildSearchIndex = function() {
 
-    console.log('buildSearchIndex rodou');
+    if (typeof mockFeatured === 'undefined') return;
 
     window.searchIndex = mockFeatured.map(item => ({
         id: item.id,
         type: 'featured',
-
         title: item.title || '',
         artist: item.artist || '',
         image: item.image || '',
-
         search: (
             (item.title || '') + ' ' +
             (item.artist || '') + ' ' +
@@ -606,14 +824,14 @@ window.buildSearchIndex = function() {
             (item.name || '')
         ).toLowerCase()
     }));
-
-    console.log('TOTAL:', window.searchIndex.length);
 };
 
+// BUSCA
 function handleSearch(term) {
 
     const $dropdown = $('#searchDropdown');
     if (!$dropdown.length) return;
+    if (!window.searchIndex.length) return;
 
     if (!term || term.length < 2) {
         $dropdown.hide();
@@ -634,77 +852,59 @@ function handleSearch(term) {
     renderSearchResults(results);
 }
 
+// RENDER RESULTADOS
 function renderSearchResults(results) {
 
     const html = results.map(item => `
-        <div class="result-item md-ripples ripples-light" data-id="${item.id}" data-type="${item.type}">
+        <div class="result-item" data-id="${item.id}" data-type="${item.type}">
             <img src="${item.image}" class="result-thumb">
             <div class="result-info">
-                <h3>${item.artist || ''}</h3>
-                <p>${item.title || ''}</p>
+                <h3>${item.artist}</h3>
+                <p>${item.title}</p>
             </div>
         </div>
     `).join('');
 
-    $('#searchDropdown')
-        .html(html)
-        .show();
+    $('#searchDropdown').html(html).show();
 }
 
+// DEBOUNCE
 function debounceSearch(value) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-        handleSearch(value); // ✅ AGORA SIM
+        handleSearch(value);
     }, 250);
 }
 
-$(document).on('input', '#searchInput', function() {
-    debounceSearch($(this).val());
-});
-
-$(document).on('keypress', '#searchInput', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        handleSearch($(this).val());
-    }
-});
-
-$(document).on('click', '.result-item', function() {
-
-    const id = parseInt($(this).data('id'));
-    const type = $(this).data('type');
-
-    if (!isNaN(id)) {
-        openPlayer(id, type);
-    }
-
-    $('#searchDropdown').hide();
-});
-
-$(document).on('click', function(e) {
-    if (!$(e.target).closest('#searchInput, #searchDropdown').length) {
-        $('#searchDropdown').hide();
-    }
-});
+// =====================================================
+// RENDER DATA
+// =====================================================
 
 function initRenderFunctions() {
-    if (typeof renderAllAlbums === 'function') renderAllAlbums();
-    if (typeof renderAllArtists === 'function') renderAllArtists();
-    if (typeof renderAllPlaylists === 'function') renderAllPlaylists();
-    if (typeof renderTimeline === 'function') renderTimeline();
-    if (typeof renderMusics === 'function') renderMusics();
-    if (typeof renderAllSingles === 'function') renderAllSingles();
-    if (typeof renderAllVinyls === 'function') renderAllVinyls();
-    if (typeof renderAllDjs === 'function') renderAllDjs();
-    if (typeof renderAllInstrumental === 'function') renderAllInstrumental();
-    if (typeof renderFeaturedAlbums === 'function') renderFeaturedAlbums();
-    if (typeof renderRecentlyPlayed === 'function') renderRecentlyPlayed();
-    if (typeof renderFeaturedDjs === 'function') renderFeaturedDjs();
-    if (typeof renderDailyHit === 'function') renderDailyHit();
-    if (typeof renderAllLabels === 'function') renderAllLabels();
-    if (typeof renderDailyFeaturedTitles === 'function') renderDailyFeaturedTitles();
-    if (typeof renderAllGenres === 'function') renderAllGenres();
+
+    const safeCall = fn => typeof fn === 'function' && fn();
+
+    safeCall(renderAllAlbums);
+    safeCall(renderAllArtists);
+    safeCall(renderAllPlaylists);
+    safeCall(renderTimeline);
+    safeCall(renderMusics);
+    safeCall(renderAllSingles);
+    safeCall(renderAllVinyls);
+    safeCall(renderAllDjs);
+    safeCall(renderAllInstrumental);
+    safeCall(renderFeaturedAlbums);
+    safeCall(renderRecentlyPlayed);
+    safeCall(renderFeaturedDjs);
+    safeCall(renderDailyHit);
+    safeCall(renderAllLabels);
+    safeCall(renderDailyFeaturedTitles);
+    safeCall(renderAllGenres);
 }
+
+// =====================================================
+// INIT APP
+// =====================================================
 
 $(document).ready(function() {
 
@@ -714,11 +914,7 @@ $(document).ready(function() {
     initGlobalEvents();
     initTabSystem();
     initRenderFunctions();
-    initPlugins();
-    setupScrollWatch();
-	
-    setTimeout(() => {
-        buildSearchIndex();
-    }, 100);
+    hydrateUI();
 
+    setTimeout(buildSearchIndex, 100);
 });
