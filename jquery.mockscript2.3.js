@@ -1,20 +1,54 @@
+/*
+====================================================
+ PLAY 90 MUSIC - SPA CORE BY WEB5XCSS3 - W53 DEVELOPMENT
+====================================================
+
+ Descrição:
+Inicialização principal da aplicação (SPA) usando jQuery.
+Responsável por carregar, configurar e ativar todos os
+módulos do sistema após o DOM estar pronto.
+
+⚙️ Estrutura:
+- Encapsulamento em IIFE para evitar conflitos globais
+- Uso de "use strict" para código mais seguro
+- Execução automática quando o DOM estiver carregado
+
+🧠 Funções principais inicializadas:
+- Renderização do App (App.js)
+- Sistema de Tabs (SPA navigation)
+- Eventos globais (menu, dropdown, search)
+- Renderização de dados dinâmicos
+- Inicialização de plugins (Slick, FillColor, etc)
+- Sistema de busca otimizado
+
+ Observações:
+- Este bloco roda apenas UMA vez
+- Toda reatividade da UI é controlada internamente (SPA)
+- Evita recarregamento de página
+
+====================================================
+*/
+
 (function($) {
 
     "use strict";
 
-    $(document).ready(function() {
+    $(function() {
 
-        // Inicialização segura dos dados com fallback
+        // ===============================
+        // DADOS
+        // ===============================
         let currentData = {
             featured: (typeof mockFeatured !== 'undefined') ? mockFeatured : []
         };
 
-        // Backup dos dados originais para reset correto
         const originalData = {
             featured: (typeof mockFeatured !== 'undefined') ? [...mockFeatured] : []
         };
 
-        // Escape HTML utilitário
+        // ===============================
+        // UTILS
+        // ===============================
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, '&amp;')
@@ -23,122 +57,103 @@
                 .replace(/>/g, '&gt;');
         }
 
-        // DOM Elements com verificação de existência
-        const $navButtons = $('ul li button');
-        const $tabContents = $('section .tab-content');
-
-        // Variável para debounce
         let searchTimeout;
 
-        // Initialize the app
-        $(document).ready(function() {
-            console.log('MonkMusic: DOM loaded, inicializando...');
-            try {
-                initializeApp();
-                setupEventListeners();
-                console.log('MonkMusic: Inicialização concluída com sucesso');
-            } catch (error) {
-                console.error('Erro durante inicialização:', error);
-            }
-        });
-
-        function initializeApp() {
-            updateStats();
-            renderAllAlbums();
-            renderAllArtists();
-            renderAllPlaylists();
-            renderTimeline();
-            renderMusics();
-            renderAllSingles();
-            renderAllVinyls();
-            renderAllDjs();
-            renderAllInstrumental();
-            renderFeaturedAlbums();
-            renderRecentlyPlayed();
-            renderFeaturedDjs();
-            renderDailyHit();
-            renderAllLabels();
-            renderDailyFeaturedTitles();
-            renderAllGenres();
-            buildSearchIndex();
-        }
-
-        // Setup de event listeners section
+        // ===============================
+        // EVENTOS (SPA SAFE)
+        // ===============================
         function setupEventListeners() {
 
-            // ================= NAV TABS =================
+            // NAV TABS
             $(document).on('click', '[data-tab]', function(event) {
                 event.preventDefault();
-
                 const tab = $(this).data('tab');
-                if (tab) {
-                    switchTab(tab);
-                }
+                if (tab) switchTab(tab);
             });
 
-            // ================= BOTÕES VOLTAR =================
-            $(document).on('click', '#backToArtistsBtn', function(e) {
-                e.preventDefault();
-                switchTab('artists');
-            });
-
-            $(document).on('click', '#backToTimelineBtn', function(e) {
-                e.preventDefault();
-                switchTab('timeline');
-            });
-
-            $(document).on('click', '#backToTimelineFromGenres', function(e) {
-                e.preventDefault();
-                switchTab('timeline');
-            });
-
-            $(document).on('click', '#backToLabelsBtn', function(e) {
-                e.preventDefault();
-                switchTab('labels');
-            });
-
-            $(document).on('click', '#backToHomeFromLabels', function(e) {
-                e.preventDefault();
-                switchTab('artists');
-            });
-
-            // grupo único (melhor performance)
+            // BOTÕES VOLTAR (dinâmico)
             $(document).on('click', `
-				#backToMusicsBtn,
-				#backToPlaylistsBtn,
-				#backToAlbunsBtn,
-				#backToSingleBtn,
-				#backToVinylBtn,
-				#backToDjsBtn,
-				#backToInstrumentaisBtn
-			`, function(e) {
+                #backToArtistsBtn,
+                #backToTimelineBtn,
+                #backToTimelineFromGenres,
+                #backToLabelsBtn,
+                #backToHomeFromLabels,
+                #backToMusicsBtn,
+                #backToPlaylistsBtn,
+                #backToAlbunsBtn,
+                #backToSingleBtn,
+                #backToVinylBtn,
+                #backToDjsBtn,
+                #backToInstrumentaisBtn
+            `, function(e) {
                 e.preventDefault();
-                switchTab('artists');
+
+                const tab = $(this).data('tab') || 'artists';
+                switchTab(tab);
             });
 
         }
 
+        // ===============================
+        // TABS (SEM CACHE ❗)
+        // ===============================
         function switchTab(tabName) {
-            // Remove active class from all nav buttons
-            $navButtons.removeClass('active');
-            $navButtons.filter(`[data-tab="${tabName}"]`).addClass('active');
 
-            // Hide all tab contents
-            $tabContents.removeClass('active');
-            $tabContents.filter(`#${tabName}`).addClass('active');
+            // conteúdo
+            $('.tab-content').removeClass('active');
+            $('#' + tabName).addClass('active');
+
+            // menu ativo
+            $('[data-tab]').removeClass('active');
+            $('[data-tab="' + tabName + '"]').addClass('active');
+
+            // 🔥 REHIDRATAR UI (slick etc)
+            setTimeout(() => {
+                if (typeof hydrateUI === 'function') {
+                    hydrateUI();
+                }
+            }, 50);
         }
 
+        // ===============================
+        // STATS
+        // ===============================
         function updateStats() {
             $('#albumCount').text((currentData.albums || []).length);
             $('#artistCount').text((currentData.artists || []).length);
             $('#playlistCount').text((currentData.playlists || []).length);
         }
 
-        // ==================================================================
-        // HOME FEATURED ALBUMS
-        // ==================================================================
+        // ===============================
+        // 🔥 EXPOR GLOBAL
+        // ===============================
+        window.updateStats = updateStats;
 
+        window.renderAllAlbums = renderAllAlbums;
+        window.renderAllArtists = renderAllArtists;
+        window.renderAllPlaylists = renderAllPlaylists;
+        window.renderTimeline = renderTimeline;
+        window.renderMusics = renderMusics;
+        window.renderAllSingles = renderAllSingles;
+        window.renderAllVinyls = renderAllVinyls;
+        window.renderAllDjs = renderAllDjs;
+        window.renderAllInstrumental = renderAllInstrumental;
+        window.renderFeaturedAlbums = renderFeaturedAlbums;
+        window.renderRecentlyPlayed = renderRecentlyPlayed;
+        window.renderFeaturedDjs = renderFeaturedDjs;
+        window.renderDailyHit = renderDailyHit;
+        window.renderAllLabels = renderAllLabels;
+        window.renderDailyFeaturedTitles = renderDailyFeaturedTitles;
+        window.renderAllGenres = renderAllGenres;
+
+        // ===============================
+        // INIT (APENAS EVENTOS)
+        // ===============================
+        setupEventListeners();
+
+        // Funções de renderização featuredAlbums
         function renderFeaturedAlbums() {
+
             const $container = $('#featuredAlbums');
             if (!$container.length) return;
 
@@ -154,87 +169,137 @@
                 .sort((a, b) => (b.id || 0) - (a.id || 0))
                 .slice(0, 20);
 
+            // render HTML
             $container.html(featuredAlbums.map(item => `
-				<div class="album-card" data-id="${item.id || ''}" data-type="featured">
-					<article class="box post">
-						<div class="content">
-							<div class="stack1"></div>
-							<div class="stack2"></div>
-							<div class="image fit md-ripples ripples-light" data-position="center">
-								<img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
-							</div>
-							<ul class="icons">
-								<li><button type="button" class="icon solid fa-play"></button></li>
-							</ul>
-						</div>
-						<header class="align-left">
-							<h3 class="album-artist">${escapeHtml(item.artist || '')}</h3>
-							<p class="album-title">${escapeHtml(item.title || '')}</p>
-						</header>
-					</article>
-				</div>
-			`).join(''));
+        <div class="album-card" data-id="${item.id || ''}" data-type="featured">
+            <article class="box post">
+                <div class="content">
+                    <div class="stack1"></div>
+                    <div class="stack2"></div>
+                    <div class="image fit md-ripples ripples-light">
+                        <img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
+                    </div>
+                    <ul class="icons">
+                        <li><button type="button" class="icon solid fa-play"></button></li>
+                    </ul>
+                </div>
+                <header class="align-left">
+                    <h3 class="album-artist">${escapeHtml(item.artist || '')}</h3>
+                    <p class="album-title">${escapeHtml(item.title || '')}</p>
+                </header>
+            </article>
+        </div>
+    `).join(''));
+
+            // =====================================================
+            // BANNER OTIMIZADO (SEM LAG)
+            // =====================================================
+            let bannerTimeout;
 
             function updateBannerFromSlide($slide) {
-                const imgUrl = $slide.find('img').attr('src');
-                if (imgUrl) {
+
+                clearTimeout(bannerTimeout);
+
+                bannerTimeout = setTimeout(() => {
+
+                    const $img = $slide.find('img');
+                    if (!$img.length) return;
+
+                    const imgUrl = $img.attr('src');
+                    if (!imgUrl) return;
+
+                    // evita render duplicado
+                    if ($banner.data('current') === imgUrl) return;
+
+                    $banner.data('current', imgUrl);
+
                     $banner.html(`<img src="${imgUrl}" alt="Banner Image">`);
-                    $banner.fillColor({
-                        type: 'avgYUV'
-                    });
-                }
+
+                    // espera carregar antes de aplicar cor
+                    const img = new Image();
+                    img.src = imgUrl;
+
+                    img.onload = () => {
+                        if ($.fn.fillColor) {
+                            $banner.fillColor({
+                                type: 'avgYUV'
+                            });
+                        }
+                    };
+
+                }, 80);
             }
 
-            // destruir se já estiver iniciado
+            // =====================================================
+            // SLICK (SEM BUG / SEM DUPLICAÇÃO)
+            // =====================================================
             if ($container.hasClass('slick-initialized')) {
                 $container.slick('unslick');
             }
 
-            $container.slick({
+            $container
+                .on('init', function(event, slick) {
+                    const $firstSlide = slick.$slides.eq(0);
+                    updateBannerFromSlide($firstSlide);
+                })
+                .slick({
                     focusOnSelect: true,
                     infinite: true,
                     slidesToShow: 4,
-                    speed: 300,
                     slidesToScroll: 1,
+                    speed: 300,
+
                     appendArrows: $('#new-slick-arrow'),
-                    nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
-                    prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
+
+                    nextArrow: `
+                <ul class="icons">
+                    <li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li>
+                </ul>`,
+
+                    prevArrow: `
+                <ul class="icons">
+                    <li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li>
+                </ul>`,
+
                     responsive: [{
-                        breakpoint: 1280,
-                        settings: {
-                            slidesToShow: 3
+                            breakpoint: 1280,
+                            settings: {
+                                slidesToShow: 3
+                            }
+                        },
+                        {
+                            breakpoint: 980,
+                            settings: {
+                                slidesToShow: 2
+                            }
+                        },
+                        {
+                            breakpoint: 736,
+                            settings: {
+                                slidesToShow: 2
+                            }
+                        },
+                        {
+                            breakpoint: 480,
+                            settings: {
+                                slidesToShow: 1
+                            }
                         }
-                    }, {
-                        breakpoint: 980,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    }, {
-                        breakpoint: 736,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    }, {
-                        breakpoint: 480,
-                        settings: {
-                            slidesToShow: 1
-                        }
-                    }]
+                    ]
                 })
                 .on('afterChange', function(event, slick, currentSlide) {
                     const $current = slick.$slides.eq(currentSlide);
                     updateBannerFromSlide($current);
                 });
 
-            // ⚠️ força carregar primeiro banner
-            setTimeout(() => {
-                const $firstSlide = $container.find('.slick-slide').not('.slick-cloned').eq(0);
-                updateBannerFromSlide($firstSlide);
-            }, 50);
+            // =====================================================
+            // CLICK (PLAYER)
+            // =====================================================
+            $container.off('click', '.album-card').on('click', '.album-card', function() {
 
-            $container.find('.album-card').on('click', function() {
                 const id = parseInt($(this).data('id'));
                 const type = $(this).data('type');
+
                 if (!isNaN(id)) {
                     openPlayer(id, type);
                 }
@@ -242,10 +307,7 @@
 
         }
 
-        // ==================================================================
-        // HOME FEATURED DAY HITS (12 itens embaralhados)
-        // ==================================================================
-
+        // Funções de renderização dailyHit
         function renderDailyHit(count = 1) {
             const $container = $('#dailyHit');
             if (!$container.length) return;
@@ -259,7 +321,7 @@
             let cachedData = localStorage.getItem('dailyHit');
             let dailyHits = [];
 
-            // 🔹 Usa cache se for do mesmo dia
+            // Usa cache se for do mesmo dia
             if (cachedData) {
                 try {
                     cachedData = JSON.parse(cachedData);
@@ -271,7 +333,7 @@
                 }
             }
 
-            // 🔹 Se não houver cache válido, gera nova seleção
+            // Se não houver cache válido, gera nova seleção
             if (!dailyHits.length) {
                 const items = (currentData.featured || [])
                     .slice() // cópia
@@ -286,7 +348,7 @@
                 }));
             }
 
-            // 🔹 Renderiza cards
+            // Renderiza cards
             if (!dailyHits.length) {
                 $container.html('<p>Nenhum hit disponível hoje.</p>');
                 return;
@@ -317,7 +379,7 @@
             $container.html(html);
 
             /*
-            // 🔹 Slick 
+            // Slick 
             if ($container.hasClass('slick-initialized')) {
                 $container.slick('unslick');
             }
@@ -355,9 +417,7 @@
             });
         }
 
-        // ==================================================================
         // UTIL
-        // ==================================================================
         function shuffleArray(array) {
             const arr = array.slice();
             for (let i = arr.length - 1; i > 0; i--) {
@@ -367,9 +427,7 @@
             return arr;
         }
 
-        // ==================================================================
-        // HOME FEATURED ESPECIAL TITULOS
-        // ==================================================================
+        // Funções de renderização dailyFeaturedTitles
         function renderDailyFeaturedTitles() {
 
             const $container = $('#dailyFeaturedTitles');
@@ -480,23 +538,23 @@
 
             // render
             $container.html(selected.map(item => `
-			<div class="album-card" data-id="${item.id || ''}" data-type="featured">
-				<article class="box post">
-					<div class="content">
-						<div class="image fit avg md-ripples ripples-light">
-							<img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
+				<div class="album-card" data-id="${item.id || ''}" data-type="featured">
+					<article class="box post">
+						<div class="content">
+							<div class="image fit avg md-ripples ripples-light">
+								<img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
+							</div>
+							<ul class="icons">
+								<li><button type="button" class="icon solid fa-play"></button></li>
+							</ul>
 						</div>
-						<ul class="icons">
-							<li><button type="button" class="icon solid fa-play"></button></li>
-						</ul>
-					</div>
-					<header class="align-left">
-						<h3>${escapeHtml(item.artist || '')}</h3>
-						<p>${escapeHtml(item.title || '')}</p>
-					</header>
-				</article>
-			</div>
-		`).join(''));
+						<header class="align-left">
+							<h3>${escapeHtml(item.artist || '')}</h3>
+							<p>${escapeHtml(item.title || '')}</p>
+						</header>
+					</article>
+				</div>
+			`).join(''));
 
             // Aplica fillColor apenas no container atual
             $container.find('.avg').fillColor({
@@ -518,26 +576,30 @@
                 nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                 prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                 responsive: [{
-                    breakpoint: 1280,
-                    settings: {
-                        slidesToShow: 5
+                        breakpoint: 1280,
+                        settings: {
+                            slidesToShow: 5
+                        }
+                    },
+                    {
+                        breakpoint: 980,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    },
+                    {
+                        breakpoint: 736,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2
+                        }
                     }
-                }, {
-                    breakpoint: 980,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                }, {
-                    breakpoint: 736,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                }, {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                }]
+                ]
             });
 
             // clique
@@ -549,11 +611,7 @@
             });
         }
 
-        // ==================================================================
-        // HOME FEATURED DJS // WITH SLICK SLIDER
-        // ==================================================================
-
-        // Render featured playlists
+        // Funções de renderização featuredDjs
         function renderFeaturedDjs() {
             const $container = $('#featuredDjs');
             if (!$container.length) return;
@@ -599,7 +657,7 @@
                 }
             });
 
-            // ⚡ Slick Slider
+            // Slick Slider
             if ($container.hasClass('slick-initialized')) {
                 $container.slick('unslick');
             }
@@ -614,35 +672,35 @@
                 nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                 prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                 responsive: [{
-                    breakpoint: 1280,
-                    settings: {
-                        slidesToShow: 6
+                        breakpoint: 1280,
+                        settings: {
+                            slidesToShow: 6
+                        }
+                    },
+                    {
+                        breakpoint: 980,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    },
+                    {
+                        breakpoint: 736,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2
+                        }
                     }
-                }, {
-                    breakpoint: 980,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                }, {
-                    breakpoint: 736,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                }, {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                }]
+                ]
             });
 
         }
 
-        // ==================================================================
-        // HOME RECENT PLAYED WITH SLICK SLIDER
-        // ==================================================================
-
-        // Recent Played
+        // Funções de renderização recentlyPlayed
         function renderRecentlyPlayed() {
             const $container = $('#recentlyPlayed');
             if (!$container.length) return;
@@ -713,26 +771,30 @@
                     nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                     prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                     responsive: [{
-                        breakpoint: 1280,
-                        settings: {
-                            slidesToShow: 6
+                            breakpoint: 1280,
+                            settings: {
+                                slidesToShow: 6
+                            }
+                        },
+                        {
+                            breakpoint: 980,
+                            settings: {
+                                slidesToShow: 4
+                            }
+                        },
+                        {
+                            breakpoint: 736,
+                            settings: {
+                                slidesToShow: 3
+                            }
+                        },
+                        {
+                            breakpoint: 480,
+                            settings: {
+                                slidesToShow: 2
+                            }
                         }
-                    }, {
-                        breakpoint: 980,
-                        settings: {
-                            slidesToShow: 4
-                        }
-                    }, {
-                        breakpoint: 736,
-                        settings: {
-                            slidesToShow: 3
-                        }
-                    }, {
-                        breakpoint: 480,
-                        settings: {
-                            slidesToShow: 2
-                        }
-                    }]
+                    ]
                 });
             }
 
@@ -747,10 +809,7 @@
 
         }
 
-        // ==================================================================
         // Save Recent Played
-        // ==================================================================
-
         function saveToRecentlyPlayed(item) {
             const key = 'recentlyPlayed';
             const stored = JSON.parse(localStorage.getItem(key)) || [];
@@ -768,11 +827,7 @@
             renderRecentlyPlayed();
         }
 
-        // ==================================================================
-        // INSTRUMENTALS
-        // ==================================================================
-
-        // Funções de renderização allInstrumental
+        // Funções de renderização allInstrumentals
         function renderAllInstrumental() {
             const $container = $('#allInstrumentals');
             if (!$container.length) return;
@@ -817,10 +872,6 @@
                 }
             });
         }
-
-        // ==================================================================
-        // DJ'S
-        // ==================================================================
 
         // Funções de renderização allDjs
         function renderAllDjs() {
@@ -867,10 +918,6 @@
                 }
             });
         }
-
-        // ==================================================================
-        // MUSICS
-        // ==================================================================
 
         // Funções de renderização allMusics
         function renderMusics() {
@@ -930,10 +977,6 @@
                 }
             });
         }
-
-        // ==================================================================
-        // ALBUMS COM LOAD MORE
-        // ==================================================================
 
         // Funções de renderização allAlbums
         let albumsData = [];
@@ -1023,10 +1066,6 @@
                 $('#loadMoreAlbums').hide();
             }
         }
-
-        // ==================================================================
-        //	ALL ARTISTS
-        // ==================================================================
 
         // Funções de renderização allArtists
 
@@ -1155,10 +1194,6 @@
             loadMoreArtists();
         });
 
-        // ==================================================================
-        // ALBUMS BY ARTISTS
-        // ==================================================================
-
         // Funções de renderização suballAlbums dos artistas
         function renderSubAlbumsByArtist(artist) {
             const allAlbums = [
@@ -1218,10 +1253,6 @@
 
             switchTab('subalbums');
         }
-
-        // ==================================================================
-        // VINYLS COM LOAD MORE
-        // ==================================================================
 
         // Funções de renderização allVinyls
         let vinylsData = [];
@@ -1312,10 +1343,6 @@
             }
         }
 
-        // ==================================================================
-        // SINGLES COM LOAD MORE
-        // ==================================================================
-
         // Funções de renderização allSingles
         let singlesData = [];
         let singlesVisible = 0;
@@ -1404,10 +1431,6 @@
             }
         }
 
-        // ==================================================================
-        // PLAYLISTS
-        // ==================================================================
-
         // Funções de renderização allPlaylists
         function renderAllPlaylists() {
             const $container = $('#allPlaylists');
@@ -1454,10 +1477,6 @@
             });
         }
 
-        // ==================================================================
-        // TIMELINE
-        // ==================================================================
-
         // UTIL
         function switchTab(tabName) {
             // Atualiza menu ativo
@@ -1474,7 +1493,7 @@
             }, 50);
         }
 
-        // Timeline
+        // Funções de renderização allTimeline
         function renderTimeline() {
             const $container = $('#allTimeline');
             if (!$container.length) return;
@@ -1535,26 +1554,30 @@
                 nextArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-right md-ripples ripples-light"></button></li></ul>',
                 prevArrow: '<ul class="icons"><li><button type="button" class="icon solid fa-chevron-left md-ripples ripples-light"></button></li></ul>',
                 responsive: [{
-                    breakpoint: 1280,
-                    settings: {
-                        slidesToShow: 6
+                        breakpoint: 1280,
+                        settings: {
+                            slidesToShow: 6
+                        }
+                    },
+                    {
+                        breakpoint: 980,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    },
+                    {
+                        breakpoint: 736,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2
+                        }
                     }
-                }, {
-                    breakpoint: 980,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                }, {
-                    breakpoint: 736,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                }, {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                }]
+                ]
             });
 
             setupBannerFillColorEvents('allTimeline');
@@ -1686,11 +1709,7 @@
             loadMoreYearAlbums();
         });
 
-        // ==================================================================
-        // Genres
-        // ==================================================================
-
-        // Genres
+        // Funções de renderização AllGenres
         function renderAllGenres() {
 
             const $container = $('#AllGenres');
@@ -1903,10 +1922,6 @@
             loadMoreGenresAlbums();
         });
 
-        // ==================================================================
-        // LABELS
-        // ==================================================================
-
         // Labels List
         // 1. VARIÁVEIS
         let allLabelsData = [];
@@ -2062,10 +2077,6 @@
             });
         }
 
-        // ==================================================================
-        // PLAYER
-        // ==================================================================
-
         // Função openPlayer
         window.openPlayer = function(id) {
 
@@ -2079,10 +2090,7 @@
 
             console.log('🎵 PLAYER:', item);
 
-            // ==================================================================
-            // 🎬 IFRAME
-            // ==================================================================
-
+            // Iframe
             const $embedContainer = $('.player-embed');
 
             $embedContainer.html(`
@@ -2117,10 +2125,7 @@
                 }
             }, 5000);
 
-            // ==================================================================
-            // 🎨 UI
-            // ==================================================================
-
+            // UI
             $('#playerImage').attr('src', item.image || '');
             $('#playerTitle').text(item.title || '');
             $('#playerArtist').text(item.artist || '');
@@ -2133,17 +2138,11 @@
             $('#detailGenre').text(item.genre || '');
             $('#detailStyle').text(item.style || '');
 
-            // ==================================================================
-            // 🚀 ATIVAR PLAYER
-            // ==================================================================
-
+            // Ativar Player
             $('#player-bar').addClass('opened active').fadeIn(200);
             $('#player-page').addClass('showmore').fadeIn(200);
 
-            // ==================================================================
-            // 🔁 EXTRAS
-            // ==================================================================
-
+            // Extras
             showRelatedAlbums(item.artist, id);
             saveToRecentlyPlayed({
                 id,
@@ -2151,11 +2150,7 @@
             });
         };
 
-        // ==================================================================
-        // RELATED ALBUMS
-        // ==================================================================
-
-        // Related Albums
+        // Funções de renderização relatedAlbums
         function showRelatedAlbums(artist, currentId) {
             const $container = $('#relatedAlbums');
             const $title = $('#relatedArtistName');
@@ -2238,10 +2233,6 @@
             e.preventDefault();
             toggleRelated(this);
         });
-
-        // ==================================================================
-        // ALTERNAR O CORPO DO PLAYER
-        // ==================================================================
 
         // Alterna o corpo do player
         function togglePlayerBody() {
@@ -2333,10 +2324,6 @@
             console.log('SearchInput element:', $searchInput);
         }
 
-        // ==================================================================
-        // BANNER
-        // ==================================================================
-
         // Funções utilitárias adicionais a banner
         function setupBannerFillColorEvents(sectionId, cardSelector = '.album-card') {
 
@@ -2386,9 +2373,7 @@
                 });
         }
 
-        // ==================================================================
-        // PROGRESS BAR
-        // ==================================================================
+        // Load Progress Bar
 
         // Cria progress-bar se não existir
         if (!$('#progress-bar').length) {
