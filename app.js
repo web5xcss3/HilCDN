@@ -549,11 +549,6 @@ function suballAlbumsContent() {
 					</ul>
 				</div>
 			</section>
-
-        <!-- Footer -->
-			<footer id="footer">
-				<span class="copyright">© Play 90 Music 2026 | <a href="https://www.forumeiros.com/">Crie um forum grátis</a></span>
-			</footer>
 		`;
 	}
 
