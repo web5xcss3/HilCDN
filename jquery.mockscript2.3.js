@@ -62,37 +62,44 @@ módulos do sistema após o DOM estar pronto.
         // ===============================
         // EVENTOS (SPA SAFE)
         // ===============================
-        function setupEventListeners() {
+		function setupEventListeners() {
 
-            // NAV TABS
-            $(document).on('click', '[data-tab]', function(event) {
-                event.preventDefault();
-                const tab = $(this).data('tab');
-                if (tab) switchTab(tab);
-            });
+			// NAV TABS
+			$(document).on('click', '[data-tab]', function(event) {
+				event.preventDefault();
+				const tab = $(this).data('tab');
+				if (tab) switchTab(tab);
+			});
 
-            // BOTÕES VOLTAR (dinâmico)
-            $(document).on('click', `
-                #backToArtistsBtn,
-                #backToTimelineBtn,
-                #backToTimelineFromGenres,
-                #backToLabelsBtn,
-                #backToHomeFromLabels,
-                #backToMusicsBtn,
-                #backToPlaylistsBtn,
-                #backToAlbunsBtn,
-                #backToSingleBtn,
-                #backToVinylBtn,
-                #backToDjsBtn,
-                #backToInstrumentaisBtn
-            `, function(e) {
-                e.preventDefault();
+			// BOTÕES VOLTAR
+			$(document).on('click', `
+				#backToArtistsBtn,
+				#backToTimelineBtn,
+				#backToTimelineFromGenres,
+				#backToLabelsBtn,
+				#backToHomeFromLabels,
+				#backToMusicsBtn,
+				#backToPlaylistsBtn,
+				#backToAlbunsBtn,
+				#backToSingleBtn,
+				#backToVinylBtn,
+				#backToDjsBtn,
+				#backToInstrumentaisBtn
+			`, function(e) {
+				e.preventDefault();
 
-                const tab = $(this).data('tab') || 'artists';
-                switchTab(tab);
-            });
+				let tab = $(this).data('tab');
 
-        }
+				// FALLBACK INTELIGENTE
+				if (!tab) {
+					if (this.id === 'backToLabelsBtn') tab = 'labels';
+					else tab = 'artists';
+				}
+
+				switchTab(tab);
+			});
+
+		}
 
         // ===============================
         // TABS (SEM CACHE ❗)
@@ -107,7 +114,7 @@ módulos do sistema após o DOM estar pronto.
             $('[data-tab]').removeClass('active');
             $('[data-tab="' + tabName + '"]').addClass('active');
 
-            // 🔥 REHIDRATAR UI (slick etc)
+            // REHIDRATAR UI (slick etc)
             setTimeout(() => {
                 if (typeof hydrateUI === 'function') {
                     hydrateUI();
@@ -125,7 +132,7 @@ módulos do sistema após o DOM estar pronto.
         }
 
         // ===============================
-        // 🔥 EXPOR GLOBAL
+        // EXPOR GLOBAL
         // ===============================
         window.updateStats = updateStats;
 
@@ -176,7 +183,7 @@ módulos do sistema após o DOM estar pronto.
                 <div class="content">
                     <div class="stack1"></div>
                     <div class="stack2"></div>
-                    <div class="image fit md-ripples ripples-light">
+                    <div class="image fit md-ripples ripples-light" data-position="center">
                         <img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
                     </div>
                     <ul class="icons">
@@ -541,7 +548,7 @@ módulos do sistema após o DOM estar pronto.
 				<div class="album-card" data-id="${item.id || ''}" data-type="featured">
 					<article class="box post">
 						<div class="content">
-							<div class="image fit avg md-ripples ripples-light">
+							<div class="image fit avg md-ripples ripples-light" data-position="center">
 								<img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
 							</div>
 							<ul class="icons">
@@ -1136,7 +1143,7 @@ módulos do sistema após o DOM estar pronto.
 				<div class="artist-card" data-artist="${artist.name}">
 					<article class="box post avg">
 						<div class="content">
-							<div class="image fit md-ripples ripples-light">
+							<div class="image fit md-ripples ripples-light" data-position="center">
 								<img src="${artist.image}" alt="${escapeHtml(artist.name)}" loading="lazy">
 							</div>
 						</div>
@@ -1195,64 +1202,101 @@ módulos do sistema após o DOM estar pronto.
         });
 
         // Funções de renderização suballAlbums dos artistas
-        function renderSubAlbumsByArtist(artist) {
-            const allAlbums = [
-                    ...(currentData.albums || []),
-                    ...(currentData.singles || []),
-                    ...(currentData.vinyls || []),
-                    ...(currentData.featured || [])
-                ]
-                .slice()
-                .sort((a, b) => (b.id || 0) - (a.id || 0))
-                .slice(0, 5000);
+// Funções de renderização suballAlbums dos artistas
+function renderSubAlbumsByArtist(artist) {
 
-            const albums = allAlbums.filter(album => album && album.artist === artist);
-            const $container = $('#suballAlbums');
-            const $title = $('#subalbumsTitle');
+    // 🔧 NORMALIZADOR (resolve bugs de comparação)
+    const normalize = str => (str || '').toLowerCase().trim();
 
-            if (!$container.length || !$title.length) return;
+    const allAlbums = [
+        ...(currentData.albums || []),
+        ...(currentData.singles || []),
+        ...(currentData.vinyls || []),
+        ...(currentData.featured || [])
+    ]
+    .slice()
+    .sort((a, b) => (b.id || 0) - (a.id || 0))
+    .slice(0, 5000);
 
-            $title.html(`Álbuns de <span class="artist-name">${artist}</span>`);
-            $container.html(albums.map(album => {
-                let albumType = 'album';
-                if ((currentData.singles || []).find(s => s.id === album.id)) albumType = 'singles';
-                else if ((currentData.albums || []).find(v => v.id === album.id)) albumType = 'albums';
-                else if ((currentData.vinyls || []).find(v => v.id === album.id)) albumType = 'vinyls';
-                else if ((currentData.featured || []).find(f => f.id === album.id)) albumType = 'featured';
+    // ✅ FILTRO CORRIGIDO
+    const albums = allAlbums.filter(album =>
+        album && normalize(album.artist) === normalize(artist)
+    );
 
-                return `
-				<div class="album-card" data-id="${album.id || ''}" data-type="${albumType}">
-					<article class="box post">
-						<div class="content">
-							<div class="image fit md-ripples ripples-light" data-position="center">
-								<img src="${album.image || ''}" alt="${escapeHtml(album.title || '')}" loading="lazy">
-							</div>
-							<ul class="icons">
-								<li><button type="button" class="icon solid fa-play"></button></li>
-							</ul>
-						</div>
-						<header class="align-left">
-							<h3 class="album-artist">${escapeHtml(album.artist || '')}</h3>
-							<p class="album-title">${escapeHtml(album.title || '')}</p>
-						</header>
-					</article>
-				</div>
-			`;
-            }).join(''));
+    const $container = $('#suballAlbums');
+    const $title = $('#subalbumsTitle');
 
-            setupBannerFillColorEvents('suballAlbums');
+    // 🔥 NOVOS ELEMENTOS (layout artista)
+    const $artistName = $('#artistName');
+    const $artistImage = $('#artistImage');
 
-            $container.find('.album-card').on('click', function(e) {
-                e.preventDefault();
-                const id = parseInt($(this).data('id'));
-                const type = $(this).data('type');
-                if (!isNaN(id)) {
-                    openPlayer(id, type);
-                }
-            });
+    if (!$container.length || !$title.length) return;
 
-            switchTab('subalbums');
+    // 🎧 HEADER
+    $title.html(`Álbuns de <span class="artist-name">${artist}</span>`);
+
+    // 🎤 INFO ARTISTA
+    if ($artistName.length) {
+        $artistName.text(artist);
+    }
+
+    // 📸 IMAGEM DO ARTISTA (usa primeiro álbum)
+    const firstAlbum = albums[0];
+    if ($artistImage.length && firstAlbum) {
+        $artistImage.attr('src', firstAlbum.image || '');
+    }
+
+    // 🎵 RENDER DOS ÁLBUNS (com chave única)
+    $container.html(albums.map(album => {
+
+        let albumType = 'album';
+
+        if ((currentData.singles || []).find(s => s.id === album.id)) albumType = 'singles';
+        else if ((currentData.albums || []).find(v => v.id === album.id)) albumType = 'albums';
+        else if ((currentData.vinyls || []).find(v => v.id === album.id)) albumType = 'vinyls';
+        else if ((currentData.featured || []).find(f => f.id === album.id)) albumType = 'featured';
+
+        return `
+        <div class="album-card md-ripples ripples-light" data-id="${album.id || ''}" data-type="${albumType}" data-key="${albumType}-${album.id}">
+
+            <article class="box post">
+
+                <div class="image fit" data-position="center">
+                    <img src="${album.image || ''}" alt="${escapeHtml(album.title || '')}" loading="lazy">
+                </div>
+
+                <header class="song-info">
+                    <h3 class="album-title">${escapeHtml(album.title || '')}</h3>
+                    <span class="album-artist">${escapeHtml(album.artist || '')}</span>
+                </header>
+
+            </article>
+
+        </div>
+        `;
+    }).join(''));
+
+    // 🎯 EVENTO CORRIGIDO (SEM BUG)
+    $container.off('click').on('click', '.album-card', function(e) {
+        e.preventDefault();
+
+        const key = $(this).attr('data-key');
+
+        if (!key) return;
+
+        const [type, id] = key.split('-');
+
+        if (id && type) {
+            openPlayer(parseInt(id), type);
         }
+    });
+
+    // 🎨 efeitos visuais (mantido)
+    setupBannerFillColorEvents('suballAlbums');
+
+    // 🔄 troca de aba
+    switchTab('subalbums');
+}
 
         // Funções de renderização allVinyls
         let vinylsData = [];
@@ -1295,7 +1339,6 @@ módulos do sistema após o DOM estar pronto.
                 renderMoreVinyls();
             });
         }
-
 
         // carregar mais itens
         function renderMoreVinyls() {
@@ -1650,7 +1693,7 @@ módulos do sistema após o DOM estar pronto.
 				<div class="album-card" data-id="${album.id}" data-type="${albumType}">
 					<article class="box post">
 						<div class="content">
-							<div class="image fit md-ripples ripples-light">
+							<div class="image fit md-ripples ripples-light" data-position="center">
 								<img src="${album.image}" alt="${escapeHtml(album.title)}" loading="lazy">
 							</div>
 							<ul class="icons">
@@ -1863,7 +1906,7 @@ módulos do sistema após o DOM estar pronto.
 				<div class="album-card" data-id="${album.id}" data-type="${albumType}">
 					<article class="box post">
 						<div class="content">
-							<div class="image fit md-ripples ripples-light">
+							<div class="image fit md-ripples ripples-light" data-position="center">
 								<img src="${album.image}" alt="${escapeHtml(album.title)}" loading="lazy">
 							</div>
 							<ul class="icons">
@@ -1972,7 +2015,7 @@ módulos do sistema após o DOM estar pronto.
 				<div class="album-card label-card" data-label="${label.name}">
 					<article class="box post">
 						<div class="content">
-							<div class="image fit circles md-ripples ripples-light">
+							<div class="image fit circles md-ripples ripples-light" data-position="center">
 								<img src="${label.image || ''}" alt="${escapeHtml(label.name)}" loading="lazy">
 							</div>
 						</div>
@@ -2051,7 +2094,7 @@ módulos do sistema após o DOM estar pronto.
 				<div class="album-card" data-id="${item.id}" data-type="featured">
 					<article class="box post">
 						<div class="content">
-							<div class="image fit md-ripples ripples-light">
+							<div class="image fit md-ripples ripples-light" data-position="center">
 								<img src="${item.image || ''}" alt="${escapeHtml(item.title || '')}" loading="lazy">
 							</div>
 							<ul class="icons">
