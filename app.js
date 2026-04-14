@@ -218,20 +218,35 @@ eventos globais e renderização dinâmica do app.
 	}
 
 // Artists Component
-	function suballAlbumsContent() {
-		return `
-		<!-- Artists Albums Tab -->
-			<section id="subalbums" class="tab-content">
+
+function suballAlbumsContent() {
+	return `
+	<section id="subalbums" class="tab-content">
+
+		<main class="artist-page">
+
+			<!-- LEFT -->
+			<div class="artist-left">
+				<img id="artistImage" src="" alt="">
+				<h2 id="artistName"></h2>
+			</div>
+
+			<!-- RIGHT -->
+			<div class="artist-right">
 				<header class="major">
 					<h2 id="subalbumsTitle"></h2>
 					<ul class="actions">
 						<li><button type="button" id="backToArtistsBtn" class="button icon solid fa-arrow-left md-ripples ripples-light">Voltar</button></li>
 					</ul>
 				</header>
-				<div id="suballAlbums" class="grid col-6"></div>
-			</section>
-		`;
-	}
+				<div id="suballAlbums" class="album-list"></div>
+			</div>
+
+		</main>
+
+	</section>
+	`;
+}
 	
 // Timeline Component
 	function timelineContent() {
@@ -534,6 +549,11 @@ eventos globais e renderização dinâmica do app.
 					</ul>
 				</div>
 			</section>
+
+        <!-- Footer -->
+			<footer id="footer">
+				<span class="copyright">© Play 90 Music 2026 | <a href="https://www.forumeiros.com/">Crie um forum grátis</a></span>
+			</footer>
 		`;
 	}
 
