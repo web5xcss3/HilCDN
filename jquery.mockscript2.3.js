@@ -95,6 +95,10 @@ módulos do sistema após o DOM estar pronto.
 					if (this.id === 'backToLabelsBtn') tab = 'labels';
 					else tab = 'artists';
 				}
+				
+				if (tab === 'youtubeVideos') {
+					loadYouTubeVideos();
+				}
 
 				switchTab(tab);
 			});
@@ -2071,6 +2075,8 @@ function renderSubAlbumsByArtist(artist) {
 
         // 🔹 função de re-renderização dos artist label
         function renderLabelDetails(labelName) {
+			
+			updatePageTitle(labelName, 'label'); // 👈 AQUI
 
             const $title = $('#labelTitle');
             const $container = $('#labelArtistsList');
@@ -2130,6 +2136,9 @@ function renderSubAlbumsByArtist(artist) {
                 console.warn('❌ Item não encontrado:', id);
                 return;
             }
+			
+			// 🧠 AQUI 👇 (POSIÇÃO CERTA)
+			updatePageTitle(item, 'song');
 
             console.log('🎵 PLAYER:', item);
 
