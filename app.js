@@ -56,6 +56,53 @@ eventos globais e renderização dinâmica do app.
 ====================================================
 */
 
+// =====================================================
+// 🧠 TITLE SYSTEM (SEO + SPA)
+// =====================================================
+window.BASE_TITLE = 'Play 90 Music';
+
+window.updatePageTitle = function(data = null, type = '') {
+
+    let title = '';
+
+    if (!data) {
+        title = `${BASE_TITLE} | Hits dos Anos 90, Playlists e Rádio Online`;
+    } else {
+
+        switch(type) {
+
+            case 'song':
+                title = `${data.artist} - ${data.title} (${data.year}) | ${BASE_TITLE}`;
+                break;
+
+            case 'artist':
+                title = `${data.artist} - Artista | ${BASE_TITLE}`;
+                break;
+
+            case 'album':
+                title = `${data.title} - Álbum (${data.year}) | ${BASE_TITLE}`;
+                break;
+
+            case 'genre':
+                title = `${data} - Gênero | ${BASE_TITLE}`;
+                break;
+
+            case 'label':
+                title = `${data} - Selo | ${BASE_TITLE}`;
+                break;
+
+            case 'search':
+                title = `Busca: "${data}" | ${BASE_TITLE}`;
+                break;
+
+            default:
+                title = `${BASE_TITLE}`;
+        }
+    }
+
+    document.title = title;
+};
+
 // Header Component
 	function Header() {
 		return `
@@ -549,6 +596,11 @@ function suballAlbumsContent() {
 					</ul>
 				</div>
 			</section>
+
+        <!-- Footer -->
+			<footer id="footer">
+				<span class="copyright">© Play 90 Music 2026 | <a href="https://www.forumeiros.com/">Crie um forum grátis</a></span>
+			</footer>
 		`;
 	}
 
@@ -590,6 +642,9 @@ function switchTab(tab) {
 
     $('[data-tab]').removeClass('active');
     $('[data-tab="' + tab + '"]').addClass('active');
+	
+	 // 🧠 UPDATE TITLE POR TAB
+    updatePageTitle(tab, 'genre'); // fallback simples
 
     // rehidratar UI após troca
     setTimeout(hydrateUI, 80);
@@ -838,6 +893,8 @@ window.buildSearchIndex = function() {
 
 // BUSCA
 function handleSearch(term) {
+	
+	updatePageTitle(term, 'search'); // 👈 ADICIONA
 
     const $dropdown = $('#searchDropdown');
     if (!$dropdown.length) return;
@@ -921,6 +978,7 @@ $(document).ready(function() {
     console.log('SPA: inicializando...');
 
     renderRoot();
+	updatePageTitle(); // 👈 ADICIONA AQUI
     initGlobalEvents();
     initTabSystem();
     initRenderFunctions();
