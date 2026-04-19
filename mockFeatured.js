@@ -5311,4 +5311,58 @@ const mockFeatured = [{
 	genre: "Electronic",
 	style: "House, Techno, Italodance"
   },
+  {
+    id: 447,
+    artist: "Black & Blondie",
+    title: "Stop!!! (Vinyl, 12'', Discomagic Records, Italy 1995)",
+    image: "https://i.ibb.co/MkCW2x6W/R-990832-1209308470.jpg",
+    embedUrl: "https://audiomack.com/embed/play90music/album/stop-vinyl-12-discomagic-records-italy-1995",
+	label: "Discomagic Records",
+	format: "Vinyl, 12'', 45 RPM",
+	country: "Italy",
+    year: "1995",
+	genre: "Electronic",
+	style: "Italodance"
+  },
+  {
+    id: 448,
+    artist: "D.J. Shaka",
+    title: "Is My Power (Vinyl, 12'', Whirlpool Record, Italy 1994)",
+    image: "https://i.ibb.co/qF2gHFVh/R-544422-1380268421-2027.jpg",
+    embedUrl: "https://audiomack.com/embed/play90music/album/is-my-power-vinyl-12-whirlpool-record-italy-1994",
+	label: "Whirlpool Record",
+	format: "Vinyl, 12'', 45 RPM",
+	country: "Italy",
+    year: "1994",
+	genre: "Electronic",
+	style: "Italodance"
+  },
+  {
+    id: 449,
+    artist: "Derby",
+    title: "In The Colour (Vinyl, 12'', Discomagic Records, Italy 1995)",
+    image: "https://i.ibb.co/GQDdJYQZ/R-1001381-1332091213.jpg",
+    embedUrl: "https://audiomack.com/embed/play90music/album/in-the-colour-vinyl-12-discomagic-records-italy-1995",
+	label: "Discomagic Records",
+	format: "Vinyl, 12'', 33 ⅓ RPM",
+	country: "Italy",
+    year: "1995",
+	genre: "Electronic",
+	style: "Italodance"
+  },
+  /*
+  {
+    id:,
+    artist: "",
+    title: "",
+    image: "",
+    embedUrl: "",
+	label: "",
+	format: "",
+	country: "",
+    year: "",
+	genre: "Electronic",
+	style: "Italodance"
+  },
+  */
 ];
