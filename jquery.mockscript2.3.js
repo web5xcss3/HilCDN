@@ -92,12 +92,24 @@ módulos do sistema após o DOM estar pronto.
 
 				// FALLBACK INTELIGENTE
 				if (!tab) {
-					if (this.id === 'backToLabelsBtn') tab = 'labels';
-					else tab = 'artists';
-				}
-				
-				if (tab === 'youtubeVideos') {
-					loadYouTubeVideos();
+
+					// FORÇAR TIMELINE
+					if (
+						this.id === 'backToTimelineBtn' ||
+						this.id === 'backToTimelineFromGenres'
+					) {
+						tab = 'timeline';
+					}
+
+					// OUTROS CASOS ESPECÍFICOS
+					else if (this.id === 'backToLabelsBtn') {
+						tab = 'labels';
+					}
+
+					// PADRÃO GLOBAL
+					else {
+						tab = 'artists';
+					}
 				}
 
 				switchTab(tab);
