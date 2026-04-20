@@ -3,7 +3,7 @@
 // =====================================================
 
 const LASTFM_KEY = '4959ac7ccf2055437d47a70303cc0ee0';
-const YOUTUBE_KEY = 'AIzaSyBaGigYcCmqoHVwc0nidjzpEsTO5PHOwy4';
+const YOUTUBE_KEY = '';
 
 // =====================================================
 // INIT
