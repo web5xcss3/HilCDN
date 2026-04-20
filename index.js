@@ -619,52 +619,36 @@ function openPlayerYoutube(videoId) {
 
 function openPlayerMixcloud(url, data = {}) {
 
-    const proxies = [
-        'https://api.codetabs.com/v1/proxy/?quest=',
-        'https://api.allorigins.win/get?url='
-    ];
+    const api = 'https://api.codetabs.com/v1/proxy/?quest=' +
+        encodeURIComponent(`https://www.mixcloud.com/oembed/?format=json&url=${url}`);
 
-    function tryProxy(index) {
+    fetch(api)
+        .then(res => res.json())
+        .then(json => {
 
-        if (index >= proxies.length) {
-            $('#playerEmbed').html('<p>Erro ao carregar player</p>');
-            return;
-        }
+            let embed = json.html || '';
 
-        const api = proxies[index] +
-            encodeURIComponent(`https://www.mixcloud.com/oembed/?format=json&url=${url}`);
+            // ✅ correção correta
+            embed = embed.replace(/src="\/\//g, 'src="https://');
 
-        fetch(api)
-            .then(res => res.json())
-            .then(res => {
+            $('#playerEmbed').html(embed);
 
-                const json = res.contents ? JSON.parse(res.contents) : res;
+            $('#playerTitle').text(data.name || json.title || 'Podcast');
 
-                let embed = json.html || '';
+            const img =
+                data.pictures?.medium ||
+                json.thumbnail_url ||
+                'public/images/defaults/no_image.png';
 
-                embed = embed
-                    .replace('http://', 'https://')
-                    .replace('//www.mixcloud.com', 'https://www.mixcloud.com');
+            $('#playerImage').css('background-image', `url('${img}')`);
 
-                $('#playerEmbed').html(embed);
-                $('#playerTitle').text(data.name || json.title || 'Podcast');
+            $('#player-bar').addClass('opened');
 
-                const img =
-                    data.pictures?.medium ||
-                    json.thumbnail_url ||
-                    'public/images/defaults/no_image.png';
+        })
+        .catch(err => {
+            console.error('Erro player:', err);
+        });
 
-                $('#playerImage').css('background-image', `url('${img}')`);
-                $('#player-bar').addClass('opened');
-
-            })
-            .catch(() => {
-                tryProxy(index + 1); // tenta próximo proxy
-            });
-
-    }
-
-    tryProxy(0);
 }
 
 // =====================================================
