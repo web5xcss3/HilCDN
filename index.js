@@ -9,7 +9,7 @@ const YOUTUBE_KEY = 'AIzaSyBaGigYcCmqoHVwc0nidjzpEsTO5PHOwy4';
 // INIT
 // =====================================================
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     initTabs();
     initSearch();
@@ -24,7 +24,7 @@ $(document).ready(function () {
 
 function initTabs() {
 
-    $(document).on('click', '[data-tab]', function (e) {
+    $(document).on('click', '[data-tab]', function(e) {
         e.preventDefault();
 
         const tab = $(this).data('tab');
@@ -40,7 +40,9 @@ function switchTab(tab) {
 
     // mostra só a atual
     const $target = $('#' + tab);
-	$target.fadeIn(150).css('opacity', 0).animate({ opacity: 1 }, 200);
+    $target.fadeIn(150).css('opacity', 0).animate({
+        opacity: 1
+    }, 200);
 
     // carregar conteúdo (lazy load)
     if (tab === 'artists' && !$target.data('loaded')) {
@@ -66,16 +68,16 @@ function switchTab(tab) {
 
 function initSearch() {
 
-    $('#openSearch').on('click', function () {
+    $('#openSearch').on('click', function() {
         $('#searchBox').addClass('opened');
         $('#searchInput').focus();
     });
 
-    $('#closeSearch').on('click', function () {
+    $('#closeSearch').on('click', function() {
         $('#searchBox').removeClass('opened');
     });
 
-    $('#searchForm').on('submit', function (e) {
+    $('#searchForm').on('submit', function(e) {
         e.preventDefault();
 
         const query = $('#searchInput').val();
@@ -162,18 +164,15 @@ function renderArtists(list, target) {
                                         <ul>
 
                                             <li class="euro-list-data-options-item">
-                                                <a href="#" class="artist-music icon-cd"
-                                                   data-artist="${slug}" title="Músicas"></a>
+												<a href="#" class="icon artist-music material-symbols-outlined" data-artist="${slug}" title="Músicas">album</a>
                                             </li>
 
                                             <li class="euro-list-data-options-item">
-                                                <a href="#" class="artist-videos icon-video"
-                                                   data-artist="${slug}" title="Vídeos"></a>
+												<a href="#" class="icon artist-videos material-symbols-outlined"data-artist="${slug}" title="Vídeos">videocam</a>
                                             </li>
 
                                             <li class="euro-list-data-options-item">
-                                                <a href="#" class="artist-info icon-paper"
-                                                   data-artist="${slug}" title="Detalhes"></a>
+												<a href="#" class="icon artist-info material-symbols-outlined"data-artist="${slug}" title="Detalhes">article</a>
                                             </li>
 
                                         </ul>
@@ -196,21 +195,21 @@ function renderArtists(list, target) {
     // EVENTOS
     // =========================
 
-    $('.artist-link').on('click', function (e) {
+    $('.artist-link').on('click', function(e) {
         e.preventDefault();
 
         const artist = $(this).data('artist');
         loadArtistDetails(artist);
     });
 
-    $('.artist-videos').on('click', function (e) {
+    $('.artist-videos').on('click', function(e) {
         e.preventDefault();
 
         const artist = $(this).data('artist');
         searchVideosByArtist(artist);
     });
 
-    $('.artist-music').on('click', function (e) {
+    $('.artist-music').on('click', function(e) {
         e.preventDefault();
 
         const artist = $(this).data('artist');
@@ -255,23 +254,19 @@ function loadArtistDetails(slug) {
                                 <ul>
 
                                     <li class="euro-artists-header-options-item">
-                                        <a href="#" class="icon-cd artist-music"
-                                           data-artist="${slug}" title="Músicas"></a>
+										<a href="#" class="icon artist-music material-symbols-outlined" data-artist="${slug}" title="Músicas">album</a>
                                     </li>
 
                                     <li class="euro-artists-header-options-item">
-                                        <a href="#" class="icon-video artist-videos"
-                                           data-artist="${slug}" title="Vídeos"></a>
+										<a href="#" class="icon artist-videos material-symbols-outlined"data-artist="${slug}" title="Vídeos">videocam</a>
                                     </li>
 
                                     <li class="euro-artists-header-options-item">
-                                        <a href="#" class="icon-paper artist-info"
-                                           data-artist="${slug}" title="Detalhes"></a>
+										<a href="#" class="icon artist-info material-symbols-outlined"data-artist="${slug}" title="Detalhes">article</a>
                                     </li>
 
                                     <li class="euro-artists-header-options-item">
-                                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}"
-                                           class="icon-facebook" target="_blank"></a>
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}"class="icon fa-brands fa-facebook"target="_blank"></a>
                                     </li>
 
                                 </ul>
@@ -355,18 +350,15 @@ function loadSimilarArtists(list) {
                                         <ul>
 
                                             <li class="euro-list-data-options-item">
-                                                <a href="#" class="icon-cd artist-music"
-                                                   data-artist="${slug}"></a>
+                                                <a href="#" class="icon artist-music material-symbols-outlined" data-artist="${slug}">album</a>
                                             </li>
 
                                             <li class="euro-list-data-options-item">
-                                                <a href="#" class="icon-video artist-videos"
-                                                   data-artist="${slug}"></a>
+                                                <a href="#" class="icon artist-videos material-symbols-outlined"data-artist="${slug}">videocam</a>
                                             </li>
 
                                             <li class="euro-list-data-options-item">
-                                                <a href="#" class="icon-paper artist-info"
-                                                   data-artist="${slug}"></a>
+                                                <a href="#" class="icon artist-info material-symbols-outlined"data-artist="${slug}">article</a>
                                             </li>
 
                                         </ul>
@@ -390,17 +382,17 @@ function loadSimilarArtists(list) {
 
 function bindArtistActions() {
 
-    $('.artist-link').off().on('click', function (e) {
+    $('.artist-link').off().on('click', function(e) {
         e.preventDefault();
         loadArtistDetails($(this).data('artist'));
     });
 
-    $('.artist-videos').off().on('click', function (e) {
+    $('.artist-videos').off().on('click', function(e) {
         e.preventDefault();
         searchVideosByArtist($(this).data('artist'));
     });
 
-    $('.artist-music').off().on('click', function (e) {
+    $('.artist-music').off().on('click', function(e) {
         e.preventDefault();
         searchMusicByArtist($(this).data('artist'));
     });
@@ -454,7 +446,7 @@ function renderVideos(videos) {
 
     $('#videosGrid').html(html);
 
-    $('.video-card').on('click', function () {
+    $('.video-card').on('click', function() {
         const id = $(this).data('id');
         openPlayerYoutube(id);
     });
@@ -522,14 +514,14 @@ function renderPodcasts(list) {
                                         <ul>
 
                                             <li class="euro-list-data-options-item">
-                                                <i class="icon-play"></i>
+												<i class="icon material-symbols-outlined">play_arrow</i>
                                                 <b class="euro-list-data-options-item-counter">
                                                     ${plays}
                                                 </b>
                                             </li>
 
                                             <li class="euro-list-data-options-item">
-                                                <i class="icon-heart"></i>
+												<i class="material-symbols-outlined">favorite</i>
                                                 <b class="euro-list-data-options-item-counter">
                                                     ${likes}
                                                 </b>
@@ -558,24 +550,26 @@ function renderPodcasts(list) {
     // EVENTO PLAYER
     // =========================
 
-    $('.podcast-click').off().on('click', function () {
+    $('.podcast-click').off().on('click', function() {
 
-    const url = $(this).data('url');
+        const url = $(this).data('url');
 
-    // pegar dados do item
-    const item = $(this).closest('.euro-list-data-item');
+        // pegar dados do item
+        const item = $(this).closest('.euro-list-data-item');
 
-    const name = item.find('h2').text().trim();
-    const img = $(this).css('background-image')
-        .replace('url("', '')
-        .replace('")', '');
+        const name = item.find('h2').text().trim();
+        const img = $(this).css('background-image')
+            .replace('url("', '')
+            .replace('")', '');
 
-    openPlayerMixcloud(url, {
-        name: name,
-        pictures: { medium: img }
+        openPlayerMixcloud(url, {
+            name: name,
+            pictures: {
+                medium: img
+            }
+        });
+
     });
-
-});
 
 }
 
@@ -655,7 +649,7 @@ function openPlayerMixcloud(url, data = {}) {
 // PLAYER TOGGLE
 // =====================================================
 
-$('#togglePlayer').on('click', function (e) {
+$('#togglePlayer').on('click', function(e) {
     e.preventDefault();
     $('#player-bar').toggleClass('showmore');
 });
