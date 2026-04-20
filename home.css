@@ -198,15 +198,6 @@
 		clear: both;
 	}
 
-	@font-face {
-		font-family:"eurodance_icons";
-		src:url("/public/fonts/eurodance_icons.eot");
-		src:url("/public/fonts/eurodance_icons.eot?#iefix") format("eot"),
-		url("/public/fonts/eurodance_icons.woff") format("woff"),
-		url("/public/fonts/eurodance_icons.ttf") format("truetype"),
-		url("/public/fonts/eurodance_icons.svg") format("svg")
-	}
-
 	p {
 		line-height: 1.875rem;
 		color: #666666;
@@ -249,170 +240,22 @@
 		display: block;
 	}
 
-/* Icons */
+/* Material Icons */
 
-	[class*="icon-"] {
-		font-family: 'eurodance_icons';
-		font-style: normal;
+	.material-icons,
+	.material-symbols-outlined,
+	.material-symbols-rounded,
+	.material-symbols-sharp {
 		font-weight: normal;
-		font-variant: normal;
+		font-style: normal;
+		font-size: 34px;
+		display: inline-block;
+		line-height: 1;
 		text-transform: none;
-		line-height:1;
-		-moz-osx-font-smoothing: grayscale;
-		-webkit-font-smoothing: antialiased
+		letter-spacing: normal;
+		white-space: nowrap;
+		direction: ltr;
 	}
-
-		.icon-align-left:before {
-			content: "\f100";
-		}
-
-		.icon-arrow-down:before {
-			content: "\f101";
-		}
-
-		.icon-arrow-left:before {
-			content: "\f102";
-		}
-
-		.icon-arrow-right:before {
-			content: "\f103";
-		}
-
-		.icon-bar-graph2:before {
-			content: "\f104";
-		}
-
-		.icon-camera:before {
-			content: "\f105";
-		}
-
-		.icon-cd:before {
-			content: "\f106";
-		}
-
-		.icon-clock:before {
-			content: "\f107";
-		}
-
-		.icon-cog:before {
-			content: "\f108";
-		}
-
-		.icon-facebook:before {
-			content: "\f121";
-		}
-
-		.icon-grid:before {
-			content: "\f109";
-		}
-
-		.icon-head:before {
-			content: "\f10a";
-		}
-
-		.icon-heart:before {
-			content: "\f10b";
-		}
-
-		.icon-image:before {
-			content: "\f10c";
-		}
-
-		.icon-lastfm:before {
-			content: "\f123";
-		}
-
-		.icon-location2:before {
-			content: "\f10d";
-		}
-
-		.icon-magnifying-glass:before {
-			content: "\f10e";
-		}
-
-		.icon-mail:before {
-			content: "\f10f";
-		}
-
-		.icon-monitor:before {
-			content: "\f110";
-		}
-
-		.icon-navigation:before {
-			content: "\f111";
-		}
-
-		.icon-open:before {
-			content: "\f112";
-		}
-
-		.icon-paper:before {
-			content: "\f113";
-		}
-
-		.icon-play:before {
-			content: "\f114";
-		}
-
-		.icon-printer:before {
-			content: "\f115";
-		}
-
-		.icon-ribbon:before {
-			content: "\f116";
-		}
-
-		.icon-soundcloud:before {
-			content: "\f124";
-		}
-
-		.icon-speech-bubble:before {
-			content: "\f117";
-		}
-
-		.icon-square-add:before {
-			content: "\f118";
-		}
-
-		.icon-square-check:before {
-			content: "\f119";
-		}
-
-		.icon-square-cross:before {
-			content: "\f11a";
-		}
-
-		.icon-square-subtract:before {
-			content: "\f11b";
-		}
-
-		.icon-stack2:before {
-			content: "\f11c";
-		}
-
-		.icon-stop:before {
-			content: "\f11d";
-		}
-
-		.icon-tag:before {
-			content: "\f11e";
-		}
-
-		.icon-trash:before {
-			content: "\f11f";
-		}
-
-		.icon-twitter:before {
-			content: "\f122";
-		}
-
-		.icon-video:before {
-			content: "\f120";
-		}
-
-		.icon-youtube:before {
-			content: "\f125";
-		}
 
 /* Basic */
 
@@ -633,7 +476,7 @@
 				color: #999999;
 			}
 
-				.euro-list-data-desc .euro-list-data-options .euro-list-data-options-item [class*="icon-"] {
+				.euro-list-data-desc .euro-list-data-options .euro-list-data-options-item .icon {
 					-webkit-box-flex: 1 0 auto;
 					-webkit-flex: 1 0 auto;
 					-moz-box-flex: 1 0 auto;
@@ -763,18 +606,18 @@
 				justify-content: center;
 			}
 
-			.euro-list-data-options .euro-list-data-options-item a[class*="icon-"] {
+			.euro-list-data-options .euro-list-data-options-item a.icon {
 				-webkit-transition: color 200ms ease-in;
 				-moz-transition: color 200ms ease-in;
 				-o-transition: color 200ms ease-in;
 				transition: color 200ms ease-in;
 			}
 
-				.euro-list-data-options .euro-list-data-options-item a[class*="icon-"]:hover {
+				.euro-list-data-options .euro-list-data-options-item a.icon:hover {
 					color: black;
 				}
 
-				.euro-list-data-options .euro-list-data-options-item:last-child [class*="icon-"] {
+				.euro-list-data-options .euro-list-data-options-item:last-child .icon {
 					margin-right: 0;
 				}
 
@@ -866,7 +709,7 @@
 			height: 100%;
 		}
 
-			.euro-player.showmore .euro-player-nav .euro-player-nav-item .icon-arrow-down {
+			.euro-player.showmore .euro-player-nav .euro-player-nav-item.icon-arrow-down {
 				-webkit-transform: rotate(0);
 				-moz-transform: rotate(0);
 				-ms-transform: rotate(0);
@@ -979,7 +822,7 @@
 				margin-left: 0.625rem;
 			}
 
-				.euro-player-nav .euro-player-nav-item [class*="icon-"] {
+				.euro-player-nav .euro-player-nav-item.icon-arrow-down {
 					-webkit-border-radius: 50px;
 					-moz-border-radius: 50px;
 					-ms-border-radius: 50px;
@@ -992,7 +835,7 @@
 					color: #999999;
 				}
 
-				.euro-player-nav .euro-player-nav-item .icon-arrow-down {
+				.euro-player-nav .euro-player-nav-item.icon-arrow-down {
 					-webkit-transition: all 300ms;
 					-webkit-transition-delay: 300ms;
 					-moz-transition: all 300ms 300ms;
@@ -1123,7 +966,7 @@
 					padding-right: 0;
 				}
 
-				.euro-header .euro-header-nav .header-nav-items [class*="icon-"] {
+				.euro-header .euro-header-nav .header-nav-items .icon {
 					font-size: 1.75rem;
 				}
 
@@ -1211,7 +1054,7 @@
 				margin: 0 0 0 0.625rem;
 			}
 
-			.euro-footer .euro-footer-we-love .euro-footer-we-love-items [class*="icon-"] {
+			.euro-footer .euro-footer-we-love .euro-footer-we-love-items .icon {
 				-webkit-transition: color 200ms ease-in;
 				-moz-transition: color 200ms ease-in;
 				-o-transition: color 200ms ease-in;
@@ -1223,12 +1066,15 @@
 				border-radius: 50px;
 				display: block;
 				border: 1px solid #999999;
-				padding: 0.625rem;
+				height: 3rem;
+				width: 3rem;
+				line-height: 3rem;
+				text-align: center;
 				font-size: 1.625rem;
 				color: #999999;
 			}
 
-				.euro-footer .euro-footer-we-love .euro-footer-we-love-items [class*="icon-"]:hover {
+				.euro-footer .euro-footer-we-love .euro-footer-we-love-items .icon:hover {
 					color: black;
 				}
 
@@ -1321,7 +1167,7 @@
 			}
 
 			.euro-search-close-button {
-				font-size: 2.875rem;
+				font-size: 2.875rem !important;
 			}
 
 		}
@@ -1420,7 +1266,7 @@
 					justify-content: center;
 				}
 
-				.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item [class*="icon-"] {
+				.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item .icon {
 					-webkit-transition: color 200ms ease-in;
 					-moz-transition: color 200ms ease-in;
 					-o-transition: color 200ms ease-in;
@@ -1430,11 +1276,11 @@
 					color: #999999;
 				}
 
-					.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item [class*="icon-"]:hover {
+					.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item .icon:hover {
 						color: black;
 					}
 
-					.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item:last-child [class*="icon-"] {
+					.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item:last-child .icon {
 						margin-right: 0;
 					}
 
