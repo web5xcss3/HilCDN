@@ -275,8 +275,10 @@ function suballAlbumsContent() {
 			<!-- LEFT -->
 			<div class="artist-left">
 				<img id="artistImage" src="" alt="">
-				<h2 id="artistName"></h2>
-				<p id="artist-bio"></p>
+				<header="align-left">
+					<h2 id="artistName"></h2>
+					<p id="artist-bio"></p>
+				</header>
 			</div>
 
 			<!-- RIGHT -->
