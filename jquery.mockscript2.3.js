@@ -1216,102 +1216,146 @@ módulos do sistema após o DOM estar pronto.
         $(document).on('click', '#loadMoreArtists', function() {
             loadMoreArtists();
         });
-
-        // Funções de renderização suballAlbums dos artistas
+		
+// =====================================================
 // Funções de renderização suballAlbums dos artistas
-function renderSubAlbumsByArtist(artist) {
+// =====================================================
+	function renderSubAlbumsByArtist(artist) {
 
-    // 🔧 NORMALIZADOR (resolve bugs de comparação)
-    const normalize = str => (str || '').toLowerCase().trim();
+		// NORMALIZADOR (resolve bugs de comparação)
+		const normalize = str => (str || '').toLowerCase().trim();
 
-    const allAlbums = [
-        ...(currentData.albums || []),
-        ...(currentData.singles || []),
-        ...(currentData.vinyls || []),
-        ...(currentData.featured || [])
-    ]
-    .slice()
-    .sort((a, b) => (b.id || 0) - (a.id || 0))
-    .slice(0, 5000);
+		const allAlbums = [
+			...(currentData.albums || []),
+			...(currentData.singles || []),
+			...(currentData.vinyls || []),
+			...(currentData.featured || [])
+		]
+		.slice()
+		.sort((a, b) => (b.id || 0) - (a.id || 0))
+		.slice(0, 5000);
 
-    // ✅ FILTRO CORRIGIDO
-    const albums = allAlbums.filter(album =>
-        album && normalize(album.artist) === normalize(artist)
-    );
+		// FILTRO CORRIGIDO
+		const albums = allAlbums.filter(album =>
+			album && normalize(album.artist) === normalize(artist)
+		);
 
-    const $container = $('#suballAlbums');
-    const $title = $('#subalbumsTitle');
+		const $container = $('#suballAlbums');
+		const $title = $('#subalbumsTitle');
 
-    // 🔥 NOVOS ELEMENTOS (layout artista)
-    const $artistName = $('#artistName');
-    const $artistImage = $('#artistImage');
+		// NOVOS ELEMENTOS (layout artista)
+		const $artistName = $('#artistName');
+		const $artistImage = $('#artistImage');
 
-    if (!$container.length || !$title.length) return;
+		if (!$container.length || !$title.length) return;
 
-    // 🎧 HEADER
-    $title.html(`Álbuns de <span class="artist-name">${artist}</span>`);
+		// HEADER
+		$title.html(`Álbuns de <span class="artist-name">${artist}</span>`);
 
-    // 🎤 INFO ARTISTA
-    if ($artistName.length) {
-        $artistName.text(artist);
-    }
+		// INFO ARTISTA
+		if ($artistName.length) {
+			$artistName.text(artist);
+		}
+	
+		// BIO
+		$('#artist-bio').text('Carregando biografia...');
+		loadArtistBioOnly(artist);
 
-    // 📸 IMAGEM DO ARTISTA (usa primeiro álbum)
-    const firstAlbum = albums[0];
-    if ($artistImage.length && firstAlbum) {
-        $artistImage.attr('src', firstAlbum.image || '');
-    }
+		// IMAGEM DO ARTISTA (usa primeiro álbum)
+		const firstAlbum = albums[0];
+		if ($artistImage.length && firstAlbum) {
+			$artistImage.attr('src', firstAlbum.image || '');
+		}
 
-    // 🎵 RENDER DOS ÁLBUNS (com chave única)
-    $container.html(albums.map(album => {
+		// RENDER DOS ÁLBUNS (com chave única)
+		$container.html(albums.map(album => {
 
-        let albumType = 'album';
+			let albumType = 'album';
 
-        if ((currentData.singles || []).find(s => s.id === album.id)) albumType = 'singles';
-        else if ((currentData.albums || []).find(v => v.id === album.id)) albumType = 'albums';
-        else if ((currentData.vinyls || []).find(v => v.id === album.id)) albumType = 'vinyls';
-        else if ((currentData.featured || []).find(f => f.id === album.id)) albumType = 'featured';
+			if ((currentData.singles || []).find(s => s.id === album.id)) albumType = 'singles';
+			else if ((currentData.albums || []).find(v => v.id === album.id)) albumType = 'albums';
+			else if ((currentData.vinyls || []).find(v => v.id === album.id)) albumType = 'vinyls';
+			else if ((currentData.featured || []).find(f => f.id === album.id)) albumType = 'featured';
 
-        return `
-        <div class="album-card md-ripples ripples-light" data-id="${album.id || ''}" data-type="${albumType}" data-key="${albumType}-${album.id}">
+			return `
+			<div class="album-card md-ripples ripples-light" data-id="${album.id || ''}" data-type="${albumType}" data-key="${albumType}-${album.id}">
+				<article class="box post">
+					<div class="image fit" data-position="center">
+						<img src="${album.image || ''}" alt="${escapeHtml(album.title || '')}" loading="lazy">
+					</div>
+					<header class="song-info">
+						<h3 class="album-title">${escapeHtml(album.title || '')}</h3>
+						<span class="album-artist">${escapeHtml(album.artist || '')}</span>
+					</header>
+				</article>
+			</div>
+			`;
+		}).join(''));
 
-            <article class="box post">
+		// EVENTO CORRIGIDO (SEM BUG)
+		$container.off('click').on('click', '.album-card', function(e) {
+			e.preventDefault();
+			
+			const key = $(this).attr('data-key');
+			
+			if (!key) return;
+			
+			const [type, id] = key.split('-');
+			
+			if (id && type) {
+				openPlayer(parseInt(id), type);
+			}
+		});
 
-                <div class="image fit" data-position="center">
-                    <img src="${album.image || ''}" alt="${escapeHtml(album.title || '')}" loading="lazy">
-                </div>
+		// efeitos visuais (mantido)
+		setupBannerFillColorEvents('suballAlbums');
 
-                <header class="song-info">
-                    <h3 class="album-title">${escapeHtml(album.title || '')}</h3>
-                    <span class="album-artist">${escapeHtml(album.artist || '')}</span>
-                </header>
+		// troca de aba
+		switchTab('subalbums');
+	}
 
-            </article>
+// =====================================================
+// BIO
+// =====================================================
 
-        </div>
-        `;
-    }).join(''));
+function loadArtistBioOnly(artist) {
 
-    // 🎯 EVENTO CORRIGIDO (SEM BUG)
-    $container.off('click').on('click', '.album-card', function(e) {
-        e.preventDefault();
+    const url = `https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist)}&api_key=4959ac7ccf2055437d47a70303cc0ee0&format=json`;
 
-        const key = $(this).attr('data-key');
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
 
-        if (!key) return;
+            const info = data.artist;
 
-        const [type, id] = key.split('-');
+            if (!info) {
+                $('#artist-bio').text(`Sem informações para ${artist}`);
+                return;
+            }
 
-        if (id && type) {
-            openPlayer(parseInt(id), type);
-        }
-    });
+            let bio = info.bio?.summary || '';
 
-    // 🎨 efeitos visuais (mantido)
-    setupBannerFillColorEvents('suballAlbums');
+            // 🔥 LIMPA HTML DO LASTFM
+            bio = bio
+                .replace(/<a[^>]*>.*?<\/a>/g, '')
+                .replace(/Read more.*/i, '')
+                .trim();
 
-    // 🔄 troca de aba
-    switchTab('subalbums');
+            // ✅ 🔥 FALLBACK AQUI
+            if (!bio || bio.length < 20) {
+                bio = `Informações sobre ${artist} não disponíveis no momento.`;
+            }
+
+            $('#artist-bio').html(bio);
+
+        })
+        .catch(() => {
+
+            // ✅ FALLBACK EM ERRO DE API
+            $('#artist-bio').text(`Não foi possível carregar a biografia de ${artist}`);
+
+        });
+
 }
 
         // Funções de renderização allVinyls
