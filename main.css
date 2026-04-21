@@ -2197,6 +2197,11 @@
 				
 		@media (max-width: 980px) {
 
+			#subalbums {
+				width: 100%;
+				margin: 0;
+			}
+
 			#subalbums .artist-page.column .artist-left {
 				-moz-flex-direction: column;
 				-webkit-flex-direction: column;
