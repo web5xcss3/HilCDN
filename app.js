@@ -270,12 +270,13 @@ function suballAlbumsContent() {
 	return `
 	<section id="subalbums" class="tab-content">
 
-		<main class="artist-page">
+		<main class="artist-page column">
 
 			<!-- LEFT -->
 			<div class="artist-left">
 				<img id="artistImage" src="" alt="">
 				<h2 id="artistName"></h2>
+				<p id="artist-bio"></p>
 			</div>
 
 			<!-- RIGHT -->
