@@ -362,8 +362,8 @@ $(document).ready(function() {
 function loadVideos() {
 
     $('#videosGrid').html('<p>Carregando vídeos...</p>');
-
-    fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
+	
+	fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
         .then(res => res.json())
         .then(data => {
 
@@ -385,7 +385,7 @@ function loadVideos() {
         return;
     }
 
-    fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
+	fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
         .then(res => res.json())
         .then(data => {
 
