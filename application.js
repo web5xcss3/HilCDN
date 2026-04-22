@@ -132,7 +132,7 @@ function Player() {
 	</div>
     `;
 }
-
+/*
 // FOOTER
 function Footer() {
     return `
@@ -151,7 +151,7 @@ function Footer() {
 	</footer>
     `;
 }
-
+*/
 // ROOT APP
 function App() {
     return `
@@ -159,7 +159,6 @@ function App() {
         ${SearchBox()}
         ${Content()}
         ${Player()}
-        ${Footer()}
     `;
 }
 
