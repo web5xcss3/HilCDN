@@ -1,6 +1,71 @@
 /*! normalize.css v2.1.3 | MIT License | git.io/normalize */
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700);
 
+:root {
+
+    /* BACKGROUNDS */
+    --euro-bg-primary: #ffffff;
+    --euro-bg-secondary: #e9e9e9;
+    --euro-bg-tertiary: #dcdcdc;
+    --euro-bg-highlight: #ff0000;
+    --euro-bg-dark: #000000;
+    --euro-bg-transparent: transparent;
+
+    /* TEXTOS */
+    --euro-text-primary: #000000;
+    --euro-text-secondary: #333333;
+    --euro-text-muted: #666666;
+    --euro-text-disabled: #999999;
+
+    /* BORDAS */
+    --euro-border-primary: #c0c0c0;
+    --euro-border-secondary: #cccccc;
+    --euro-border-muted: #dcdcdc;
+
+    /* ELEMENTOS (AGORA CORRIGIDO) */
+    --euro-surface: var(--euro-bg-primary);
+    --euro-card-bg: var(--euro-bg-secondary);
+    --euro-hover-bg: var(--euro-bg-tertiary);
+
+    --euro-hover-color: var(--euro-text-primary);
+    --euro-button-color: var(--euro-border-secondary);
+    --euro-border-color: var(--euro-border-primary);
+    --euro-icon-color: var(--euro-text-disabled);
+    --euro-icon-hover: var(--euro-text-primary);
+}
+
+.theme-dark {
+
+    /* BACKGROUNDS */
+    --euro-bg-primary: #121212;
+    --euro-bg-secondary: #1e1e1e;
+    --euro-bg-tertiary: #303030;
+    --euro-bg-highlight: #9e9e9e;
+	--euro-bg-dark: #ffffff;
+
+    /* TEXTOS */
+	--euro-text-primary: #ffffff;
+    --euro-text-secondary: #cccccc;
+    --euro-text-muted: #999999;
+    --euro-text-disabled: #9e9e9e;
+
+    /* BORDAS */
+    --euro-border-primary: #303030;
+    --euro-border-secondary: #444444;
+    --euro-border-muted: rgba(255, 255, 255, 0.12);
+
+    /* ELEMENTOS */
+    --euro-surface: var(--euro-bg-primary);
+    --euro-card-bg: var(--euro-bg-secondary);
+    --euro-hover-bg: var(--euro-bg-tertiary);
+
+    --euro-hover-color: var(--euro-text-primary);
+    --euro-button-color: var(--euro-bg-highlight);
+    --euro-border-color: var(--euro-border-secondary);
+    --euro-icon-color: var(--euro-text-muted);
+    --euro-icon-hover: var(--euro-text-primary);
+}
+
 	article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
 		display: block;
 	}
@@ -29,7 +94,7 @@
 	}
 
 	a {
-		background: transparent;
+		background: var(--euro-bg-transparent);
 	}
 
 		a:focus {
@@ -46,7 +111,7 @@
 	}
 
 	abbr[title] {
-		border-bottom: 1px dotted;
+		border-bottom: 1px dotted var(--euro-border-primary);
 	}
 
 	b, strong {
@@ -64,8 +129,8 @@
 	}
 
 	mark {
-		background: #ff0;
-		color: #000;
+		background: var(--euro-bg-highlight);
+		color: var(--euro-text-primary);
 	}
 
 	code, kbd, pre, samp {
@@ -113,7 +178,7 @@
 	}
 
 	fieldset {
-		border: 1px solid #c0c0c0;
+		border: 1px solid var(--euro-border-primary);
 		margin: 0 2px;
 		padding: 0.35em 0.625em 0.75em;
 	}
@@ -200,7 +265,8 @@
 
 	p {
 		line-height: 1.875rem;
-		color: #666666;
+		color: var(--euro-text-muted);
+		font-size: 1.125rem;
 	}
 
 /* Titles */
@@ -210,11 +276,11 @@
 		margin-top: 0;
 		margin-bottom: 0;
 		font-weight: 700;
-		color: black;
+		color: var(--euro-text-primary);
 	}
 
 		.euro-title a {
-			color: black;
+			color: var(--euro-text-primary);
 		}
 
 		.euro-title.small {
@@ -278,7 +344,7 @@
 	}
 
 	body {
-		background: white;
+		background: var(--euro-bg-primary);
 		font-family: "Source Sans Pro", sans-serif;
 		font-size: 100%;
 		font-weight: 400;
@@ -350,7 +416,7 @@
 
 	.show-overlay:after {
 		content: '';
-		background: white;
+		background: var(--euro-bg-primary);
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -380,7 +446,7 @@
 		align-items: center;
 		margin-bottom: 1.25rem;
 		padding-bottom: 1.25rem;
-		border-bottom: 1px solid gainsboro;
+		border-bottom: 1px solid var(--euro-border-muted);
 	}
 
 		.euro-list-data-item:last-child {
@@ -473,7 +539,7 @@
 				-moz-align-items: center;
 				align-items: center;
 				margin-right: 1.25rem;
-				color: #999999;
+				color: var(--euro-text-disabled);
 			}
 
 				.euro-list-data-desc .euro-list-data-options .euro-list-data-options-item .icon {
@@ -484,7 +550,7 @@
 					-ms-flex: 1 0 auto;
 					flex: 1 0 auto;
 					font-size: 1.625rem;
-					color: #999999;
+					color: var(--euro-icon-color);
 				}
 
 				.euro-list-data-desc .euro-list-data-options .euro-list-data-options-item .euro-list-data-options-item-counter {
@@ -532,7 +598,7 @@
 		}
 
 			.euro-list-data-item:last-child {
-				border-bottom: 1px solid gainsboro;
+				border-bottom: 1px solid var(--euro-border-muted);
 			}
 
 	}
@@ -575,7 +641,7 @@
 				-moz-transition: opacity 300ms linear;
 				-o-transition: opacity 300ms linear;
 				transition: opacity 300ms linear;
-				background: gainsboro;
+				background: var(--euro-bg-tertiary);
 				content: '';
 				height: 0.0625rem;
 				width: 100%;
@@ -614,7 +680,7 @@
 			}
 
 				.euro-list-data-options .euro-list-data-options-item a.icon:hover {
-					color: black;
+					color: var(--euro-text-primary);
 				}
 
 				.euro-list-data-options .euro-list-data-options-item:last-child .icon {
@@ -657,17 +723,17 @@
 		-ms-border-radius: 40px;
 		-o-border-radius: 40px;
 		border-radius: 40px;
-		border: 2px solid gainsboro;
+		border: 2px solid var(--euro-border-muted);
 		padding: 0.9375rem 1.25rem;
 		font-size: 1rem;
-		color: #999999;
+		color: var(--euro-color-disabled);
 		text-transform: uppercase;
 		font-weight: bold;
 		cursor: pointer;
 	}
 
 		.button:hover {
-			color: black;
+			color: var(--euro-hover-color);
 		}
 
 /* Player */
@@ -682,9 +748,9 @@
 		-moz-transition: all 300ms;
 		-o-transition: all 300ms;
 		transition: all 300ms;
-		background: #e9e9e9;
+		background: var(--euro-bg-secondary);
 		padding: 1.25rem 0;
-		border-top: 1px solid gainsboro;
+		border-top: 1px solid var(--euro-border-muted);
 		position: fixed;
 		bottom: 0;
 		left: 0;
@@ -829,10 +895,10 @@
 					-o-border-radius: 50px;
 					border-radius: 50px;
 					display: block;
-					border: 1px solid #999999;
+					border: 1px solid var(--euro-border-color);
 					padding: 0.625rem;
 					font-size: 1.125rem;
-					color: #999999;
+					color: var(--euro-icon-color);
 				}
 
 				.euro-player-nav .euro-player-nav-item.icon-arrow-down {
@@ -846,12 +912,12 @@
 					-ms-transform: rotate(180deg);
 					-o-transform: rotate(180deg);
 					transform: rotate(180deg);
-					background: gainsboro;
+					background: var(--euro-bg-tertiary);
 					cursor: pointer;
 				}
 
 		.euro-player-embed {
-			border-top: 1px solid #cccccc;
+			border-top: 1px solid var(--euro-border-secondary);
 			margin-top: 1.25rem;
 			padding-top: 1.25rem;
 		}
@@ -880,9 +946,9 @@
 /* Header */
 
 	.euro-header {
-		background: white;
-		border-bottom: 1px solid gainsboro;
-		border-top: 1px solid gainsboro;
+		background: var(--euro-bg-primary);
+		border-bottom: 1px solid var(--euro-border-muted);
+		border-top: 1px solid var(--euro-border-muted);
 		padding: 1.25rem 0;
 		z-index: 2;
 		position: relative;
@@ -959,7 +1025,7 @@
 				-moz-align-items: center;
 				align-items: center;
 				padding: 0 1.25rem;
-				color: #999999;
+				color: var(--euro-text-disabled);
 			}
 
 				.euro-header .euro-header-nav .header-nav-items > a:last-child {
@@ -984,7 +1050,7 @@
 						-moz-transition: width 150ms linear;
 						-o-transition: width 150ms linear;
 						transition: width 150ms linear;
-						background: black;
+						background: var(--euro-bg-dark);
 						content: '';
 						height: 0.125rem;
 						width: 0%;
@@ -992,7 +1058,7 @@
 					}
 
 				.euro-header .euro-header-nav .header-nav-items:hover > a {
-					color: black;
+					color: var(--euro-hover-color);
 				}
 
 				@media only screen and (min-width: 48rem) {
@@ -1010,8 +1076,8 @@
 /* Footer */
 
 	.euro-footer {
-		background: white;
-		border-top: 1px solid gainsboro;
+		background: var(--euro-bg-primary);
+		border-top: 1px solid var(--euro-border-muted);
 		padding: 1.25rem 0;
 		padding-bottom: 7.5rem;
 	}
@@ -1065,17 +1131,17 @@
 				-o-border-radius: 50px;
 				border-radius: 50px;
 				display: block;
-				border: 1px solid #999999;
+				border: 1px solid var(--euro-icon-color);
 				height: 3rem;
 				width: 3rem;
 				line-height: 3rem;
 				text-align: center;
 				font-size: 1.625rem;
-				color: #999999;
+				color: var(--euro-icon-color);
 			}
 
 				.euro-footer .euro-footer-we-love .euro-footer-we-love-items .icon:hover {
-					color: black;
+					color: var(--euro-hover-color);
 				}
 
 		@media only screen and (min-width: 38.75rem) {
@@ -1118,8 +1184,8 @@
 		-moz-transition: -moz-transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 100ms;
 		-o-transition: -o-transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 100ms;
 		transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275) 100ms;
-		background: white;
-		border-bottom: 1px solid gainsboro;
+		background: var(--euro-bg-primary);
+		border-bottom: 1px solid var(--euro-border-muted);
 		padding: 1.25rem 0;
 		position: absolute;
 		top: 5.375rem;
@@ -1141,19 +1207,20 @@
 		}
 
 		.euro-search-field {
+			background: var(--euro-bg-primary);
 			border: 0;
 			font-size: 1.375rem;
-			color: #cccccc;
+			color: var(--euro-button-color);
 			width: 90%;
 		}
 
 			.euro-search-field::-webkit-input-placeholder {
-				color: #cccccc;
+				color: var(--euro-button-color);
 			}
 
 		.euro-search-close-button {
 			font-size: 2.25rem;
-			color: #cccccc;
+			color: var(--euro-button-color);
 			position: absolute;
 			right: 0;
 			top: 0;
@@ -1185,7 +1252,7 @@
 
 	.euro-artists-header {
 		padding-bottom: 1.25rem;
-		border-bottom: 1px solid gainsboro;
+		border-bottom: 1px solid var(--euro-border-muted);
 	}
 
 		.euro-artists-header .grid {
@@ -1273,11 +1340,11 @@
 					transition: color 200ms ease-in;
 					font-size: 1.625rem;
 					margin-right: 1.5rem;
-					color: #999999;
+					color: var(--euro-text-disabled);
 				}
 
 					.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item .icon:hover {
-						color: black;
+						color: var(--euro-hover-color);
 					}
 
 					.euro-artists-header-desc .euro-artists-header-options .euro-artists-header-options-item:last-child .icon {
@@ -1285,7 +1352,7 @@
 					}
 
 		.euro-artists-bio a {
-			color: #333333;
+			color: var(--euro-text-secondary);
 			text-decoration: underline;
 			font-weight: bold;
 		}
