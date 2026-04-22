@@ -361,16 +361,39 @@ $(document).ready(function() {
 
 function loadVideos() {
 
+    $('#videosGrid').html('<p>Carregando vídeos...</p>');
+
     fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
         .then(res => res.json())
         .then(data => {
 
-            console.log(data); // debug
-
             renderVideos(data.items);
 
         })
-        .catch(err => console.error('Erro API:', err));
+        .catch(() => {
+            $('#videosGrid').html('<p>Erro ao carregar vídeos</p>');
+        });
+
+}
+
+let videoCache = null;
+
+function loadVideos() {
+
+    if (videoCache) {
+        renderVideos(videoCache);
+        return;
+    }
+
+    fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
+        .then(res => res.json())
+        .then(data => {
+
+            videoCache = data.items;
+            renderVideos(videoCache);
+
+        });
+
 }
 
 
