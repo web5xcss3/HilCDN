@@ -356,46 +356,26 @@ $(document).ready(function() {
 });
 
 // =====================================================
-// YOUTUBE VIA API PROXY (RENDER)
+// YOUTUBE VIA BACKEND (FUNCIONANDO)
 // =====================================================
 
 function loadVideos() {
 
-    $('#videosGrid').html('<p>Carregando vídeos...</p>');
-	
-	fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
+    fetch('https://eurodance-api.onrender.com/youtube?q=eurodance')
         .then(res => res.json())
         .then(data => {
+
+            if (!data.items) {
+                console.error('Erro API:', data);
+                return;
+            }
 
             renderVideos(data.items);
 
         })
-        .catch(() => {
-            $('#videosGrid').html('<p>Erro ao carregar vídeos</p>');
-        });
+        .catch(err => console.error('Erro fetch:', err));
 
 }
-
-let videoCache = null;
-
-function loadVideos() {
-
-    if (videoCache) {
-        renderVideos(videoCache);
-        return;
-    }
-
-	fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
-        .then(res => res.json())
-        .then(data => {
-
-            videoCache = data.items;
-            renderVideos(videoCache);
-
-        });
-
-}
-
 
 function searchVideosByArtist(name) {
 
@@ -412,12 +392,11 @@ function searchVideosByArtist(name) {
 
 }
 
-
 function renderVideos(videos) {
 
-    if (!videos) return;
-
     const html = videos.map(v => {
+
+        if (!v.id.videoId) return '';
 
         const id = v.id.videoId;
 
@@ -427,28 +406,28 @@ function renderVideos(videos) {
                 <h4>${v.snippet.title}</h4>
             </div>
         `;
+
     }).join('');
 
     $('#videosGrid').html(html);
 
-    // 🔥 EVENTO SPA (IMPORTANTE)
-    $(document).off('click', '.video-card').on('click', '.video-card', function() {
+    // 🔥 EVENTO DELEGADO (SPA FIX)
+    $(document).off('click', '.video-card')
+        .on('click', '.video-card', function() {
 
-        const id = $(this).data('id');
-        openPlayerYoutube(id);
+            const id = $(this).data('id');
+            openPlayerYoutube(id);
 
-    });
+        });
+
 }
-
 
 function openPlayerYoutube(videoId) {
 
     const embed = `
         <iframe width="100%" height="200"
             src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-            frameborder="0"
-            allow="autoplay; encrypted-media"
-            allowfullscreen>
+            frameborder="0" allowfullscreen>
         </iframe>
     `;
 
