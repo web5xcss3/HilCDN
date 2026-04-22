@@ -3,7 +3,6 @@
 // =====================================================
 	const LASTFM_KEY = '4959ac7ccf2055437d47a70303cc0ee0';
 	// const LASTFM_KEY = 'c193438e5e5bcd8687beb1b5ebe89bd3';
-	const YOUTUBE_KEY = 'AIzaSyBaGigYcCmqoHVwc0nidjzpEsTO5PHOwy4';
 
 // =====================================================
 // INIT
@@ -357,85 +356,73 @@ $(document).ready(function() {
 });
 
 // =====================================================
-// 🎬 YOUTUBE (VIDEOS) - VERSÃO COMPLETA SPA READY
+// YOUTUBE VIA API PROXY (RENDER)
 // =====================================================
 
-// 🔹 Carregar vídeos (HOME / TAB)
 function loadVideos() {
 
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=eurodance&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
+    fetch(`https://eurodance-api.onrender.com/youtube?q=eurodance`)
         .then(res => res.json())
         .then(data => {
 
-            if (!data.items) {
-                console.warn('Nenhum vídeo encontrado');
-                return;
-            }
+            console.log(data); // debug
 
             renderVideos(data.items);
 
         })
-        .catch(err => {
-            console.error('Erro YouTube:', err);
-        });
-
+        .catch(err => console.error('Erro API:', err));
 }
 
-// 🔍 Buscar vídeos por artista
+
 function searchVideosByArtist(name) {
 
     const query = name.replace(/-/g, ' ');
 
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${query}&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
+    fetch(`https://eurodance-api.onrender.com/youtube?q=${query}`)
         .then(res => res.json())
         .then(data => {
 
-            renderVideos(data.items || []);
+            renderVideos(data.items);
             switchTab('videos');
 
-        })
-        .catch(err => {
-            console.error('Erro busca vídeos:', err);
         });
 
 }
 
-// 🎨 Renderizar vídeos
+
 function renderVideos(videos) {
 
-    // filtra só vídeos válidos
-    const validVideos = videos.filter(v => v.id && v.id.videoId);
+    if (!videos) return;
 
-    if (validVideos.length === 0) {
-        $('#videosGrid').html('<p>Nenhum vídeo disponível</p>');
-        return;
-    }
-
-    const html = validVideos.map(v => {
+    const html = videos.map(v => {
 
         const id = v.id.videoId;
-        const thumb = v.snippet?.thumbnails?.medium?.url || '';
-        const title = v.snippet?.title || 'Sem título';
 
         return `
             <div class="card video-card" data-id="${id}">
-                <img src="${thumb}" />
-                <h4>${title}</h4>
+                <img src="${v.snippet.thumbnails.medium.url}" />
+                <h4>${v.snippet.title}</h4>
             </div>
         `;
     }).join('');
 
     $('#videosGrid').html(html);
+
+    // 🔥 EVENTO SPA (IMPORTANTE)
+    $(document).off('click', '.video-card').on('click', '.video-card', function() {
+
+        const id = $(this).data('id');
+        openPlayerYoutube(id);
+
+    });
 }
 
-// ▶️ Player YouTube
+
 function openPlayerYoutube(videoId) {
 
-    if (!videoId) return;
-
     const embed = `
-        <iframe width="100%" height="315"
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+        <iframe width="100%" height="200"
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1"
             frameborder="0"
             allow="autoplay; encrypted-media"
             allowfullscreen>
@@ -445,6 +432,7 @@ function openPlayerYoutube(videoId) {
     $('#playerEmbed').html(embed);
     $('#playerTitle').text('YouTube Player');
     $('#player-bar').addClass('opened');
+
 }
 
 // =====================================================
