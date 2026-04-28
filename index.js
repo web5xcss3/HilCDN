@@ -2,7 +2,7 @@
 // CONFIG
 // =====================================================
 	const LASTFM_KEY = '4959ac7ccf2055437d47a70303cc0ee0';
-	const YOUTUBE_KEY = '';
+	// const LASTFM_KEY = 'c193438e5e5bcd8687beb1b5ebe89bd3';
 
 // =====================================================
 // INIT
@@ -356,73 +356,106 @@ $(document).ready(function() {
 });
 
 // =====================================================
-// YOUTUBE (VIDEOS)
+// 🎬 YOUTUBE (VIDEOS) - VERSÃO COMPLETA SPA READY
 // =====================================================
-	function loadVideos() {
 
-	    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=eurodance&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
-	        .then(res => res.json())
-	        .then(data => {
+// 🔹 Carregar vídeos (HOME / TAB)
+function loadVideos() {
 
-	            renderVideos(data.items);
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=eurodance&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
+        .then(res => res.json())
+        .then(data => {
 
-	        });
+            if (!data.items) {
+                console.warn('Nenhum vídeo encontrado');
+                return;
+            }
 
-	}
+            renderVideos(data.items);
 
-	function searchVideosByArtist(name) {
+        })
+        .catch(err => {
+            console.error('Erro YouTube:', err);
+        });
 
-	    const query = name.replace(/-/g, ' ');
+}
 
-	    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&key=${YOUTUBE_KEY}`)
-	        .then(res => res.json())
-	        .then(data => {
+// 🔍 Buscar vídeos por artista
+function searchVideosByArtist(name) {
 
-	            renderVideos(data.items);
-	            switchTab('videos');
+    const query = name.replace(/-/g, ' ');
 
-	        });
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${query}&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
+        .then(res => res.json())
+        .then(data => {
 
-	}
+            renderVideos(data.items || []);
+            switchTab('videos');
 
-	function renderVideos(videos) {
+        })
+        .catch(err => {
+            console.error('Erro busca vídeos:', err);
+        });
 
-	    const html = videos.map(v => {
+}
 
-	        const id = v.id.videoId;
+// 🎨 Renderizar vídeos
+function renderVideos(videos) {
 
-	        return `
-            <div class="card video-card" data-id="${id}">
-                <img src="${v.snippet.thumbnails.medium.url}" />
-                <h4>${v.snippet.title}</h4>
-            </div>
-        `;
-	    }).join('');
+    if (!videos || !videos.length) {
+        $('#videosGrid').html('<p>Nenhum vídeo disponível</p>');
+        return;
+    }
 
-	    $('#videosGrid').html(html);
+    const html = videos
+        .filter(v => v.id && v.id.videoId)
+        .map(v => {
 
-	    $('.video-card').on('click', function() {
-	        const id = $(this).data('id');
-	        openPlayerYoutube(id);
-	    });
+            const id = v.id.videoId;
+            const thumb = v.snippet?.thumbnails?.medium?.url || '';
+            const title = v.snippet?.title || 'Sem título';
 
-	}
+            return `
+                <div class="card video-card" data-id="${id}">
+                    <img loading="lazy" src="${thumb}" />
+                    <h4>${title}</h4>
+                </div>
+            `;
+        }).join('');
 
-	function openPlayerYoutube(videoId) {
+    $('#videosGrid').html(html);
+}
 
-	    const embed = `
-        <iframe width="100%" height="200"
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-            frameborder="0" allowfullscreen>
+// ▶️ Player YouTube
+function openPlayerYoutube(videoId) {
+
+    if (!videoId) return;
+
+    $('#playerEmbed').html(`
+        <iframe width="100%" height="315"
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
         </iframe>
-    `;
+    `);
 
-	    $('#playerEmbed').html(embed);
-	    $('#playerTitle').text('YouTube Player');
-	    $('#player-bar').addClass('opened');
+    $('#playerTitle').text('YouTube Player');
+    $('#player-bar').addClass('opened');
+}
 
-	}
+// =====================================================
+// ⚡ EVENTO SPA (CLICK NOS VIDEOS)
+// =====================================================
 
+$(document)
+    .off('click.video')
+    .on('click.video', '.video-card', function() {
+
+        const id = $(this).data('id');
+        openPlayerYoutube(id);
+
+    });
 // =====================================================
 // MIXCLOUD (PODCASTS) - VERSÃO ROBUSTA 2024 (SEM DATA)
 // =====================================================
