@@ -494,6 +494,22 @@ $(document)
 
     });
 
+// clique no vídeo (imagem ou título)
+$(document).on('click', '.video-link', function(e) {
+    e.preventDefault();
+
+    const id = $(this).data('id');
+    openPlayerYoutube(id);
+});
+
+// botão play
+$(document).on('click', '.play-video', function(e) {
+    e.preventDefault();
+
+    const id = $(this).data('id');
+    openPlayerYoutube(id);
+});
+
 // =====================================================
 // 🚀 INIT (AUTO LOAD + RESTORE)
 // =====================================================
