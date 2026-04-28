@@ -1,12 +1,12 @@
-// =====================================================
-// CONFIG
-// =====================================================
+	// =====================================================
+	// CONFIG
+	// =====================================================
 	const LASTFM_KEY = '4959ac7ccf2055437d47a70303cc0ee0';
 	// const LASTFM_KEY = 'c193438e5e5bcd8687beb1b5ebe89bd3';
 
-// =====================================================
-// INIT
-// =====================================================
+	// =====================================================
+	// INIT
+	// =====================================================
 	$(document).ready(function() {
 
 	    initTabs();
@@ -16,9 +16,9 @@
 
 	});
 
-// =====================================================
-// TABS SYSTEM
-// =====================================================
+	// =====================================================
+	// TABS SYSTEM
+	// =====================================================
 	function initTabs() {
 
 	    $(document).on('click', '[data-tab]', function(e) {
@@ -59,9 +59,9 @@
 
 	}
 
-// =====================================================
-// SEARCH
-// =====================================================
+	// =====================================================
+	// SEARCH
+	// =====================================================
 	function initSearch() {
 
 	    $('#openSearch').on('click', function() {
@@ -82,46 +82,46 @@
 
 	}
 
-// =====================================================
-// HOME
-// =====================================================
+	// =====================================================
+	// HOME
+	// =====================================================
 	function loadHome() {
 	    loadHomeArtists();
 	    loadPodcasts();
 	}
 
-// =====================================================
-// LAST.FM (ARTISTS) - VERSÃO CORRIGIDA 2024
-// =====================================================
+	// =====================================================
+	// LAST.FM (ARTISTS) - VERSÃO CORRIGIDA 2024
+	// =====================================================
 
-function loadHomeArtists() {
-    fetch(`https://ws.audioscrobbler.com/2.0/?method=tag.gettopartists&tag=eurodance&api_key=${LASTFM_KEY}&format=json`)
-        .then(res => res.json())
-        .then(data => {
-            renderArtists(data.topartists.artist.slice(0, 8), '#homeArtists');
-        })
-        .catch(err => {
-            console.error('Erro Last.fm:', err);
-        });
-}
+	function loadHomeArtists() {
+	    fetch(`https://ws.audioscrobbler.com/2.0/?method=tag.gettopartists&tag=eurodance&api_key=${LASTFM_KEY}&format=json`)
+	        .then(res => res.json())
+	        .then(data => {
+	            renderArtists(data.topartists.artist.slice(0, 8), '#homeArtists');
+	        })
+	        .catch(err => {
+	            console.error('Erro Last.fm:', err);
+	        });
+	}
 
-function loadArtists() {
-    fetch(`https://ws.audioscrobbler.com/2.0/?method=tag.gettopartists&tag=eurodance&api_key=${LASTFM_KEY}&format=json`)
-        .then(res => res.json())
-        .then(data => {
-            renderArtists(data.topartists.artist, '#artistsGrid');
-        })
-        .catch(err => {
-            console.error('Erro Last.fm:', err);
-        });
-}
+	function loadArtists() {
+	    fetch(`https://ws.audioscrobbler.com/2.0/?method=tag.gettopartists&tag=eurodance&api_key=${LASTFM_KEY}&format=json`)
+	        .then(res => res.json())
+	        .then(data => {
+	            renderArtists(data.topartists.artist, '#artistsGrid');
+	        })
+	        .catch(err => {
+	            console.error('Erro Last.fm:', err);
+	        });
+	}
 
-function searchMusicByArtist(name) {
-    alert('🎧 Aqui você pode integrar SoundCloud depois para: ' + name);
-}
+	function searchMusicByArtist(name) {
+	    alert('🎧 Aqui você pode integrar SoundCloud depois para: ' + name);
+	}
 
-function renderArtists(list, target) {
-    const html = `
+	function renderArtists(list, target) {
+	    const html = `
         <div class="euro-artists-list modules">
             <div class="grid">
                 <h2 class="euro-title medium section-title">Artistas</h2>
@@ -170,46 +170,46 @@ function renderArtists(list, target) {
         </div>
     `;
 
-    $(target).html(html);
+	    $(target).html(html);
 
-    // ✅ EVENTOS DELEGADOS (melhor performance)
-    bindArtistActions();
-}
+	    // ✅ EVENTOS DELEGADOS (melhor performance)
+	    bindArtistActions();
+	}
 
-// 🔧 FUNÇÃO CRÍTICA: Extrai imagem correta do Last.fm
-function getArtistImage(images) {
-    if (!images || !Array.isArray(images)) return 'public/images/defaults/no_image.png';
-    
-    // ✅ Prioridades: mega -> extralarge -> large -> medium
-    const sizes = ['mega', 'extralarge', 'large', 'medium'];
-    
-    for (let size of sizes) {
-        const img = images.find(i => i.size === size);
-        if (img && img['#text']) return img['#text'];
-    }
-    
-    // Fallback para qualquer imagem disponível
-    for (let img of images) {
-        if (img['#text']) return img['#text'];
-    }
-    
-    return 'public/images/defaults/no_image.png';
-}
+	// 🔧 FUNÇÃO CRÍTICA: Extrai imagem correta do Last.fm
+	function getArtistImage(images) {
+	    if (!images || !Array.isArray(images)) return 'public/images/defaults/no_image.png';
 
-function loadArtistDetails(slug) {
-    const artistName = slug.replace(/-/g, ' ');
+	    // ✅ Prioridades: mega -> extralarge -> large -> medium
+	    const sizes = ['mega', 'extralarge', 'large', 'medium'];
 
-    fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${artistName}&api_key=${LASTFM_KEY}&format=json`)
-        .then(res => res.json())
-        .then(data => {
-            const artist = data.artist;
+	    for (let size of sizes) {
+	        const img = images.find(i => i.size === size);
+	        if (img && img['#text']) return img['#text'];
+	    }
 
-            const name = artist.name;
-            // ✅ CORRIGIDO: Usa getArtistImage
-            const image = getArtistImage(artist.image);
-            const bio = artist.bio?.content || artist.bio?.summary || '';
+	    // Fallback para qualquer imagem disponível
+	    for (let img of images) {
+	        if (img['#text']) return img['#text'];
+	    }
 
-            const html = `
+	    return 'public/images/defaults/no_image.png';
+	}
+
+	function loadArtistDetails(slug) {
+	    const artistName = slug.replace(/-/g, ' ');
+
+	    fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${artistName}&api_key=${LASTFM_KEY}&format=json`)
+	        .then(res => res.json())
+	        .then(data => {
+	            const artist = data.artist;
+
+	            const name = artist.name;
+	            // ✅ CORRIGIDO: Usa getArtistImage
+	            const image = getArtistImage(artist.image);
+	            const bio = artist.bio?.content || artist.bio?.summary || '';
+
+	            const html = `
                 <!-- HEADER -->
                 <header class="euro-artists-header">
                     <div class="grid">
@@ -253,33 +253,33 @@ function loadArtistDetails(slug) {
                 <section id="relatedArtists"></section>
             `;
 
-            $('#searchResults').html(html);
-            switchTab('search');
+	            $('#searchResults').html(html);
+	            switchTab('search');
 
-            // carregar similares
-            loadSimilarArtists(artist.similar?.artist || []);
+	            // carregar similares
+	            loadSimilarArtists(artist.similar?.artist || []);
 
-            // eventos
-            bindArtistActions();
+	            // eventos
+	            bindArtistActions();
 
-        })
-        .catch(err => {
-            console.error('Erro detalhes artista:', err);
-        });
-}
+	        })
+	        .catch(err => {
+	            console.error('Erro detalhes artista:', err);
+	        });
+	}
 
-function formatBio(text) {
-    if (!text) return '';
+	function formatBio(text) {
+	    if (!text) return '';
 
-    return text
-        .replace(/<a.*?>.*?<\/a>/g, '') // remove links
-        .replace(/\n/g, '<br>');
-}
+	    return text
+	        .replace(/<a.*?>.*?<\/a>/g, '') // remove links
+	        .replace(/\n/g, '<br>');
+	}
 
-function loadSimilarArtists(list) {
-    if (!list || list.length === 0) return;
+	function loadSimilarArtists(list) {
+	    if (!list || list.length === 0) return;
 
-    const html = `
+	    const html = `
         <div class="euro-artists-list modules">
             <div class="grid">
                 <h2 class="euro-title medium section-title">Artistas Relacionados</h2>
@@ -327,95 +327,95 @@ function loadSimilarArtists(list) {
         </div>
     `;
 
-    $('#relatedArtists').html(html);
-    bindArtistActions();
-}
+	    $('#relatedArtists').html(html);
+	    bindArtistActions();
+	}
 
-function bindArtistActions() {
-    // ✅ EVENTOS DELEGADOS (funciona em elementos dinâmicos)
-    $(document).off('click', '.artist-link, .artist-music, .artist-videos, .artist-info')
-        .on('click', '.artist-link', function(e) {
-            e.preventDefault();
-            loadArtistDetails($(this).data('artist'));
-        })
-        .on('click', '.artist-music', function(e) {
-            e.preventDefault();
-            searchMusicByArtist($(this).data('artist'));
-        })
-        .on('click', '.artist-videos, .artist-info', function(e) {
-            e.preventDefault();
-            // Placeholder para futuras funcionalidades
-            alert('Funcionalidade em desenvolvimento');
-        });
-}
+	function bindArtistActions() {
+	    // ✅ EVENTOS DELEGADOS (funciona em elementos dinâmicos)
+	    $(document).off('click', '.artist-link, .artist-music, .artist-videos, .artist-info')
+	        .on('click', '.artist-link', function(e) {
+	            e.preventDefault();
+	            loadArtistDetails($(this).data('artist'));
+	        })
+	        .on('click', '.artist-music', function(e) {
+	            e.preventDefault();
+	            searchMusicByArtist($(this).data('artist'));
+	        })
+	        .on('click', '.artist-videos, .artist-info', function(e) {
+	            e.preventDefault();
+	            // Placeholder para futuras funcionalidades
+	            alert('Funcionalidade em desenvolvimento');
+	        });
+	}
 
-// 🔄 Inicialização automática
-$(document).ready(function() {
-    loadHomeArtists();
-    loadArtists();
-});
+	// 🔄 Inicialização automática
+	$(document).ready(function() {
+	    loadHomeArtists();
+	    loadArtists();
+	});
 
-// =====================================================
-// 🎬 YOUTUBE (VIDEOS) - SPA READY (COM API RENDER)
-// =====================================================
+	// =====================================================
+	// 🎬 YOUTUBE (VIDEOS) - SPA READY (COM API RENDER)
+	// =====================================================
 
-// ⚙️ CONFIG
-const API_URL = 'https://eurodance-api.onrender.com/youtube';
+	// ⚙️ CONFIG
+	const API_URL = 'https://eurodance-api.onrender.com/youtube';
 
-// 🔹 Carregar vídeos (HOME / TAB)
-function loadVideos() {
+	// 🔹 Carregar vídeos (HOME / TAB)
+	function loadVideos() {
 
-    fetch(`${API_URL}?q=eurodance`)
-        .then(res => res.json())
-        .then(data => {
+	    fetch(`${API_URL}?q=eurodance`)
+	        .then(res => res.json())
+	        .then(data => {
 
-            if (!data.items) {
-                console.warn('Nenhum vídeo encontrado');
-                $('#videosGrid').html('<p>Nenhum vídeo encontrado</p>');
-                return;
-            }
+	            if (!data.items) {
+	                console.warn('Nenhum vídeo encontrado');
+	                $('#videosGrid').html('<p>Nenhum vídeo encontrado</p>');
+	                return;
+	            }
 
-            renderVideos(data.items);
+	            renderVideos(data.items);
 
-        })
-        .catch(err => {
-            console.error('Erro API:', err);
-            $('#videosGrid').html('<p>Erro ao carregar vídeos</p>');
-        });
+	        })
+	        .catch(err => {
+	            console.error('Erro API:', err);
+	            $('#videosGrid').html('<p>Erro ao carregar vídeos</p>');
+	        });
 
-}
+	}
 
-// 🔍 Buscar vídeos por artista
-function searchVideosByArtist(name) {
+	// 🔍 Buscar vídeos por artista
+	function searchVideosByArtist(name) {
 
-    const query = name.replace(/-/g, ' ');
+	    const query = name.replace(/-/g, ' ');
 
-    fetch(`${API_URL}?q=${encodeURIComponent(query)}`)
-        .then(res => res.json())
-        .then(data => {
+	    fetch(`${API_URL}?q=${encodeURIComponent(query)}`)
+	        .then(res => res.json())
+	        .then(data => {
 
-            renderVideos(data.items || []);
+	            renderVideos(data.items || []);
 
-            if (typeof switchTab === 'function') {
-                switchTab('videos');
-            }
+	            if (typeof switchTab === 'function') {
+	                switchTab('videos');
+	            }
 
-        })
-        .catch(err => {
-            console.error('Erro busca vídeos:', err);
-        });
+	        })
+	        .catch(err => {
+	            console.error('Erro busca vídeos:', err);
+	        });
 
-}
+	}
 
-// 🎨 Renderizar vídeos
-function renderVideos(videos) {
+	// 🎨 Renderizar vídeos
+	function renderVideos(videos) {
 
-    if (!videos || !videos.length) {
-        $('#videosGrid').html('<p>Nenhum vídeo disponível</p>');
-        return;
-    }
+	    if (!videos || !videos.length) {
+	        $('#videosGrid').html('<p>Nenhum vídeo disponível</p>');
+	        return;
+	    }
 
-    const html = `
+	    const html = `
         <div class="euro-artists-list modules">
             <div class="grid">
                 <h2 class="euro-title medium section-title">Vídeos</h2>
@@ -431,25 +431,22 @@ function renderVideos(videos) {
                             const thumb = v.snippet?.thumbnails?.medium?.url || '';
 
                             return `
-                                <li class="euro-list-data-item">
+                                <li class="euro-list-data-item"
+									data-id="${id}"
+									data-title="${title.replace(/"/g, '&quot;')}"
+									data-thumb="${thumb}">
 
-                                    <!-- THUMB -->
-                                    <a href="#" class="video-link" data-id="${id}">
-                                        <div class="euro-list-data-photo"
-                                             style="background-image: url('${thumb}')">
-                                        </div>
-                                    </a>
-
-                                    <!-- INFO -->
-                                    <div class="euro-list-data-desc">
-                                        <h2 class="euro-title small">
-                                            <a href="#" class="video-link" data-id="${id}">
-                                                ${title}
-                                            </a>
-                                        </h2>
-                                    </div>
-
-                                </li>
+									<!-- THUMB -->
+									<a href="#" class="video-link">
+										<div class="euro-list-data-photo" style="background-image: url('${thumb}')"></div>
+									</a>
+									<!-- INFO -->
+									<div class="euro-list-data-desc">
+										<h2 class="euro-title small">
+											<a href="#" class="video-link">${title}</a>
+										</h2>
+									</div>
+								</li>
                             `;
                         }).join('')}
                 </ul>
@@ -457,15 +454,20 @@ function renderVideos(videos) {
         </div>
     `;
 
-    $('#videosGrid').html(html);
-}
+	    $('#videosGrid').html(html);
+	}
 
-// ▶️ Player YouTube
-function openPlayerYoutube(videoId) {
+	// ▶️ Player YouTube
+	function openPlayerYoutube(videoId, title = '', thumb = '') {
 
-    if (!videoId) return;
+	    const thumbnail = thumb || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
-    $('#playerEmbed').html(`
+	    // 👇 seu player usa DIV (não img)
+	    $('#playerImage').css('background-image', `url('${thumbnail}')`);
+
+	    $('#playerTitle').text(title || 'YouTube Player');
+
+	    $('#playerEmbed').html(`
         <iframe width="100%" height="315"
             src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1"
             frameborder="0"
@@ -474,140 +476,141 @@ function openPlayerYoutube(videoId) {
         </iframe>
     `);
 
-    $('#playerTitle').text('YouTube Player');
-    $('#player-bar').addClass('opened');
+	    $('#player-bar').addClass('opened');
+	}
 
-    // salva último vídeo (opcional)
-    localStorage.setItem('lastVideo', videoId);
-}
+	// =====================================================
+	// ⚡ EVENTO SPA (CLICK NOS VIDEOS)
+	// =====================================================
 
-// =====================================================
-// ⚡ EVENTO SPA (CLICK NOS VIDEOS)
-// =====================================================
+	// clique no vídeo (imagem ou título)
+	$(document).on('click', '.video-link', function(e) {
+	    e.preventDefault();
 
-// clique no vídeo (imagem ou título)
-$(document).on('click', '.video-link', function(e) {
-    e.preventDefault();
+	    const item = $(this).closest('.euro-list-data-item');
 
-    const id = $(this).data('id');
-    openPlayerYoutube(id);
-});
+	    const id = item.data('id');
+	    const title = item.data('title');
+	    const thumb = item.data('thumb');
 
-// botão play
-$(document).on('click', '.play-video', function(e) {
-    e.preventDefault();
+	    openPlayerYoutube(id, title, thumb);
+	});
 
-    const id = $(this).data('id');
-    openPlayerYoutube(id);
-});
+	// botão play
+	$(document).on('click', '.play-video', function(e) {
+	    e.preventDefault();
 
-// =====================================================
-// 🚀 INIT (AUTO LOAD + RESTORE)
-// =====================================================
+	    const id = $(this).data('id');
+	    openPlayerYoutube(id);
+	});
 
-$(document).ready(function() {
+	// =====================================================
+	// 🚀 INIT (AUTO LOAD + RESTORE)
+	// =====================================================
 
-    loadVideos();
+	$(document).ready(function() {
 
-    const lastVideo = localStorage.getItem('lastVideo');
+	    loadVideos();
 
-    if (lastVideo) {
-        $('#playerTitle').text('Último vídeo disponível');
-        // NÃO abre o player automaticamente
-    }
+	    const lastVideo = localStorage.getItem('lastVideo');
 
-});
+	    if (lastVideo) {
+	        $('#playerTitle').text('Último vídeo disponível');
+	        // NÃO abre o player automaticamente
+	    }
 
-// =====================================================
-// MIXCLOUD (PODCASTS) - VERSÃO ROBUSTA 2024 (SEM DATA)
-// =====================================================
+	});
 
-// Lista de proxies confiáveis (prioridade alta -> baixa)
-const PROXY_URLS = [
-    'https://corsproxy.io/?',                    // ✅ Mais confiável
-    'https://api.allorigins.win/raw?url=',       // ✅ Bom fallback
-    'https://thingproxy.freeboard.io/fetch/',    // ✅ Backup
-    'https://api.codetabs.com/v1/proxy/?quest=', // ✅ Último recurso
-];
+	// =====================================================
+	// MIXCLOUD (PODCASTS) - VERSÃO ROBUSTA 2024 (SEM DATA)
+	// =====================================================
 
-function loadPodcasts() {
-    const user = 'Play90Music';
-	// const user = 'djadriano';
-    const mixcloudUrl = `https://api.mixcloud.com/${user}/cloudcasts/?limit=20`;
-    
-    console.log('🔄 Iniciando carregamento de podcasts...');
-    
-    tryNextProxy(0, mixcloudUrl);
-}
+	// Lista de proxies confiáveis (prioridade alta -> baixa)
+	const PROXY_URLS = [
+	    'https://corsproxy.io/?', // ✅ Mais confiável
+	    'https://api.allorigins.win/raw?url=', // ✅ Bom fallback
+	    'https://thingproxy.freeboard.io/fetch/', // ✅ Backup
+	    'https://api.codetabs.com/v1/proxy/?quest=', // ✅ Último recurso
+	];
 
-function tryNextProxy(proxyIndex, mixcloudUrl) {
-    if (proxyIndex >= PROXY_URLS.length) {
-        console.error('❌ Todos os proxies falharam');
-        showFallbackPodcasts();
-        return;
-    }
-    
-    const proxyUrl = PROXY_URLS[proxyIndex];
-    console.log(`🔄 Tentando proxy ${proxyIndex + 1}/${PROXY_URLS.length}:`, proxyUrl);
-    
-    fetch(proxyUrl + encodeURIComponent(mixcloudUrl), {
-        cache: 'no-cache'
-    })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-        }
-        return res.text();
-    })
-    .then(data => {
-        const json = JSON.parse(data);
-        console.log('✅ Podcasts carregados com sucesso!', json.data?.length || 0);
-        
-        // Cache local por 1 hora
-        cachePodcasts(json);
-        renderPodcasts(json.data || []);
-    })
-    .catch(err => {
-        console.error(`❌ Proxy ${proxyIndex + 1} falhou:`, err.message);
-        
-        // Tenta próximo proxy após delay
-        setTimeout(() => {
-            tryNextProxy(proxyIndex + 1, mixcloudUrl);
-        }, 300);
-    });
-}
+	function loadPodcasts() {
+	    const user = 'Play90Music';
+	    // const user = 'djadriano';
+	    const mixcloudUrl = `https://api.mixcloud.com/${user}/cloudcasts/?limit=20`;
 
-function cachePodcasts(json) {
-    const cacheKey = 'mixcloud_podcasts_cache';
-    const cacheData = {
-        data: json.data || [],
-        timestamp: Date.now(),
-        expires: Date.now() + (60 * 60 * 1000) // 1 hora
-    };
-    localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-}
+	    console.log('🔄 Iniciando carregamento de podcasts...');
 
-function getCachedPodcasts() {
-    const cacheKey = 'mixcloud_podcasts_cache';
-    const cached = localStorage.getItem(cacheKey);
-    
-    if (cached) {
-        const cacheData = JSON.parse(cached);
-        if (Date.now() < cacheData.expires && cacheData.data.length > 0) {
-            console.log('📦 Usando cache local');
-            return cacheData.data;
-        }
-    }
-    return null;
-}
+	    tryNextProxy(0, mixcloudUrl);
+	}
 
-function renderPodcasts(list) {
-    if (!list || list.length === 0) {
-        showFallbackPodcasts();
-        return;
-    }
+	function tryNextProxy(proxyIndex, mixcloudUrl) {
+	    if (proxyIndex >= PROXY_URLS.length) {
+	        console.error('❌ Todos os proxies falharam');
+	        showFallbackPodcasts();
+	        return;
+	    }
 
-    const html = `
+	    const proxyUrl = PROXY_URLS[proxyIndex];
+	    console.log(`🔄 Tentando proxy ${proxyIndex + 1}/${PROXY_URLS.length}:`, proxyUrl);
+
+	    fetch(proxyUrl + encodeURIComponent(mixcloudUrl), {
+	            cache: 'no-cache'
+	        })
+	        .then(res => {
+	            if (!res.ok) {
+	                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+	            }
+	            return res.text();
+	        })
+	        .then(data => {
+	            const json = JSON.parse(data);
+	            console.log('✅ Podcasts carregados com sucesso!', json.data?.length || 0);
+
+	            // Cache local por 1 hora
+	            cachePodcasts(json);
+	            renderPodcasts(json.data || []);
+	        })
+	        .catch(err => {
+	            console.error(`❌ Proxy ${proxyIndex + 1} falhou:`, err.message);
+
+	            // Tenta próximo proxy após delay
+	            setTimeout(() => {
+	                tryNextProxy(proxyIndex + 1, mixcloudUrl);
+	            }, 300);
+	        });
+	}
+
+	function cachePodcasts(json) {
+	    const cacheKey = 'mixcloud_podcasts_cache';
+	    const cacheData = {
+	        data: json.data || [],
+	        timestamp: Date.now(),
+	        expires: Date.now() + (60 * 60 * 1000) // 1 hora
+	    };
+	    localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+	}
+
+	function getCachedPodcasts() {
+	    const cacheKey = 'mixcloud_podcasts_cache';
+	    const cached = localStorage.getItem(cacheKey);
+
+	    if (cached) {
+	        const cacheData = JSON.parse(cached);
+	        if (Date.now() < cacheData.expires && cacheData.data.length > 0) {
+	            console.log('📦 Usando cache local');
+	            return cacheData.data;
+	        }
+	    }
+	    return null;
+	}
+
+	function renderPodcasts(list) {
+	    if (!list || list.length === 0) {
+	        showFallbackPodcasts();
+	        return;
+	    }
+
+	    const html = `
         <div class="euro-artists-mixes modules">
             <div class="grid">
                 <h2 class="euro-title medium section-title">
@@ -655,32 +658,34 @@ function renderPodcasts(list) {
         </div>
     `;
 
-    // Renderiza em HOME e na aba podcasts
-    $('#homePodcasts, #podcastsGrid').html(html);
+	    // Renderiza em HOME e na aba podcasts
+	    $('#homePodcasts, #podcastsGrid').html(html);
 
-    // EVENTO PLAYER DELEGADO (mais eficiente)
-    $(document).off('click', '.podcast-click').on('click', '.podcast-click', function() {
-        const url = $(this).data('url');
-        const name = $(this).data('name') || $(this).closest('.podcast-item').find('.podcast-title').text().trim();
-        const img = $(this).data('img');
-        
-        openPlayerMixcloud(url, {
-            name: name,
-            pictures: { medium: img }
-        });
-    });
-}
+	    // EVENTO PLAYER DELEGADO (mais eficiente)
+	    $(document).off('click', '.podcast-click').on('click', '.podcast-click', function() {
+	        const url = $(this).data('url');
+	        const name = $(this).data('name') || $(this).closest('.podcast-item').find('.podcast-title').text().trim();
+	        const img = $(this).data('img');
 
-function showFallbackPodcasts() {
-    const cached = getCachedPodcasts();
-    
-    if (cached && cached.length > 0) {
-        console.log('📦 Renderizando do cache');
-        renderPodcasts(cached);
-        return;
-    }
-    
-    const fallbackHtml = `
+	        openPlayerMixcloud(url, {
+	            name: name,
+	            pictures: {
+	                medium: img
+	            }
+	        });
+	    });
+	}
+
+	function showFallbackPodcasts() {
+	    const cached = getCachedPodcasts();
+
+	    if (cached && cached.length > 0) {
+	        console.log('📦 Renderizando do cache');
+	        renderPodcasts(cached);
+	        return;
+	    }
+
+	    const fallbackHtml = `
         <div class="euro-artists-mixes modules">
             <div class="grid">
                 <h2 class="euro-title medium section-title">
@@ -696,89 +701,89 @@ function showFallbackPodcasts() {
             </div>
         </div>
     `;
-    
-    $('#homePodcasts, #podcastsGrid').html(fallbackHtml);
-}
 
-// PLAYER MIXCLOUD ROBUSTO
-function openPlayerMixcloud(url, data = {}) {
-    console.log('🎵 Abrindo player:', url);
-    
-    // Cache primeiro
-    const cacheKey = 'mixcloud_player_' + url.split('/').pop();
-    const cached = localStorage.getItem(cacheKey);
-    
-    if (cached) {
-        try {
-            const json = JSON.parse(cached);
-            renderPlayer(json, data);
-            return;
-        } catch(e) {
-            console.warn('Cache inválido, recarregando...');
-        }
-    }
-    
-    // Tenta múltiplos endpoints OEmbed
-    const oembedUrls = [
-        `https://www.mixcloud.com/oembed/?format=json&url=${encodeURIComponent(url)}`,
-        `https://api.mixcloud.com/${url.split('/').pop()}/#oembed`
-    ];
-    
-    tryOembedProxy(0, oembedUrls[0], data, cacheKey);
-}
+	    $('#homePodcasts, #podcastsGrid').html(fallbackHtml);
+	}
 
-function tryOembedProxy(index, oembedUrl, data, cacheKey) {
-    const proxyUrls = [
-        'https://corsproxy.io/?',
-        'https://api.codetabs.com/v1/proxy/?quest=',
-        'https://api.allorigins.win/raw?url='
-    ];
-    
-    if (index >= proxyUrls.length) {
-        renderIframeFallback(data);
-        return;
-    }
-    
-    fetch(proxyUrls[index] + encodeURIComponent(oembedUrl))
-    .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-    })
-    .then(json => {
-        // Cache por 24h
-        localStorage.setItem(cacheKey, JSON.stringify(json));
-        renderPlayer(json, data);
-    })
-    .catch(err => {
-        console.error(`Oembed proxy ${index + 1} falhou:`, err);
-        tryOembedProxy(index + 1, oembedUrl, data, cacheKey);
-    });
-}
+	// PLAYER MIXCLOUD ROBUSTO
+	function openPlayerMixcloud(url, data = {}) {
+	    console.log('🎵 Abrindo player:', url);
 
-function renderPlayer(json, data) {
-    let embed = json.html || '';
-    
-    // Correções essenciais
-    embed = embed.replace(/src="\/\//g, 'src="https://');
-    embed = embed.replace(/width="100\%"/, 'width="100%"');
-    embed = embed.replace(/height="450"/, 'height="400"');
-    
-    $('#playerEmbed').html(embed);
-    $('#playerTitle').text(data.name || json.title || 'Podcast');
-    
-    const img = data.pictures?.medium || 
-                json.thumbnail_url || 
-                json.thumbnail_url_with_play_button ||
-                'public/images/defaults/no_image.png';
-    
-    $('#playerImage').css('background-image', `url('${img}')`);
-    $('#player-bar').addClass('opened');
-    
-    console.log('✅ Player renderizado!');
-}
+	    // Cache primeiro
+	    const cacheKey = 'mixcloud_player_' + url.split('/').pop();
+	    const cached = localStorage.getItem(cacheKey);
 
-function renderIframeFallback(data) {
-    const iframe = `
+	    if (cached) {
+	        try {
+	            const json = JSON.parse(cached);
+	            renderPlayer(json, data);
+	            return;
+	        } catch (e) {
+	            console.warn('Cache inválido, recarregando...');
+	        }
+	    }
+
+	    // Tenta múltiplos endpoints OEmbed
+	    const oembedUrls = [
+	        `https://www.mixcloud.com/oembed/?format=json&url=${encodeURIComponent(url)}`,
+	        `https://api.mixcloud.com/${url.split('/').pop()}/#oembed`
+	    ];
+
+	    tryOembedProxy(0, oembedUrls[0], data, cacheKey);
+	}
+
+	function tryOembedProxy(index, oembedUrl, data, cacheKey) {
+	    const proxyUrls = [
+	        'https://corsproxy.io/?',
+	        'https://api.codetabs.com/v1/proxy/?quest=',
+	        'https://api.allorigins.win/raw?url='
+	    ];
+
+	    if (index >= proxyUrls.length) {
+	        renderIframeFallback(data);
+	        return;
+	    }
+
+	    fetch(proxyUrls[index] + encodeURIComponent(oembedUrl))
+	        .then(res => {
+	            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	            return res.json();
+	        })
+	        .then(json => {
+	            // Cache por 24h
+	            localStorage.setItem(cacheKey, JSON.stringify(json));
+	            renderPlayer(json, data);
+	        })
+	        .catch(err => {
+	            console.error(`Oembed proxy ${index + 1} falhou:`, err);
+	            tryOembedProxy(index + 1, oembedUrl, data, cacheKey);
+	        });
+	}
+
+	function renderPlayer(json, data) {
+	    let embed = json.html || '';
+
+	    // Correções essenciais
+	    embed = embed.replace(/src="\/\//g, 'src="https://');
+	    embed = embed.replace(/width="100\%"/, 'width="100%"');
+	    embed = embed.replace(/height="450"/, 'height="400"');
+
+	    $('#playerEmbed').html(embed);
+	    $('#playerTitle').text(data.name || json.title || 'Podcast');
+
+	    const img = data.pictures?.medium ||
+	        json.thumbnail_url ||
+	        json.thumbnail_url_with_play_button ||
+	        'public/images/defaults/no_image.png';
+
+	    $('#playerImage').css('background-image', `url('${img}')`);
+	    $('#player-bar').addClass('opened');
+
+	    console.log('✅ Player renderizado!');
+	}
+
+	function renderIframeFallback(data) {
+	    const iframe = `
         <iframe width="100%" 
                 height="400" 
                 src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=1&feed=${encodeURIComponent(data.url || '')}"
@@ -786,39 +791,39 @@ function renderIframeFallback(data) {
                 allowfullscreen>
         </iframe>
     `;
-    
-    $('#playerEmbed').html(iframe);
-    $('#playerTitle').text(data.name || 'Podcast');
-    $('#playerImage').css('background-image', `url('${data.pictures?.medium || 'public/images/defaults/no_image.png'}')`);
-    $('#player-bar').addClass('opened');
-    
-    console.log('Fallback iframe renderizado');
-}
 
-// Inicialização automática + botão retry global
-$(document).ready(function() {
-    // Tenta cache primeiro
-    const cached = getCachedPodcasts();
-    if (cached) {
-        renderPodcasts(cached);
-    } else {
-        loadPodcasts();
-    }
-    
-    // Auto-reload a cada 30min
-    setInterval(() => {
-        if (!$('#player-bar').hasClass('opened')) {
-            loadPodcasts();
-        }
-    }, 30 * 60 * 1000);
-});
+	    $('#playerEmbed').html(iframe);
+	    $('#playerTitle').text(data.name || 'Podcast');
+	    $('#playerImage').css('background-image', `url('${data.pictures?.medium || 'public/images/defaults/no_image.png'}')`);
+	    $('#player-bar').addClass('opened');
 
-// Função pública para reload manual
-window.reloadPodcasts = loadPodcasts;
+	    console.log('Fallback iframe renderizado');
+	}
 
-// =====================================================
-// SEARCH
-// =====================================================
+	// Inicialização automática + botão retry global
+	$(document).ready(function() {
+	    // Tenta cache primeiro
+	    const cached = getCachedPodcasts();
+	    if (cached) {
+	        renderPodcasts(cached);
+	    } else {
+	        loadPodcasts();
+	    }
+
+	    // Auto-reload a cada 30min
+	    setInterval(() => {
+	        if (!$('#player-bar').hasClass('opened')) {
+	            loadPodcasts();
+	        }
+	    }, 30 * 60 * 1000);
+	});
+
+	// Função pública para reload manual
+	window.reloadPodcasts = loadPodcasts;
+
+	// =====================================================
+	// SEARCH
+	// =====================================================
 	function searchArtists(query) {
 
 	    fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${query}&api_key=${LASTFM_KEY}&format=json`)
@@ -834,10 +839,10 @@ window.reloadPodcasts = loadPodcasts;
 
 	}
 
-// =====================================================
-// PLAYER TOGGLE
-// =====================================================
+	// =====================================================
+	// PLAYER TOGGLE
+	// =====================================================
 	$(document).on('click', '#togglePlayer', function(e) {
-		e.preventDefault();
-		$('#player-bar').toggleClass('showmore');
+	    e.preventDefault();
+	    $('#player-bar').toggleClass('showmore');
 	});
