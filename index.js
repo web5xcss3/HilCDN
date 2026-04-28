@@ -485,15 +485,6 @@ function openPlayerYoutube(videoId) {
 // ⚡ EVENTO SPA (CLICK NOS VIDEOS)
 // =====================================================
 
-$(document)
-    .off('click.video')
-    .on('click.video', '.video-card', function() {
-
-        const id = $(this).data('id');
-        openPlayerYoutube(id);
-
-    });
-
 // clique no vídeo (imagem ou título)
 $(document).on('click', '.video-link', function(e) {
     e.preventDefault();
@@ -518,10 +509,11 @@ $(document).ready(function() {
 
     loadVideos();
 
-    // restaurar último vídeo
     const lastVideo = localStorage.getItem('lastVideo');
+
     if (lastVideo) {
-        openPlayerYoutube(lastVideo);
+        $('#playerTitle').text('Último vídeo disponível');
+        // NÃO abre o player automaticamente
     }
 
 });
