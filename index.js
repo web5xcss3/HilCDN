@@ -415,21 +415,47 @@ function renderVideos(videos) {
         return;
     }
 
-    const html = videos
-        .filter(v => v.id && v.id.videoId)
-        .map(v => {
+    const html = `
+        <div class="euro-artists-list modules">
+            <div class="grid">
+                <h2 class="euro-title medium section-title">Vídeos</h2>
 
-            const id = v.id.videoId;
-            const thumb = v.snippet?.thumbnails?.medium?.url || '';
-            const title = v.snippet?.title || 'Sem título';
+                <ul class="euro-list-data">
+                    ${videos
+                        .filter(v => v.id && v.id.videoId)
+                        .map(v => {
 
-            return `
-                <div class="card video-card" data-id="${id}">
-                    <img loading="lazy" src="${thumb}" />
-                    <h4>${title}</h4>
-                </div>
-            `;
-        }).join('');
+                            const id = v.id.videoId;
+                            const title = v.snippet?.title || 'Sem título';
+                            const channel = v.snippet?.channelTitle || '';
+                            const thumb = v.snippet?.thumbnails?.medium?.url || '';
+
+                            return `
+                                <li class="euro-list-data-item">
+
+                                    <!-- THUMB -->
+                                    <a href="#" class="video-link" data-id="${id}">
+                                        <div class="euro-list-data-photo"
+                                             style="background-image: url('${thumb}')">
+                                        </div>
+                                    </a>
+
+                                    <!-- INFO -->
+                                    <div class="euro-list-data-desc">
+                                        <h2 class="euro-title small">
+                                            <a href="#" class="video-link" data-id="${id}">
+                                                ${title}
+                                            </a>
+                                        </h2>
+                                    </div>
+
+                                </li>
+                            `;
+                        }).join('')}
+                </ul>
+            </div>
+        </div>
+    `;
 
     $('#videosGrid').html(html);
 }
