@@ -356,18 +356,22 @@ $(document).ready(function() {
 });
 
 // =====================================================
-// 🎬 YOUTUBE (VIDEOS) - VERSÃO COMPLETA SPA READY
+// 🎬 YOUTUBE (VIDEOS) - SPA READY (COM API RENDER)
 // =====================================================
+
+// ⚙️ CONFIG
+const API_URL = 'https://eurodance-api.onrender.com/youtube';
 
 // 🔹 Carregar vídeos (HOME / TAB)
 function loadVideos() {
 
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=eurodance&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
+    fetch(`${API_URL}?q=eurodance`)
         .then(res => res.json())
         .then(data => {
 
             if (!data.items) {
                 console.warn('Nenhum vídeo encontrado');
+                $('#videosGrid').html('<p>Nenhum vídeo encontrado</p>');
                 return;
             }
 
@@ -375,7 +379,8 @@ function loadVideos() {
 
         })
         .catch(err => {
-            console.error('Erro YouTube:', err);
+            console.error('Erro API:', err);
+            $('#videosGrid').html('<p>Erro ao carregar vídeos</p>');
         });
 
 }
@@ -385,12 +390,15 @@ function searchVideosByArtist(name) {
 
     const query = name.replace(/-/g, ' ');
 
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${query}&type=video&maxResults=12&key=${YOUTUBE_KEY}`)
+    fetch(`${API_URL}?q=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(data => {
 
             renderVideos(data.items || []);
-            switchTab('videos');
+
+            if (typeof switchTab === 'function') {
+                switchTab('videos');
+            }
 
         })
         .catch(err => {
@@ -433,7 +441,7 @@ function openPlayerYoutube(videoId) {
 
     $('#playerEmbed').html(`
         <iframe width="100%" height="315"
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1"
             frameborder="0"
             allow="autoplay; encrypted-media"
             allowfullscreen>
@@ -442,6 +450,9 @@ function openPlayerYoutube(videoId) {
 
     $('#playerTitle').text('YouTube Player');
     $('#player-bar').addClass('opened');
+
+    // salva último vídeo (opcional)
+    localStorage.setItem('lastVideo', videoId);
 }
 
 // =====================================================
@@ -456,6 +467,23 @@ $(document)
         openPlayerYoutube(id);
 
     });
+
+// =====================================================
+// 🚀 INIT (AUTO LOAD + RESTORE)
+// =====================================================
+
+$(document).ready(function() {
+
+    loadVideos();
+
+    // restaurar último vídeo
+    const lastVideo = localStorage.getItem('lastVideo');
+    if (lastVideo) {
+        openPlayerYoutube(lastVideo);
+    }
+
+});
+
 // =====================================================
 // MIXCLOUD (PODCASTS) - VERSÃO ROBUSTA 2024 (SEM DATA)
 // =====================================================
