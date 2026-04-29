@@ -172,11 +172,11 @@
 
 	    $(target).html(html);
 
-	    // ✅ EVENTOS DELEGADOS (melhor performance)
+	    // EVENTOS DELEGADOS (melhor performance)
 	    bindArtistActions();
 	}
 
-	// 🔧 FUNÇÃO CRÍTICA: Extrai imagem correta do Last.fm
+	// FUNÇÃO CRÍTICA: Extrai imagem correta do Last.fm
 	function getArtistImage(images) {
 	    if (!images || !Array.isArray(images)) return 'public/images/defaults/no_image.png';
 
@@ -205,7 +205,7 @@
 	            const artist = data.artist;
 
 	            const name = artist.name;
-	            // ✅ CORRIGIDO: Usa getArtistImage
+	            // CORRIGIDO: Usa getArtistImage
 	            const image = getArtistImage(artist.image);
 	            const bio = artist.bio?.content || artist.bio?.summary || '';
 
@@ -332,7 +332,7 @@
 	}
 
 	function bindArtistActions() {
-	    // ✅ EVENTOS DELEGADOS (funciona em elementos dinâmicos)
+	    // EVENTOS DELEGADOS (funciona em elementos dinâmicos)
 	    $(document).off('click', '.artist-link, .artist-music, .artist-videos, .artist-info')
 	        .on('click', '.artist-link', function(e) {
 	            e.preventDefault();
@@ -349,20 +349,136 @@
 	        });
 	}
 
-	// 🔄 Inicialização automática
+	// Inicialização automática
 	$(document).ready(function() {
 	    loadHomeArtists();
 	    loadArtists();
 	});
 
 	// =====================================================
-	// 🎬 YOUTUBE (VIDEOS) - SPA READY (COM API RENDER)
+	// LASTFM TRACK
+	// =====================================================
+	function searchTracksByArtist(name) {
+
+	    const url = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${encodeURIComponent(name)}&api_key=${LASTFM_KEY}&format=json&limit=12`;
+
+	    $('#searchResults').html('<p>Carregando músicas...</p>');
+
+	    fetch(url)
+	        .then(res => res.json())
+	        .then(data => {
+
+	            const tracks = data.toptracks?.track || [];
+
+	            if (!tracks.length) {
+	                $('#searchResults').html('<p>Nenhuma música encontrada</p>');
+	                return;
+	            }
+
+	            renderTracks(tracks, name);
+
+	            if (typeof switchTab === 'function') {
+	                switchTab('search');
+	            }
+
+	        })
+	        .catch(err => {
+	            console.error(err);
+	            $('#searchResults').html('<p>Erro ao carregar músicas</p>');
+	        });
+	}
+
+	function renderTracks(tracks, artistName) {
+
+	    const html = `
+        <div class="euro-artists-list modules">
+            <div class="grid">
+                <h2 class="euro-title medium section-title">
+                    Músicas de ${artistName}
+                </h2>
+
+                <ul class="euro-list-data">
+                    ${tracks.map(t => {
+
+                        const title = t.name;
+                        const artist = t.artist?.name || artistName;
+
+                        return `
+                            <li class="euro-list-data-item">
+
+                                <div class="euro-list-data-photo"
+                                     style="background-image:url('https://via.placeholder.com/300x300?text=Music')">
+                                </div>
+
+                                <div class="euro-list-data-desc">
+                                    <h2 class="euro-title small">${title}</h2>
+                                    <p>${artist}</p>
+                                </div>
+
+                            </li>
+                        `;
+                    }).join('')}
+                </ul>
+            </div>
+        </div>
+    `;
+
+	    $('#searchResults').html(html);
+	}
+
+	// VIDEOS
+	$(document).on('click', '.artist-videos', function(e) {
+	    e.preventDefault();
+
+	    const slug = $(this).data('artist');
+	    const name = slug.replace(/-/g, ' ');
+
+	    searchVideosByArtist(name);
+	});
+
+	// MUSICAS LIST
+	$(document).on('click', '.artist-music', function(e) {
+	    e.preventDefault();
+
+	    const slug = $(this).data('artist');
+	    const name = slug.replace(/-/g, ' ');
+
+	    if (typeof searchTracksByArtist === 'function') {
+	        searchTracksByArtist(name);
+	    }
+	});
+
+	// INFO
+	$(document).on('click', '.artist-info', function(e) {
+	    e.preventDefault();
+
+	    const slug = $(this).data('artist');
+
+	    if (typeof loadArtistDetails === 'function') {
+	        loadArtistDetails(slug);
+	    }
+	});
+	/*
+	// MUSIC YT
+	$(document).on('click', '.euro-list-data-item', function() {
+
+		const title = $(this).find('h2').text();
+		const artist = $(this).find('p').text();
+
+		const query = `${artist} ${title} official`;
+
+		searchVideosByArtist(query);
+	});
+	*/
+
+	// =====================================================
+	// YOUTUBE (VIDEOS) - SPA READY (COM API RENDER)
 	// =====================================================
 
-	// ⚙️ CONFIG
+	// CONFIG
 	const API_URL = 'https://eurodance-api.onrender.com/youtube';
 
-	// 🔹 Carregar vídeos (HOME / TAB)
+	// Carregar vídeos (HOME / TAB)
 	function loadVideos() {
 
 	    fetch(`${API_URL}?q=eurodance`)
@@ -371,7 +487,7 @@
 
 	            if (!data.items) {
 	                console.warn('Nenhum vídeo encontrado');
-	                $('#videosGrid').html('<p>Nenhum vídeo encontrado</p>');
+	                $('#videosGrid').html('<h2 class="euro-title medium section-title">Nenhum vídeo encontrado</h2>');
 	                return;
 	            }
 
@@ -385,10 +501,11 @@
 
 	}
 
-	// 🔍 Buscar vídeos por artista
+	// Buscar vídeos por artista
 	function searchVideosByArtist(name) {
 
-	    const query = name.replace(/-/g, ' ');
+	    // query otimizada
+	    const query = `${name} official music video eurodance -live -remix`;
 
 	    fetch(`${API_URL}?q=${encodeURIComponent(query)}`)
 	        .then(res => res.json())
@@ -401,17 +518,14 @@
 	            }
 
 	        })
-	        .catch(err => {
-	            console.error('Erro busca vídeos:', err);
-	        });
-
+	        .catch(err => console.error(err));
 	}
 
-	// 🎨 Renderizar vídeos
+	// Renderizar vídeos
 	function renderVideos(videos) {
 
 	    if (!videos || !videos.length) {
-	        $('#videosGrid').html('<p>Nenhum vídeo disponível</p>');
+	        $('#videosGrid').html('<h2 class="euro-title medium section-title">Nenhum vídeo disponível</h2>');
 	        return;
 	    }
 
