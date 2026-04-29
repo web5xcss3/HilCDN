@@ -332,22 +332,22 @@
 	}
 
 	function bindArtistActions() {
-	    // EVENTOS DELEGADOS (funciona em elementos dinâmicos)
-	    $(document).off('click', '.artist-link, .artist-music, .artist-videos, .artist-info')
-	        .on('click', '.artist-link', function(e) {
-	            e.preventDefault();
-	            loadArtistDetails($(this).data('artist'));
-	        })
-	        .on('click', '.artist-music', function(e) {
-	            e.preventDefault();
-	            searchMusicByArtist($(this).data('artist'));
-	        })
-	        .on('click', '.artist-videos, .artist-info', function(e) {
-	            e.preventDefault();
-	            // Placeholder para futuras funcionalidades
-	            alert('Funcionalidade em desenvolvimento');
-	        });
-	}
+    $(document).on('click', '.artist-link', function(e) {
+        e.preventDefault();
+        loadArtistDetails($(this).data('artist'));
+    }).on('click', '.artist-music', function(e) {
+        e.preventDefault();
+        const name = $(this).data('artist').replace(/-/g, ' ');
+        searchTracksByArtist(name);
+    }).on('click', '.artist-videos', function(e) {
+        e.preventDefault();
+        const name = $(this).data('artist').replace(/-/g, ' ');
+        searchVideosByArtist(name);
+    }).on('click', '.artist-info', function(e) {
+        e.preventDefault();
+        loadArtistDetails($(this).data('artist'));
+    });
+}
 
 	// Inicialização automática
 	$(document).ready(function() {
@@ -407,7 +407,7 @@
                             <li class="euro-list-data-item">
 
                                 <div class="euro-list-data-photo"
-                                     style="background-image:url('https://via.placeholder.com/300x300?text=Music')">
+                                     style="background-image:url('https://i.ibb.co/39DXFZKM/no-image.png')">
                                 </div>
 
                                 <div class="euro-list-data-desc">
