@@ -270,19 +270,24 @@ function suballAlbumsContent() {
 	return `
 	<section id="subalbums" class="tab-content">
 
-		<main class="artist-page column">
+		<main class="artist-page">
 
 			<!-- LEFT -->
-			<div class="artist-left">
+			<div id="primary" class="artist-left">
 				<img id="artistImage" src="" alt="">
 				<header="align-left">
 					<h2 id="artistName"></h2>
 					<p id="artist-bio"></p>
 				</header>
+				<ul class="icons">
+					<li class="alt"><button type="button" class="icon solid fa-record-vinyl md-ripples ripples-light"></button></li>
+					<li class="alt"><button type="button" class="icon solid fa-video md-ripples ripples-light"></button></li>
+					<li class="alt"><button type="button" class="icon solid fa-info md-ripples ripples-light"></button></li>
+				</ul>
 			</div>
 
 			<!-- RIGHT -->
-			<div class="artist-right">
+			<div id="secondary" class="artist-right scroll-hide">
 				<header class="major">
 					<h2 id="subalbumsTitle"></h2>
 					<ul class="actions">
@@ -537,7 +542,7 @@ function suballAlbumsContent() {
 					</div>
 					
 				<!-- Side Panel -->
-					<div id="side-panel">
+					<div id="side-panel" class="scroll-hide">
 						<div class="album-details">
 							<h4>Detalhes do Álbum</h4>
 							<div class="details-grid">
@@ -600,10 +605,10 @@ function suballAlbumsContent() {
 				</div>
 			</section>
 
-        <!-- Footer
+        <!-- Footer -->
 			<footer id="footer">
 				<span class="copyright">© Play 90 Music 2026 | <a href="https://www.forumeiros.com/">Crie um forum grátis</a></span>
-			</footer> -->
+			</footer>
 		`;
 	}
 
@@ -976,68 +981,16 @@ function initRenderFunctions() {
 // INIT APP
 // =====================================================
 
-window.loadApiData = function() {
-
-    const API = 'https://eurodance-api.onrender.com';
-
-    return fetch(`${API}/mock`)
-        .then(res => res.json())
-        .then(data => {
-
-            console.log('API carregada:', data);
-
-            window.currentData = data;
-
-            window.mockFeatured = [
-                ...data.albums,
-                ...data.single,
-                ...data.vinyl,
-                ...data.instrumental,
-                ...data.mixdjs,
-                ...data.music,
-                ...data.playlists
-            ];
-
-            window.mockLabels = data.labels;
-            window.mockGenres = data.genres;
-
-            window.originalData = {
-                featured: [...window.mockFeatured],
-                albums: [...data.albums],
-                genres: [...data.genres],
-                instrumental: [...data.instrumental],
-                labels: [...data.labels],
-                mixdjs: [...data.mixdjs],
-                music: [...data.music],
-                playlists: [...data.playlists],
-                single: [...data.single],
-                vinyl: [...data.vinyl]
-            };
-
-            return data;
-        });
-};
-
 $(document).ready(function() {
 
     console.log('SPA: inicializando...');
 
     renderRoot();
-    updatePageTitle();
+	updatePageTitle(); // 👈 ADICIONA AQUI
     initGlobalEvents();
     initTabSystem();
+    initRenderFunctions();
+    hydrateUI();
 
-    window.loadApiData()
-        .then(function() {
-
-            console.log('Dados prontos para renderizar');
-
-            initRenderFunctions();
-            hydrateUI();
-            buildSearchIndex();
-
-        })
-        .catch(function(error) {
-            console.error('Erro ao iniciar app:', error);
-        });
+    setTimeout(buildSearchIndex, 100);
 });
