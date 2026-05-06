@@ -277,7 +277,6 @@ function suballAlbumsContent() {
 				<img id="artistImage" src="" alt="">
 				<header="align-left">
 					<h2 id="artistName"></h2>
-					<p id="artist-bio"></p>
 				</header>
 				<ul class="icons">
 					<li class="alt"><button type="button" class="icon solid fa-record-vinyl md-ripples ripples-light"></button></li>
@@ -288,6 +287,7 @@ function suballAlbumsContent() {
 
 			<!-- RIGHT -->
 			<div id="secondary" class="artist-right scroll-hide">
+				<p id="artist-bio"></p>
 				<header class="major">
 					<h2 id="subalbumsTitle"></h2>
 					<ul class="actions">
