@@ -39,12 +39,29 @@ módulos do sistema após o DOM estar pronto.
         // DADOS
         // ===============================
         let currentData = {
-            featured: (typeof mockFeatured !== 'undefined') ? mockFeatured : []
+            featured: []
         };
 
         const originalData = {
-            featured: (typeof mockFeatured !== 'undefined') ? [...mockFeatured] : []
+            featured: []
         };
+
+        // ===============================
+        // LOAD API
+        // ===============================
+        fetch('https://eurodance-api.onrender.com/albums')
+            .then(res => res.json())
+            .then(data => {
+
+                currentData.featured = data;
+                originalData.featured = [...data];
+
+                renderFeatured(data);
+
+            })
+            .catch(err => {
+                console.error('Erro API:', err);
+            });
 
         // ===============================
         // UTILS
