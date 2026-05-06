@@ -976,16 +976,68 @@ function initRenderFunctions() {
 // INIT APP
 // =====================================================
 
+window.loadApiData = function() {
+
+    const API = 'https://eurodance-api.onrender.com';
+
+    return fetch(`${API}/mock`)
+        .then(res => res.json())
+        .then(data => {
+
+            console.log('API carregada:', data);
+
+            window.currentData = data;
+
+            window.mockFeatured = [
+                ...data.albums,
+                ...data.single,
+                ...data.vinyl,
+                ...data.instrumental,
+                ...data.mixdjs,
+                ...data.music,
+                ...data.playlists
+            ];
+
+            window.mockLabels = data.labels;
+            window.mockGenres = data.genres;
+
+            window.originalData = {
+                featured: [...window.mockFeatured],
+                albums: [...data.albums],
+                genres: [...data.genres],
+                instrumental: [...data.instrumental],
+                labels: [...data.labels],
+                mixdjs: [...data.mixdjs],
+                music: [...data.music],
+                playlists: [...data.playlists],
+                single: [...data.single],
+                vinyl: [...data.vinyl]
+            };
+
+            return data;
+        });
+};
+
 $(document).ready(function() {
 
     console.log('SPA: inicializando...');
 
     renderRoot();
-	updatePageTitle(); // 👈 ADICIONA AQUI
+    updatePageTitle();
     initGlobalEvents();
     initTabSystem();
-    initRenderFunctions();
-    hydrateUI();
 
-    setTimeout(buildSearchIndex, 100);
+    window.loadApiData()
+        .then(function() {
+
+            console.log('Dados prontos para renderizar');
+
+            initRenderFunctions();
+            hydrateUI();
+            buildSearchIndex();
+
+        })
+        .catch(function(error) {
+            console.error('Erro ao iniciar app:', error);
+        });
 });
