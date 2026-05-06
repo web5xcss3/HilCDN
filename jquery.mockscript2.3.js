@@ -36,27 +36,65 @@ módulos do sistema após o DOM estar pronto.
     $(function() {
 
         // ===============================
+        // API
+        // ===============================
+        const API = 'https://eurodance-api.onrender.com';
+
+        // ===============================
         // DADOS
         // ===============================
         let currentData = {
-            featured: []
+            albums: [],
+            genres: [],
+            instrumental: [],
+            labels: [],
+            mixdjs: [],
+            music: [],
+            playlists: [],
+            single: [],
+            vinyl: []
         };
 
         const originalData = {
-            featured: []
+            albums: [],
+            genres: [],
+            instrumental: [],
+            labels: [],
+            mixdjs: [],
+            music: [],
+            playlists: [],
+            single: [],
+            vinyl: []
         };
 
         // ===============================
-        // LOAD API
+        // CARREGAR API
         // ===============================
-        fetch('https://eurodance-api.onrender.com/albums')
+        fetch(`${API}/mock`)
             .then(res => res.json())
             .then(data => {
 
-                currentData.featured = data;
-                originalData.featured = [...data];
+                console.log('API carregada:', data);
 
-                renderFeatured(data);
+                currentData = data;
+
+                originalData.albums = [...data.albums];
+                originalData.genres = [...data.genres];
+                originalData.instrumental = [...data.instrumental];
+                originalData.labels = [...data.labels];
+                originalData.mixdjs = [...data.mixdjs];
+                originalData.music = [...data.music];
+                originalData.playlists = [...data.playlists];
+                originalData.single = [...data.single];
+                originalData.vinyl = [...data.vinyl];
+
+                // ===============================
+                // RENDERIZAÇÕES
+                // ===============================
+                renderAlbums(currentData.albums);
+                renderSingles(currentData.single);
+                renderVinyls(currentData.vinyl);
+                renderPlaylists(currentData.playlists);
 
             })
             .catch(err => {
