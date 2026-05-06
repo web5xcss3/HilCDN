@@ -36,70 +36,15 @@ módulos do sistema após o DOM estar pronto.
     $(function() {
 
         // ===============================
-        // API
-        // ===============================
-        const API = 'https://eurodance-api.onrender.com';
-
-        // ===============================
         // DADOS
         // ===============================
         let currentData = {
-            albums: [],
-            genres: [],
-            instrumental: [],
-            labels: [],
-            mixdjs: [],
-            music: [],
-            playlists: [],
-            single: [],
-            vinyl: []
+            featured: (typeof mockFeatured !== 'undefined') ? mockFeatured : []
         };
 
         const originalData = {
-            albums: [],
-            genres: [],
-            instrumental: [],
-            labels: [],
-            mixdjs: [],
-            music: [],
-            playlists: [],
-            single: [],
-            vinyl: []
+            featured: (typeof mockFeatured !== 'undefined') ? [...mockFeatured] : []
         };
-
-        // ===============================
-        // CARREGAR API
-        // ===============================
-        fetch(`${API}/mock`)
-            .then(res => res.json())
-            .then(data => {
-
-                console.log('API carregada:', data);
-
-                currentData = data;
-
-                originalData.albums = [...data.albums];
-                originalData.genres = [...data.genres];
-                originalData.instrumental = [...data.instrumental];
-                originalData.labels = [...data.labels];
-                originalData.mixdjs = [...data.mixdjs];
-                originalData.music = [...data.music];
-                originalData.playlists = [...data.playlists];
-                originalData.single = [...data.single];
-                originalData.vinyl = [...data.vinyl];
-
-                // ===============================
-                // RENDERIZAÇÕES
-                // ===============================
-                renderAlbums(currentData.albums);
-                renderSingles(currentData.single);
-                renderVinyls(currentData.vinyl);
-                renderPlaylists(currentData.playlists);
-
-            })
-            .catch(err => {
-                console.error('Erro API:', err);
-            });
 
         // ===============================
         // UTILS
@@ -1372,7 +1317,6 @@ módulos do sistema após o DOM estar pronto.
 // =====================================================
 // BIO
 // =====================================================
-
 function loadArtistBioOnly(artist) {
 
     const url = `https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist)}&api_key=4959ac7ccf2055437d47a70303cc0ee0&format=json`;
@@ -1388,29 +1332,100 @@ function loadArtistBioOnly(artist) {
                 return;
             }
 
-            let bio = info.bio?.summary || '';
+            let bio = info.bio?.content || info.bio?.summary || '';
 
-            // 🔥 LIMPA HTML DO LASTFM
             bio = bio
-                .replace(/<a[^>]*>.*?<\/a>/g, '')
-                .replace(/Read more.*/i, '')
+                .replace(/<a.*?>.*?<\/a>/g, '')
+                .replace(/User-contributed text[\s\S]*$/i, '')
+                .replace(/Read more[\s\S]*$/i, '')
                 .trim();
 
-            // ✅ 🔥 FALLBACK AQUI
             if (!bio || bio.length < 20) {
                 bio = `Informações sobre ${artist} não disponíveis no momento.`;
             }
 
-            $('#artist-bio').html(bio);
+            renderBioReadMore(formatBio(bio));
 
         })
         .catch(() => {
-
-            // ✅ FALLBACK EM ERRO DE API
             $('#artist-bio').text(`Não foi possível carregar a biografia de ${artist}`);
-
         });
+}
 
+function formatBio(text) {
+
+    if (!text) return '';
+
+    return text
+        .replace(/<a.*?>.*?<\/a>/g, '')
+        .replace(/User-contributed text[\s\S]*$/i, '')
+        .replace(/Read more[\s\S]*$/i, '')
+        .replace(/\n/g, '<br>')
+        .trim();
+}
+
+// =====================================================
+// LER MAIS BIO
+// =====================================================
+
+function renderBioReadMore(bio) {
+
+    const limit = 300;
+    const isLong = bio.length > limit;
+    const shortBio = isLong ? bio.substring(0, limit) + '...' : bio;
+
+    $('#artist-bio').html(`
+		<span class="bio-text">${shortBio}</span>
+
+        ${isLong ? `
+            <button type="button" class="bio-read-more">
+                Ler mais
+            </button>
+        ` : ''}
+    `);
+
+    $('#artist-bio')
+        .data('full-bio', bio)
+        .data('short-bio', shortBio);
+}
+
+// =====================================================
+// EVENTO LER MAIS / LER MENOS
+// =====================================================
+
+$(document).on('click', '.bio-read-more', function () {
+
+    const $btn = $(this);
+    const $box = $('#artist-bio');
+    const $text = $box.find('.bio-text');
+
+    const fullBio = $box.data('full-bio');
+    const shortBio = $box.data('short-bio');
+
+    const opened = $btn.hasClass('opened');
+
+    if (opened) {
+		$text.html(shortBio);
+        $btn.removeClass('opened').text('Ler mais');
+    } else {
+		$text.html(fullBio);
+        $btn.addClass('opened').text('Ler menos');
+    }
+
+});
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(text) {
+    return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
         // Funções de renderização allVinyls
