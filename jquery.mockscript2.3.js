@@ -48,7 +48,7 @@ módulos do sistema após o DOM estar pronto.
             genres: [],
             instrumental: [],
             labels: [],
-            mixdj: [],
+            mixdjs: [],
             music: [],
             playlists: [],
             single: [],
@@ -60,7 +60,7 @@ módulos do sistema após o DOM estar pronto.
             genres: [],
             instrumental: [],
             labels: [],
-            mixdj: [],
+            mixdjs: [],
             music: [],
             playlists: [],
             single: [],
@@ -82,7 +82,7 @@ módulos do sistema após o DOM estar pronto.
                 originalData.genres = [...data.genres];
                 originalData.instrumental = [...data.instrumental];
                 originalData.labels = [...data.labels];
-                originalData.mixdj = [...data.mixdj];
+                originalData.mixdjs = [...data.mixdjs];
                 originalData.music = [...data.music];
                 originalData.playlists = [...data.playlists];
                 originalData.single = [...data.single];
